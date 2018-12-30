@@ -1,0 +1,190 @@
+fileFormatVersion: 2
+guid: cdd5a08cd8d5c3145ac1ce2d490ba533
+ModelImporter:
+  serializedVersion: 23
+  fileIDToRecycleName:
+    100000: Armature
+    100002: Cube
+    100004: Finger_L
+    100006: Finger_R_001
+    100008: FingerTip_L
+    100010: FingerTip_R_001
+    100012: Foot_L
+    100014: Foot_R_001
+    100016: Hand_L
+    100018: Hand_R_001
+    100020: Head
+    100022: Hip_L
+    100024: Hip_R_001
+    100026: LowerArm_L
+    100028: LowerArm_R_001
+    100030: LowerLeg_L
+    100032: LowerLeg_R_001
+    100034: //RootNode
+    100036: Shoulder_L
+    100038: Shoulder_R_001
+    100040: Spine
+    100042: SpineUp
+    100044: Thumb_L
+    100046: Thumb_R_001
+    100048: ThumbTip_L
+    100050: ThumbTip_R_001
+    100052: Toe_L
+    100054: Toe_R_001
+    100056: Torso
+    100058: UpperArm_L
+    100060: UpperArm_R_001
+    100062: UpperLeg_L
+    100064: UpperLeg_R_001
+    100066: Barrier_Ear
+    100068: Body
+    100070: Wings
+    100072: Wings_Fire
+    400000: Armature
+    400002: Cube
+    400004: Finger_L
+    400006: Finger_R_001
+    400008: FingerTip_L
+    400010: FingerTip_R_001
+    400012: Foot_L
+    400014: Foot_R_001
+    400016: Hand_L
+    400018: Hand_R_001
+    400020: Head
+    400022: Hip_L
+    400024: Hip_R_001
+    400026: LowerArm_L
+    400028: LowerArm_R_001
+    400030: LowerLeg_L
+    400032: LowerLeg_R_001
+    400034: //RootNode
+    400036: Shoulder_L
+    400038: Shoulder_R_001
+    400040: Spine
+    400042: SpineUp
+    400044: Thumb_L
+    400046: Thumb_R_001
+    400048: ThumbTip_L
+    400050: ThumbTip_R_001
+    400052: Toe_L
+    400054: Toe_R_001
+    400056: Torso
+    400058: UpperArm_L
+    400060: UpperArm_R_001
+    400062: UpperLeg_L
+    400064: UpperLeg_R_001
+    400066: Barrier_Ear
+    400068: Body
+    400070: Wings
+    400072: Wings_Fire
+    2100000: None__Player_Diffuse
+    2100002: unnamed
+    4300000: Cube
+    4300002: Barrier_Ear
+    4300004: Wings_Fire
+    4300006: Wings
+    4300008: Body
+    7400000: Default Take
+    7400002: Aim
+    7400004: Dying
+    7400006: Idle
+    7400008: Idle_001
+    7400010: Swing
+    7400012: T-Pose
+    7400014: Walk
+    7400016: Walk_DiagLeft
+    7400018: Walk_DiagRight
+    7400020: Walk_Side
+    7400022: Flying
+    9500000: //RootNode
+    13700000: Cube
+    13700002: Barrier_Ear
+    13700004: Body
+    13700006: Wings
+    13700008: Wings_Fire
+  externalObjects: {}
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+    materialLocation: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    rigImportErrors: 
+    rigImportWarnings: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    importAnimatedCustomProperties: 0
+    importConstraints: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    extraUserProperties: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    useSRGBMaterialColor: 1
+    importVisibility: 1
+    importBlendShapes: 1
+    importCameras: 1
+    importLights: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    preserveHierarchy: 0
+    indexFormat: 0
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+    previousCalculatedGlobalScale: 1
+    hasPreviousCalculatedGlobalScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+    normalCalculationMode: 4
+    legacyComputeAllNormalsFromSmoothingGroupsWhenMeshHasBlendShapes: 0
+    blendShapeNormalImportMode: 1
+    normalSmoothingSource: 0
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    serializedVersion: 2
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    hasTranslationDoF: 0
+    hasExtraRoot: 0
+    skeletonHasParents: 1
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 2
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
