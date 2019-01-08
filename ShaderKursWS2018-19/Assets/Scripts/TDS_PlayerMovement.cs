@@ -48,6 +48,9 @@ public class TDS_PlayerMovement : MonoBehaviour
     [SerializeField]
     [Tooltip("Component of the MainCamera.")]
     CameraController cam;
+    [SerializeField]
+    [Tooltip("Component of the Maze.")]
+    MazeController maze;
 
     Rigidbody rigid;                                    // rigidbody directs all the movements
     Vector3 moveDirection;                              // direction the rigidbody should move to
@@ -192,6 +195,7 @@ public class TDS_PlayerMovement : MonoBehaviour
 
         // check transfer direction
         // update room coordinate
+        RoomCoordinate roomOld = room;
         Vector3 roomPosition = new Vector3(10 * room.x, 0, 10 * room.y);
         Vector3 transferDirection = (transferTrigger.position - roomPosition).normalized;
         if (transferDirection.x > .5f)
@@ -218,6 +222,9 @@ public class TDS_PlayerMovement : MonoBehaviour
             + 5 * Vector3.right * transferDirection.x
             + 5 * Vector3.forward * transferDirection.z;
 
+        // activate next room
+        maze.ActivateRoom(room);
+
         // move player
         yield return MovePlayer(toPos);
 
@@ -236,9 +243,34 @@ public class TDS_PlayerMovement : MonoBehaviour
             + 1.5f * Vector3.forward * transferDirection.z;
         yield return MovePlayer(toPos);
 
-        // enable moving
-        PlayerActive = true;
-        RoomTranfering = false;
+        // deactivate previous room
+        maze.DeactivateRoom(roomOld);
+
+        // check instant death
+        RoomType type = maze.GetRoomType(room);
+        if(type == RoomType.Standard)
+        {
+            // enable moving
+            PlayerActive = true;
+            RoomTranfering = false;
+        }
+        else
+        {
+            // TODO: add death anim
+
+            // respawn at start
+            // TODO: add spawn anim
+            maze.DeactivateRoom(room);
+            room.x = 0;
+            room.y = 0;
+            maze.ActivateRoom(room);
+            cam.JumpCamera(room);
+            transform.position = Vector3.zero;
+
+            // enable moving
+            PlayerActive = true;
+            RoomTranfering = false;
+        }
     }
 
     // Automatically moves the player to desired position
