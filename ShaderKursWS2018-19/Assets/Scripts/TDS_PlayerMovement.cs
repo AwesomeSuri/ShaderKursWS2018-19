@@ -2,6 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+public struct RoomCoordinate
+{
+    public int x;
+    public int y;
+}
+
 [RequireComponent(typeof(Rigidbody))]
 public class TDS_PlayerMovement : MonoBehaviour
 {
@@ -23,6 +29,9 @@ public class TDS_PlayerMovement : MonoBehaviour
     [Tooltip("The speed how fast the player walks.")]
     float walkSpeed = 5;
     [SerializeField]
+    [Tooltip("The speed how fast the player walks.")]
+    float walkSpeedCutscene = 2.5f;
+    [SerializeField]
     [Tooltip("The speed how fast the player runs.")]
     float runSpeed = 10;
     [SerializeField]
@@ -36,14 +45,19 @@ public class TDS_PlayerMovement : MonoBehaviour
     [SerializeField]
     [Tooltip("PlayerAnimator component of the mesh.")]
     PlayerAnimation anim;
+    [SerializeField]
+    [Tooltip("Component of the MainCamera.")]
+    CameraController cam;
 
-    Rigidbody rigid;                        // rigidbody directs all the movements
-    Vector3 moveDirection;                  // direction the rigidbody should move to
-    Vector3 lookDirection;                  // direction the rigidbody should face to
-    bool running;                           // if true, player moves at runSpeed
-    bool lookAtMouse;                       // true, if some mouse action is active (eg. shooting)
+    Rigidbody rigid;                                    // rigidbody directs all the movements
+    Vector3 moveDirection;                              // direction the rigidbody should move to
+    Vector3 lookDirection;                              // direction the rigidbody should face to
+    bool running;                                       // if true, player moves at runSpeed
+    bool lookAtMouse;                                   // true, if some mouse action is active (eg. shooting)
+    RoomCoordinate room;                                // stores the coordinate of the current room
 
-    public bool PlayerActive { get; set; }  // true if player can controll this object
+    public bool PlayerActive { get; set; }              // true if player can controll this object
+    public bool RoomTranfering { get; private set; }    // true if player moves to another room
 
 
     //---------------------------------------------------------------------------------------------//
@@ -55,6 +69,8 @@ public class TDS_PlayerMovement : MonoBehaviour
         moveDirection = Vector3.zero;
         lookDirection = Vector3.forward;
         running = false;
+        room.x = 0;
+        room.y = 0;
         lookAtMouse = false;
         PlayerActive = false;
     }
@@ -124,17 +140,23 @@ public class TDS_PlayerMovement : MonoBehaviour
     void UpdateMovement()
     {
         // move the player
-        rigid.MovePosition(transform.position + moveDirection * (running ? runSpeed : walkSpeed) * Time.fixedDeltaTime);
+        rigid.MovePosition(transform.position
+            + moveDirection
+            * (PlayerActive ? (running ? runSpeed : walkSpeed) : walkSpeedCutscene)
+            * Time.fixedDeltaTime);
 
         // turn the player
-        rigid.MoveRotation(Quaternion.Lerp(rigid.rotation, Quaternion.LookRotation(lookDirection), turnSpeed * Time.fixedDeltaTime));
+        rigid.MoveRotation(Quaternion.Lerp(
+            rigid.rotation,
+            Quaternion.LookRotation(lookDirection),
+            turnSpeed * Time.fixedDeltaTime));
     }
 
     // Apply movement values into the animation
     void UpdateAnimation()
     {
         // check if walking
-        if(moveDirection.magnitude > 0)
+        if (moveDirection.magnitude > 0)
         {
             // get local look direction
             Vector3 animDirection = (transform.InverseTransformDirection(moveDirection)).normalized;
@@ -149,5 +171,82 @@ public class TDS_PlayerMovement : MonoBehaviour
         {
             anim.UpdateMovement(0, 0);
         }
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (PlayerActive && other.tag == "WallTransfer")
+        {
+            StartCoroutine(TransferingRoom(other.transform));
+        }
+    }
+
+    // Start room transfer animation
+    IEnumerator TransferingRoom(Transform transferTrigger)
+    {
+        // deactivate all movements
+        PlayerActive = false;
+        lookAtMouse = false;
+        running = false;
+        RoomTranfering = true;
+
+        // check transfer direction
+        // update room coordinate
+        Vector3 roomPosition = new Vector3(10 * room.x, 0, 10 * room.y);
+        Vector3 transferDirection = (transferTrigger.position - roomPosition).normalized;
+        if (transferDirection.x > .5f)
+        {
+            transferDirection = Vector3.right;
+            room.x++;
+        }
+        else if (transferDirection.x < -.5f)
+        {
+            transferDirection = Vector3.left;
+            room.x--;
+        }
+        else if (transferDirection.z > .5f)
+        {
+            transferDirection = Vector3.forward;
+            room.y++;
+        }
+        else if (transferDirection.z < -.5f)
+        {
+            transferDirection = Vector3.back;
+            room.y--;
+        }
+        Vector3 toPos = roomPosition
+            + 5 * Vector3.right * transferDirection.x
+            + 5 * Vector3.forward * transferDirection.z;
+
+        // move player
+        yield return MovePlayer(toPos);
+
+        // move shader
+        // TODO
+
+        // move camera
+        cam.MoveCamera(room);
+        yield return new WaitWhile(() => cam.IsMoving);
+
+        // move shader
+        // TODO
+
+        // move player
+        toPos += 1.5f * Vector3.right * transferDirection.x
+            + 1.5f * Vector3.forward * transferDirection.z;
+        yield return MovePlayer(toPos);
+
+        // enable moving
+        PlayerActive = true;
+        RoomTranfering = false;
+    }
+
+    // Automatically moves the player to desired position
+    IEnumerator MovePlayer(Vector3 toPos)
+    {
+        moveDirection = (toPos - transform.position).normalized;
+        lookDirection = moveDirection;
+        yield return new WaitWhile(() => Vector3.Distance(transform.position, toPos) > .1f);
+        moveDirection = Vector3.zero;
     }
 }
