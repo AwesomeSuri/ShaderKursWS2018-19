@@ -8,8 +8,19 @@ public struct RoomCoordinate
     public int y;
 }
 
+public interface IGameManagerToPlayerMovement
+{
+    void SetInput(Vector3 moveDirection, Vector3 lookDirection, bool running);
+}
+
+public interface IUIToPlayerMovement
+{
+    void SetWings(bool wings);
+}
+
 [RequireComponent(typeof(Rigidbody))]
-public class TDS_PlayerMovement : MonoBehaviour
+[RequireComponent(typeof(PlayerStats))]
+public class TDS_PlayerMovement : MonoBehaviour, IGameManagerToPlayerMovement, IUIToPlayerMovement
 {
     //---------------------------------------------------------------------------------------------//
     //---------------------------------------------------------------------------------------------//
@@ -47,20 +58,26 @@ public class TDS_PlayerMovement : MonoBehaviour
     PlayerAnimation anim;
     [SerializeField]
     [Tooltip("Component of the MainCamera.")]
-    CameraController cam;
+    CameraController camObject;
     [SerializeField]
     [Tooltip("Component of the Maze.")]
-    MazeController maze;
+    MazeController mazeObject;
+    [SerializeField]
+    [Tooltip("Controller of the UI.")]
+    LevelUIController levelUIObject;
+
+
+    IPlayerMovementToCamera cam;                        // interface between this script and the camera
+    IPlayerToMaze maze;                                 // interface between this script and the maze
+    IPlayerMovementToUI levelUI;                        // interface between this script and the ui
 
     Rigidbody rigid;                                    // rigidbody directs all the movements
+    PlayerStats stats;                                  // stores all the stats
     Vector3 moveDirection;                              // direction the rigidbody should move to
     Vector3 lookDirection;                              // direction the rigidbody should face to
     bool running;                                       // if true, player moves at runSpeed
     bool lookAtMouse;                                   // true, if some mouse action is active (eg. shooting)
     RoomCoordinate room;                                // stores the coordinate of the current room
-
-    public bool PlayerActive { get; set; }              // true if player can controll this object
-    public bool RoomTranfering { get; private set; }    // true if player moves to another room
 
 
     //---------------------------------------------------------------------------------------------//
@@ -68,24 +85,42 @@ public class TDS_PlayerMovement : MonoBehaviour
     // Use this for initialization
     void Awake()
     {
+        cam = camObject;
+        camObject = null;
+        maze = mazeObject;
+        mazeObject = null;
+        levelUI = levelUIObject;
+        levelUIObject = null;
+
         rigid = GetComponent<Rigidbody>();
+        stats = GetComponent<PlayerStats>();
         moveDirection = Vector3.zero;
         lookDirection = Vector3.forward;
         running = false;
         room.x = 0;
         room.y = 0;
         lookAtMouse = false;
-        PlayerActive = false;
+    }
+
+    void Start()
+    {
+        levelUI.EnterRoom(room.x, room.y);
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (PlayerActive)
+        if (stats.PlayerActive)
         {
             // get user's input if able
             // otherwise it's probably during a cutscene
             GetInput();
+        }
+
+        // check falling
+        if(transform.position.y < -.1f)
+        {
+            Death();
         }
     }
 
@@ -144,14 +179,14 @@ public class TDS_PlayerMovement : MonoBehaviour
     {
         // move the player
         rigid.MovePosition(transform.position
-            + moveDirection
-            * (PlayerActive ? (running ? runSpeed : walkSpeed) : walkSpeedCutscene)
+            + moveDirection.normalized
+            * (stats.PlayerActive ? (running ? runSpeed : walkSpeed) : walkSpeedCutscene)
             * Time.fixedDeltaTime);
 
         // turn the player
         rigid.MoveRotation(Quaternion.Lerp(
             rigid.rotation,
-            Quaternion.LookRotation(lookDirection),
+            Quaternion.LookRotation(lookDirection.normalized),
             turnSpeed * Time.fixedDeltaTime));
     }
 
@@ -176,11 +211,41 @@ public class TDS_PlayerMovement : MonoBehaviour
         }
     }
 
+    // Called when player y position is below 0.
+    // Death animation plays.
+    // Respawn.
+    void Death()
+    {
+        stats.PlayerActive = false;
+
+        // TODO: add spawn anim
+        maze.DeactivateRoom(room);
+        room.x = 0;
+        room.y = 0;
+        maze.ActivateRoom(room);
+        cam.JumpCamera(room);
+        transform.position = Vector3.zero;
+
+        // enable moving
+        stats.PlayerActive = true;
+        stats.SetRoomTransfering(false);
+    }
+
     private void OnTriggerEnter(Collider other)
     {
-        if (PlayerActive && other.tag == "WallTransfer")
+        if (!stats.PlayerActive || stats.RoomTranfering)
+        {
+            return;
+        }
+
+        if (other.tag == "WallTransfer")
         {
             StartCoroutine(TransferingRoom(other.transform));
+        }
+
+        if (other.tag == "Collectible")
+        {
+            PickUp(other.transform.GetComponent<IPlayerToCollectible>().PickUp());
         }
     }
 
@@ -188,10 +253,10 @@ public class TDS_PlayerMovement : MonoBehaviour
     IEnumerator TransferingRoom(Transform transferTrigger)
     {
         // deactivate all movements
-        PlayerActive = false;
+        stats.PlayerActive = false;
         lookAtMouse = false;
         running = false;
-        RoomTranfering = true;
+        stats.SetRoomTransfering(true);
 
         // check transfer direction
         // update room coordinate
@@ -224,6 +289,7 @@ public class TDS_PlayerMovement : MonoBehaviour
 
         // activate next room
         maze.ActivateRoom(room);
+        levelUI.EnterRoom(room.x, room.y);
 
         // move player
         yield return MovePlayer(toPos);
@@ -248,28 +314,24 @@ public class TDS_PlayerMovement : MonoBehaviour
 
         // check instant death
         RoomType type = maze.GetRoomType(room);
-        if(type == RoomType.Standard)
+        if (type == RoomType.Standard
+            || type == RoomType.Lava && stats.CurrentEquipment == Equipment.Barrier
+            || type == RoomType.Pit && stats.CurrentEquipment == Equipment.Wings
+            || type == RoomType.Wumpus && stats.WumpusSlayer)
         {
             // enable moving
-            PlayerActive = true;
-            RoomTranfering = false;
+            stats.PlayerActive = true;
+            stats.SetRoomTransfering(false);
+            
+            // TODO: add wumpus event
+
         }
         else
         {
             // TODO: add death anim
 
             // respawn at start
-            // TODO: add spawn anim
-            maze.DeactivateRoom(room);
-            room.x = 0;
-            room.y = 0;
-            maze.ActivateRoom(room);
-            cam.JumpCamera(room);
-            transform.position = Vector3.zero;
-
-            // enable moving
-            PlayerActive = true;
-            RoomTranfering = false;
+            Death();
         }
     }
 
@@ -280,5 +342,19 @@ public class TDS_PlayerMovement : MonoBehaviour
         lookDirection = moveDirection;
         yield return new WaitWhile(() => Vector3.Distance(transform.position, toPos) > .1f);
         moveDirection = Vector3.zero;
+    }
+
+    // When a collectible is touched.
+    // Change stats.
+    // Disable collectible.
+    void PickUp(CollectibleType type)
+    {
+        stats.PickUp(type);
+    }
+
+    public void SetWings(bool wings)
+    {
+        anim.SetFlying(wings);
+        rigid.constraints = wings ? RigidbodyConstraints.FreezePositionY : RigidbodyConstraints.None;
     }
 }

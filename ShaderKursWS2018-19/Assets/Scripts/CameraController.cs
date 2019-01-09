@@ -2,7 +2,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CameraController : MonoBehaviour
+public interface IPlayerMovementToCamera
+{
+    bool IsMoving { get; }
+    void MoveCamera(RoomCoordinate room);
+    void JumpCamera(RoomCoordinate room);
+}
+
+public class CameraController : MonoBehaviour, IPlayerMovementToCamera
 {
     //---------------------------------------------------------------------------------------------//
     //---------------------------------------------------------------------------------------------//

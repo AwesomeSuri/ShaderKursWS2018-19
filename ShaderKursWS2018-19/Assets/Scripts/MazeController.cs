@@ -2,11 +2,23 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MazeController : MonoBehaviour
+public interface IPlayerToMaze
+{
+    void DeactivateRoom(RoomCoordinate coordinate);
+    void ActivateRoom(RoomCoordinate coordinate);
+    RoomType GetRoomType(RoomCoordinate coordinate);
+}
+
+public class MazeController : MonoBehaviour, IPlayerToMaze
 {
     //---------------------------------------------------------------------------------------------//
     //---------------------------------------------------------------------------------------------//
-    RoomController[] rooms;     // array of controller of all rooms inside this maze
+    [SerializeField]
+    [Tooltip("Component of the collectible parent.")]
+    CollectibleSpawner collectibleSpawnerObject;
+
+    IMazeToRoom[] rooms;     // array of controller of all rooms inside this maze
+    IMazeToCollectibleSpawner collectibleSpawner;
 
 
     //---------------------------------------------------------------------------------------------//
@@ -14,11 +26,14 @@ public class MazeController : MonoBehaviour
     // Start is called before the first frame update
     void Awake()
     {
-        rooms = new RoomController[transform.childCount];
+        rooms = new IMazeToRoom[transform.childCount];
         for (int i = 0; i < rooms.Length; i++)
         {
             rooms[i] = transform.GetChild(i).GetComponent<RoomController>();
         }
+
+        collectibleSpawner = collectibleSpawnerObject;
+        collectibleSpawnerObject = null;
     }
 
     private void Start()
@@ -30,22 +45,38 @@ public class MazeController : MonoBehaviour
         }
 
         // activate first room
-        // TODO: change this when intro is in the making
+        // TODO: add intro
         rooms[0].ActivateRoom();
     }
 
     // Called by player.
-    // Activate the room.
+    // Deactivate the room.
+    // Deactivate all collectibles.
+    // Deactivate enemies.
     public void DeactivateRoom(RoomCoordinate coordinate)
     {
         rooms[coordinate.x + coordinate.y * 10].DeactivateRoom();
+        //collectibleSpawner.DisableCollectibles();
+
+        // TODO: deactivate enemies inside this room
     }
 
     // Called by player.
-    // Deactivate the room.
+    // Activate the room.
+    // Activate enemies.
     public void ActivateRoom(RoomCoordinate coordinate)
     {
         rooms[coordinate.x + coordinate.y * 10].ActivateRoom();
+
+        // TODO: activate all enemies in this room
+
+        // Debugging:
+        // Spawn artefact
+        CollectibleType artefact = rooms[coordinate.x + coordinate.y * 10].GetCollectibleType();
+        if((int)artefact > 2)
+        {
+            collectibleSpawner.Drop(new Vector3(10 * coordinate.x, 0, 10 * coordinate.y), artefact);
+        }
     }
 
 

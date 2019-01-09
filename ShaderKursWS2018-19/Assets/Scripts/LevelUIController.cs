@@ -5,7 +5,28 @@ using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-public class LevelUIController : MonoBehaviour
+public interface IGameManagerToUI
+{
+    void UpdateTime(float seconds);
+}
+
+public interface IPlayerStatsToUI
+{
+    void UpdateArrows(int amount);
+    void UpdateHearts(int amount);
+    void ActivateSword();
+    void ActivateBow();
+    void ActivateBarrier();
+    void ActivateWings();
+    void SetItemInteractable(bool interact);
+}
+
+public interface IPlayerMovementToUI
+{
+    void EnterRoom(int x, int y);
+}
+
+public class LevelUIController : MonoBehaviour, IPlayerStatsToUI, IGameManagerToUI, IPlayerMovementToUI
 {
     //---------------------------------------------------------------------------------------------//
     //---------------------------------------------------------------------------------------------//
@@ -35,6 +56,14 @@ public class LevelUIController : MonoBehaviour
     [SerializeField] Transform hearts;
     [SerializeField] Text arrows;
 
+    [Space]
+    [SerializeField]
+    [Tooltip("Stats component of player.")]
+    GameObject playerObject;
+
+
+    IUIToPlayerStats playerStats;
+    IUIToPlayerMovement playerMovement;
 
     bool menuOpen;
     bool mapOpen;
@@ -45,8 +74,22 @@ public class LevelUIController : MonoBehaviour
     // Start is called before the first frame update
     void Awake()
     {
+        playerStats = playerObject.GetComponent<IUIToPlayerStats>();
+        playerMovement = playerObject.GetComponent<IUIToPlayerMovement>();
+        playerObject = null;
+
         menuOpen = false;
         mapOpen = false;
+    }
+
+    void Start()
+    {
+        sword.gameObject.SetActive(false);
+        bow.gameObject.SetActive(false);
+        barrier.gameObject.SetActive(false);
+        wings.gameObject.SetActive(false);
+
+        arrows.transform.parent.gameObject.SetActive(false);
     }
 
 
@@ -80,6 +123,28 @@ public class LevelUIController : MonoBehaviour
             hearts.GetChild(1).GetComponent<Image>().color = Color.black;
         }
         hearts.GetChild(0).GetComponent<Image>().color = Color.black;
+    }
+
+    // Called by game manager.
+    // Updates the countdown time.
+    public void UpdateTime(float seconds)
+    {
+        int m1;
+        int m2;
+        int s1;
+        int s2;
+
+        float minutes = seconds / 60;
+        seconds = seconds % 60;
+
+        m1 = Mathf.FloorToInt(minutes / 10);
+        m2 = Mathf.FloorToInt(minutes % 10);
+        s1 = Mathf.FloorToInt(seconds / 10);
+        s2 = Mathf.FloorToInt(seconds % 10);
+
+        string time = "" + m1 + "" + m2 + ":" + s1 + "" + s2;
+
+        countdown.text = time;
     }
 
     // Menu /--------------------------------------------------------------------------------------//
@@ -198,22 +263,10 @@ public class LevelUIController : MonoBehaviour
 
     // when player enters a room
     // lightens the room in map
-    public void EnterRoom(float x, float y)
+    public void EnterRoom(int x, int y)
     {
-        // resolve startpoint offset
-        x += 5;
-        y += 5;
-
-        // room size independence
-        x /= 10;
-        y /= 10;
-
-        // round coordinates
-        int xCoord = Mathf.FloorToInt(x);
-        int yCoord = Mathf.FloorToInt(y);
-
         // parse 2D coordinates to 1D
-        int roomIndex = 10 * yCoord + xCoord;
+        int roomIndex = 10 * y + x;
 
         // lighten the room
         roomsParent.GetChild(roomIndex).GetComponent<Image>().color = Color.white;
@@ -233,6 +286,7 @@ public class LevelUIController : MonoBehaviour
     public void ActivateBow()
     {
         bow.gameObject.SetActive(true);
+        arrows.transform.parent.gameObject.SetActive(true);
     }
 
     // when wings obtained
@@ -253,6 +307,9 @@ public class LevelUIController : MonoBehaviour
     // equips sword
     public void EquipSword()
     {
+        playerStats.Equip(Equipment.Sword);
+        playerMovement.SetWings(false);
+
         // TODO
     }
 
@@ -260,6 +317,9 @@ public class LevelUIController : MonoBehaviour
     // equips bow
     public void EquipBow()
     {
+        playerStats.Equip(Equipment.Bow);
+        playerMovement.SetWings(false);
+
         // TODO
     }
 
@@ -267,6 +327,9 @@ public class LevelUIController : MonoBehaviour
     // equips wings
     public void EquipWings()
     {
+        playerStats.Equip(Equipment.Wings);
+        playerMovement.SetWings(true);
+
         // TODO
     }
 
@@ -274,6 +337,9 @@ public class LevelUIController : MonoBehaviour
     // equips barrier
     public void EquipBarrier()
     {
+        playerStats.Equip(Equipment.Barrier);
+        playerMovement.SetWings(false);
+
         // TODO
     }
 }

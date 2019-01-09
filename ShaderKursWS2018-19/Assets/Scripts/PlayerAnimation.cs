@@ -23,4 +23,9 @@ public class PlayerAnimation : MonoBehaviour
         anim.SetFloat("SpeedX", x);
         anim.SetFloat("SpeedY", y);
     }
+
+    public void SetFlying(bool flying)
+    {
+        anim.SetBool("Flying", flying);
+    }
 }

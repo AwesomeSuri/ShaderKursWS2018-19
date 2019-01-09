@@ -4,7 +4,16 @@ using UnityEngine;
 
 public enum RoomType { Standard, Pit, Lava, Wumpus}
 
-public class RoomController : MonoBehaviour
+public interface IMazeToRoom
+{
+    RoomType GetRoomType();
+    void ActivateRoom();
+    void DeactivateRoom();
+
+    CollectibleType GetCollectibleType();
+}
+
+public class RoomController : MonoBehaviour, IMazeToRoom
 {
     //---------------------------------------------------------------------------------------------//
     //---------------------------------------------------------------------------------------------//
@@ -17,6 +26,11 @@ public class RoomController : MonoBehaviour
     [SerializeField]
     [Tooltip("Parent object of all dynamic objects.")]
     GameObject dynamicObjects;
+
+    [Space]
+    [SerializeField]
+    [Tooltip("Drop an artefact in the middle. (For debug use)")]
+    CollectibleType collectibleType = CollectibleType.Heart;
 
     //---------------------------------------------------------------------------------------------//
     //---------------------------------------------------------------------------------------------//
@@ -50,5 +64,13 @@ public class RoomController : MonoBehaviour
 
         // deactivate all objects
         // TODO
+    }
+
+    // When entering the room.
+    // Return dropping artefact.
+    // For debug use, later the boss drops the artefact.
+    public CollectibleType GetCollectibleType()
+    {
+        return collectibleType;
     }
 }
