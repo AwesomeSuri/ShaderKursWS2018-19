@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 170076734}
-  m_IndirectSpecularColor: {r: 0.4366757, g: 0.48427194, b: 0.5645252, a: 1}
+  m_IndirectSpecularColor: {r: 0.43667564, g: 0.48427147, b: 0.56452364, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -2201,6 +2201,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: TDS_Player
       objectReference: {fileID: 0}
+    - target: {fileID: 2028106805524946175, guid: 5448c15de19bea742acb90e49cff6a5f,
+        type: 3}
+      propertyPath: levelUIObject
+      value: 
+      objectReference: {fileID: 738157795}
     - target: {fileID: 4429848419202142, guid: 5448c15de19bea742acb90e49cff6a5f, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -2280,11 +2285,6 @@ PrefabInstance:
       propertyPath: m_Drag
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 2028106805524946175, guid: 5448c15de19bea742acb90e49cff6a5f,
-        type: 3}
-      propertyPath: levelUIObject
-      value: 
-      objectReference: {fileID: 738157795}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5448c15de19bea742acb90e49cff6a5f, type: 3}
 --- !u!1001 &511440675
@@ -4540,6 +4540,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5325957914956176071, guid: 784fa73552d108341be59a78290560e4,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: ed809a5c112b4b2408189cb1f9aa5f6b, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 784fa73552d108341be59a78290560e4, type: 3}
 --- !u!1001 &1087237555
@@ -4614,15 +4619,15 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 2565158593435248387, guid: df1f8ee37a740dc4aa2f5ae7b107f285,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 7172704932702248157, guid: df1f8ee37a740dc4aa2f5ae7b107f285,
         type: 3}
       propertyPath: roomType
       value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 2565158593435248387, guid: df1f8ee37a740dc4aa2f5ae7b107f285,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: df1f8ee37a740dc4aa2f5ae7b107f285, type: 3}
@@ -9561,6 +9566,16 @@ PrefabInstance:
       propertyPath: m_Name
       value: Canvas
       objectReference: {fileID: 0}
+    - target: {fileID: 8175877486174507377, guid: 9845100dd1d30624e9d4ba362ebcbf4a,
+        type: 3}
+      propertyPath: playerStatsObject
+      value: 
+      objectReference: {fileID: 182259471}
+    - target: {fileID: 8175877486174507377, guid: 9845100dd1d30624e9d4ba362ebcbf4a,
+        type: 3}
+      propertyPath: playerObject
+      value: 
+      objectReference: {fileID: 182259466}
     - target: {fileID: 532848431315790657, guid: 9845100dd1d30624e9d4ba362ebcbf4a,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -9666,16 +9681,6 @@ PrefabInstance:
       propertyPath: m_Pivot.y
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 8175877486174507377, guid: 9845100dd1d30624e9d4ba362ebcbf4a,
-        type: 3}
-      propertyPath: playerStatsObject
-      value: 
-      objectReference: {fileID: 182259471}
-    - target: {fileID: 8175877486174507377, guid: 9845100dd1d30624e9d4ba362ebcbf4a,
-        type: 3}
-      propertyPath: playerObject
-      value: 
-      objectReference: {fileID: 182259466}
     - target: {fileID: 532848431884855933, guid: 9845100dd1d30624e9d4ba362ebcbf4a,
         type: 3}
       propertyPath: m_IsActive

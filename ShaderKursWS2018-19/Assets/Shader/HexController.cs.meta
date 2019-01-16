@@ -1,0 +1,12 @@
+fileFormatVersion: 2
+guid: 3ae0f941c14d5a84c80ac3fa0ed59e21
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - GrassMat: {fileID: 2100000, guid: 7e0ee72684ce0a44483c8ec8d6f3ad9c, type: 2}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
