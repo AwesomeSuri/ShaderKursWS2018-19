@@ -7,6 +7,7 @@
 		_Radius ("Radius", Range(0, 15)) = 8.0
 		_RimValue ("Rim Value", Range(0, 1)) = 0.5
 		_Glow ("Glow", Range(0, 50)) = 20
+		_FresnelPower ("Fresnel Power", Range(0,5)) = 2
 	}
 	SubShader
 	{
@@ -29,14 +30,14 @@
 			{
 				float4 vertex : POSITION;
 				float4 normal : NORMAL;
-				float4 color : COLOR;
+				// float4 color : COLOR;
 			};
 
 			struct v2f
 			{
 				float4 pos : SV_POSITION;
 				float3 worldNormal : TEXCOORD1;
-				float4 color : COLOR;
+				// float4 color : COLOR;
 				float3 normalDir : TEXCOORD3;
                 float4 worldPos : TEXCOORD2;
 			};
@@ -47,11 +48,12 @@
 			float4 _PlayerPos;
 			float _RimValue;
 			float _Glow;
+			float _FresnelPower;
 			
 			v2f vert (appdata v)
 			{
 				v2f o;
-				o.color = float4(0,0,0,1);
+				//o.color = float4(0,0,0,1);
 				o.pos = UnityObjectToClipPos(v.vertex);
 
 				// float4 vertexWorld = mul(UNITY_MATRIX_M, v.vertex);
@@ -59,7 +61,7 @@
 
 				if(distance(_PlayerPos, o.worldPos/*vertexWorld*/) < _Radius)
 				{
-					o.color = float4(0,0,1,1);
+					//o.color = float4(0,0,1,1);
 					//vertexWorld.y = _PlayerPos.y - 1.0f;
 					o.worldPos.y = _PlayerPos.y - 1.0f;
 				}
@@ -86,15 +88,17 @@
 				float border = 1 - (abs(dot(viewDirection, normalDir)));
 				float alpha = border * border * _RimValue;
 
+				float fresnelEffect = pow((1.0f - saturate(dot(normalize(normalDir), normalize(viewDirection)))), _FresnelPower);
+
 				// Cirlce
 				float dist = distance(i.worldPos, _PlayerPos.xyz);
 				if(dist >= _Radius)
 				{
-					return fixed4(_Color.rgb, alpha);
+					return fixed4(_Color.rgb * diffuseTerm, alpha);
 				}
 				else
 				{
-					return fixed4(_Glow * i.color.rgb * _Color.rgb * diffuseTerm.xyz, alpha);
+					return fixed4(_Glow * fresnelEffect * _Color.rgb * diffuseTerm, alpha);
 				}
 			}
 

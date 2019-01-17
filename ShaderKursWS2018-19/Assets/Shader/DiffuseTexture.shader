@@ -1,9 +1,9 @@
-﻿Shader "Custom/Diffuse"
+﻿Shader "Custom/DiffuseTexture"
 {
 	Properties
 	{
 		_MainTex ("Texture", 2D) = "white" {}
-		_Color ("Color", Color) = (1,0,0,1)
+		_Color ("Color", Color) = (1,1,1,1)
 		_Ambient ("Ambient", Range (0, 1)) = 0.25
 	}
 	SubShader
