@@ -2,6 +2,7 @@
 {
 	Properties
 	{
+		_MainTex ("Texture", 2D) = "white" {}
 		_Color ("Color Texture", Color) = (1, 1, 1, 1)
 		_Ambient ("Ambient", Range(0,1)) = 0.5
 		_Radius ("Radius", Range(0, 15)) = 8.0
@@ -14,6 +15,8 @@
 		Tags { "LightMode" = "ForwardBase" }
 
 		Blend SrcAlpha One
+		Cull Back
+		ZWrite On
 		//Cull off
 
 		Pass
