@@ -26,7 +26,7 @@ public class GrassController : MonoBehaviour
             GrassVertexGenerator localPos = collision.gameObject.GetComponentInChildren<GrassVertexGenerator>();
             if (localPos)
             {
-                offset = -localPos.transform.position;//localPos.OffsetToStart;
+                offset = -localPos.transform.position;
             }
             
             

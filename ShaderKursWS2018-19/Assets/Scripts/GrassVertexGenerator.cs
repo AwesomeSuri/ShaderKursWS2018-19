@@ -20,8 +20,7 @@ public class GrassVertexGenerator : MonoBehaviour
     public LayerMask thisLayerMask;
 
     private Vector3 lastPosition;
-
-    public Vector3 OffsetToStart;
+    
 
     // Update is called once per frame
     void Update()
