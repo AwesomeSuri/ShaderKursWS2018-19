@@ -135,7 +135,7 @@
 			}
 
 
-			[maxvertexcount(12)]
+			[maxvertexcount(4)]
 			void geom(point v2g IN[1], inout TriangleStream<g2f> triStream)
 			{
 				float3 lightPosition = _WorldSpaceLightPos0;
