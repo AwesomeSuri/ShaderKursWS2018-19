@@ -22,6 +22,7 @@ public class GrassVertexGenerator : MonoBehaviour
     private Vector3 lastPosition;
     
 
+
     // Update is called once per frame
     void Update()
     {

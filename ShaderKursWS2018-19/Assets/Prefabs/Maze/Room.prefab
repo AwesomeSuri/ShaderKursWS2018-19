@@ -48,6 +48,7 @@ MonoBehaviour:
   roomType: 0
   staticObjects: {fileID: 7416659595525226145}
   dynamicObjects: {fileID: 2793516389027594965}
+  collectibleType: 0
 --- !u!1 &2405266558525905715
 GameObject:
   m_ObjectHideFlags: 0
@@ -148,7 +149,7 @@ GameObject:
   - component: {fileID: 599579543749692381}
   - component: {fileID: 7427704295962261111}
   - component: {fileID: 9304382067112435}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Standard
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -487,7 +488,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1316939085469026369}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Ground
   m_TagString: Untagged
   m_Icon: {fileID: 0}

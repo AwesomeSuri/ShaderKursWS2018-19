@@ -20,7 +20,8 @@
 
 		_Ambient ("Ambient", float) = 0.5
 		_Radius ("Radius", float) = 1.0
-		_PlayerPos ("_PlayerPos", Vector) = (0, 0, 0)
+		_PlayerPos ("Player Position", Vector) = (0, 0, 0)
+		_localPos ("Local Position", Vector) = (0, 0, 0)
     }
     SubShader
     {
@@ -81,6 +82,7 @@
 			float _Ambient;
 			float _Radius;
 			float3 _PlayerPos;
+			float3 _localPos;
 
 			v2g vert(appdata_full v)
 			{
@@ -147,7 +149,8 @@
 				//creates line from which actual corners are computed
 				float3 v1 = float3(IN[0].pos.xyz + IN[0].normal.xyz * _GrassHeight);// + _GrassOffset * perpendicularAngle;
 				float4 vertexWorld = mul(UNITY_MATRIX_M, v1);
-				if(distance(_PlayerPos, vertexWorld) < _Radius)
+				//_PlayerPos -= _localPos;
+				if(distance((_PlayerPos), vertexWorld) < _Radius)
 				{
 					//get distance to player
 					float2 distance = min(_Radius / (pow(_PlayerPos.xz - vertexWorld.xz, 2) * 10), _Radius);

@@ -17,4 +17,19 @@ public class GrassController : MonoBehaviour
         }
         
     }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        Debug.Log("collided with " + collision.gameObject.name);
+        if (collision.gameObject.layer.Equals(LayerMask.NameToLayer("Ground")))
+        {
+            GrassVertexGenerator localPos = collision.gameObject.GetComponentInChildren<GrassVertexGenerator>();
+            if (localPos)
+            {
+                offset = -localPos.transform.position;
+            }
+            
+            
+        }
+    }
 }

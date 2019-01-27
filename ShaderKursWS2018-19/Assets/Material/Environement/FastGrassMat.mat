@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: FlowersMat
+  m_Name: FastGrassMat
   m_Shader: {fileID: 4800000, guid: bdb8ebd68797bb641883aa022f061ba6, type: 3}
   m_ShaderKeywords: 
   m_LightmapFlags: 4
@@ -40,7 +40,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTex:
-        m_Texture: {fileID: 2800000, guid: c62a283b037299a41b22c1e8e59b8248, type: 3}
+        m_Texture: {fileID: 2800000, guid: a298e0b90f9e283489a4c4f5ccfa4cb9, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MetallicGlossMap:
@@ -78,11 +78,11 @@ Material:
     - _SpecularHighlights: 1
     - _SrcBlend: 1
     - _UVSec: 0
-    - _WindSpeed: 5
+    - _WindSpeed: 70
     - _WindStrength: 0.2
     - _ZWrite: 1
     m_Colors:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _PlayerPos: {r: 0, g: 0, b: 0, a: 0}
-    - _localPos: {r: 4.8, g: 0.06, b: 0, a: 0}
+    - _localPos: {r: 0, g: 0, b: 4.5, a: 0}
