@@ -8,7 +8,9 @@ public interface ICollectibleSpawnerToCollectible
 {
     bool IsActive { get; }
     void Drop(Vector3 position, CollectibleType type);
+    void DecreaseLifetime();
     void DisableCollectible();
+    int Lifetime { get; }
 }
 
 public interface IPlayerToCollectible
@@ -40,12 +42,20 @@ public class Collectible : MonoBehaviour, ICollectibleSpawnerToCollectible, IPla
     GameObject wumpusSlayer;
 
     CollectibleType type;                       // stores the type of collectible
+    Collider col;                               // collider component of this collectible
 
     public bool IsActive { get; private set; }  // true if lootable, false when ready to be dropped
 
+    public int Lifetime { get; private set; }   // despawns when lifetime is zero, decreases when leaving the room
+
 
     //---------------------------------------------------------------------------------------------//
     //---------------------------------------------------------------------------------------------//
+    void Awake()
+    {
+        col = GetComponent<Collider>();
+    }
+
     // Called when dropped
     public void Drop(Vector3 position, CollectibleType type)
     {
@@ -78,6 +88,12 @@ public class Collectible : MonoBehaviour, ICollectibleSpawnerToCollectible, IPla
 
         // set as lootable
         IsActive = true;
+
+        // set lifetime
+        Lifetime = 2;
+
+        // enable collider
+        col.enabled = true;
     }
 
     // called when player touches the collectible
@@ -89,16 +105,32 @@ public class Collectible : MonoBehaviour, ICollectibleSpawnerToCollectible, IPla
         // play the right particle effect
         // TODO
 
-        // disable mesh
+        // disable 
         DisableCollectible();
 
         // tell player what has been picked up
         return type;
     }
 
+    // called when leaving the room
+    public void DecreaseLifetime()
+    {
+        Lifetime--;
+
+        if(Lifetime <= 0)
+        {
+            DisableCollectible();
+        }
+    }
+
     // called when leaving the room or picking up
     public void DisableCollectible()
     {
+        Lifetime = 0;
+
+        // disable collider
+        col.enabled = false;
+
         // disable all meshes
         heart.SetActive(false);
         arrow.SetActive(false);

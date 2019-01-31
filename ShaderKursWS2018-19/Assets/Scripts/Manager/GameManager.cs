@@ -26,10 +26,9 @@ public class GameManager : MonoBehaviour
         playerObject = null;
 
         playerStats.PlayerActive = true;
-        playerStats.PickUp(CollectibleType.Sword);
 
         levelUI.UpdateTime(timeLeft);
-        StartCoroutine(CountingDown());
+        StartCoroutine(Intro());
     }
 
     // Update is called once per frame
@@ -39,6 +38,16 @@ public class GameManager : MonoBehaviour
         {
             SceneManager.LoadScene("Lose");
         }
+    }
+
+    // The events that play in the beginning automatically
+    IEnumerator Intro()
+    {
+        yield return null;
+
+        playerStats.PickUp(CollectibleType.Sword);
+
+        StartCoroutine(CountingDown());
     }
 
     // Counts down time.

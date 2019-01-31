@@ -2,12 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public struct RoomCoordinate
-{
-    public int x;
-    public int y;
-}
-
 public interface IGameManagerToPlayerMovement
 {
     void SetInput(Vector3 moveDirection, Vector3 lookDirection, bool running);
@@ -138,8 +132,8 @@ public class TDS_PlayerMovement : MonoBehaviour, IGameManagerToPlayerMovement, I
     void GetInput()
     {
         // get WASD input for moveDirection
-        float horizontal = Input.GetAxis(horizontalAxis);
-        float vertical = Input.GetAxis(verticalAxis);
+        float horizontal = Input.GetAxisRaw(horizontalAxis);
+        float vertical = Input.GetAxisRaw(verticalAxis);
         moveDirection = new Vector3(horizontal, 0, vertical);
 
         // get mouse input for lookDirection
@@ -154,7 +148,7 @@ public class TDS_PlayerMovement : MonoBehaviour, IGameManagerToPlayerMovement, I
                 lookDirection.y = 0f;
             }
         }
-        else if (moveDirection.magnitude > .2f)
+        else if (moveDirection.magnitude > .5f)
         {
             // turn to moveDirection otherwise
             // only if moveDirection has a value
@@ -253,6 +247,7 @@ public class TDS_PlayerMovement : MonoBehaviour, IGameManagerToPlayerMovement, I
     IEnumerator TransferingRoom(Transform transferTrigger)
     {
         // deactivate all movements
+        rigid.isKinematic = true;
         stats.PlayerActive = false;
         lookAtMouse = false;
         running = false;
@@ -308,6 +303,7 @@ public class TDS_PlayerMovement : MonoBehaviour, IGameManagerToPlayerMovement, I
         toPos += 1.5f * Vector3.right * transferDirection.x
             + 1.5f * Vector3.forward * transferDirection.z;
         yield return MovePlayer(toPos);
+        rigid.isKinematic = false;
 
         // deactivate previous room
         maze.DeactivateRoom(roomOld);

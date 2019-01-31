@@ -17,11 +17,11 @@ TagManager:
   - 
   - PostProcessing
   - MouseFloor
-  - 
-  - 
-  - 
-  - 
-  - 
+  - Player
+  - Collectible
+  - Enemy
+  - PlayerWeapon
+  - EnemyWeapon
   - 
   - 
   - 

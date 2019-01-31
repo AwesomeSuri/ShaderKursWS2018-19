@@ -16,9 +16,12 @@ public class MazeController : MonoBehaviour, IPlayerToMaze
     [SerializeField]
     [Tooltip("Component of the collectible parent.")]
     CollectibleSpawner collectibleSpawnerObject;
+    [SerializeField]
+    [Tooltip("Component of the enemy parent.")]
+    EnemySpawner enemySpawner;
 
-    IMazeToRoom[] rooms;     // array of controller of all rooms inside this maze
-    IMazeToCollectibleSpawner collectibleSpawner;
+    IMazeToRoom[] rooms;                            // array of controller of all rooms inside this maze
+    IMazeToCollectibleSpawner collectibleSpawner;   // component that controls all collectibles
 
 
     //---------------------------------------------------------------------------------------------//
@@ -56,7 +59,7 @@ public class MazeController : MonoBehaviour, IPlayerToMaze
     public void DeactivateRoom(RoomCoordinate coordinate)
     {
         rooms[coordinate.x + coordinate.y * 10].DeactivateRoom();
-        //collectibleSpawner.DisableCollectibles();
+        collectibleSpawner.DecreaseCollectibleLifetime();
 
         // TODO: deactivate enemies inside this room
     }
@@ -66,13 +69,21 @@ public class MazeController : MonoBehaviour, IPlayerToMaze
     // Activate enemies.
     public void ActivateRoom(RoomCoordinate coordinate)
     {
-        rooms[coordinate.x + coordinate.y * 10].ActivateRoom();
+        // activate room
+        IMazeToRoom room = rooms[coordinate.x + coordinate.y * 10];
+        room.ActivateRoom();
 
-        // TODO: activate all enemies in this room
+        // activate enemies
+        EnemySpawn[] enemies = room.EnemySpawns;
+        for (int i = 0; i < enemies.Length; i++)
+        {
+            print(enemies[i].type);
+            enemySpawner.SpawnEnemy(enemies[i], coordinate);
+        }
 
         // Debugging:
         // Spawn artefact
-        CollectibleType artefact = rooms[coordinate.x + coordinate.y * 10].GetCollectibleType();
+        CollectibleType artefact = room.GetCollectibleType();
         if((int)artefact > 2)
         {
             collectibleSpawner.Drop(new Vector3(10 * coordinate.x, 0, 10 * coordinate.y), artefact);

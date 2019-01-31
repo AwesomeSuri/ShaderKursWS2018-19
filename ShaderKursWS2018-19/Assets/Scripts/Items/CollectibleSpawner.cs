@@ -10,7 +10,7 @@ public interface IEnemyToCollectibleSpawner
 
 public interface IMazeToCollectibleSpawner
 {
-    void DisableCollectibles();
+    void DecreaseCollectibleLifetime();
     void Drop(Vector3 position, CollectibleType type);
 }
 
@@ -47,11 +47,11 @@ public class CollectibleSpawner : MonoBehaviour, IEnemyToCollectibleSpawner, IMa
     }
 
     // called when leaving the room
-    public void DisableCollectibles()
+    public void DecreaseCollectibleLifetime()
     {
         for (int i = 0; i < collectibles.Length; i++)
         {
-            collectibles[i].DisableCollectible();
+            collectibles[i].DecreaseLifetime();
         }
     }
 
@@ -61,7 +61,7 @@ public class CollectibleSpawner : MonoBehaviour, IEnemyToCollectibleSpawner, IMa
     {
         for (int i = 0; i < collectibles.Length; i++)
         {
-            if (!collectibles[i].IsActive)
+            if (collectibles[i].Lifetime <= 0)
             {
                 return i;
             }
