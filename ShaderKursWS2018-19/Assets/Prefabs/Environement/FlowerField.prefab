@@ -3,8 +3,7 @@
 --- !u!1 &9020727936771792723
 GameObject:
   m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 3803042377566971790, guid: bf108590b583cab448b6dcfc3d14cac7,
-    type: 3}
+  m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
@@ -23,8 +22,7 @@ GameObject:
 --- !u!4 &9020727936771792724
 Transform:
   m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 3803042377566971786, guid: bf108590b583cab448b6dcfc3d14cac7,
-    type: 3}
+  m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 9020727936771792723}
@@ -38,8 +36,7 @@ Transform:
 --- !u!114 &9020727936771792727
 MonoBehaviour:
   m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 3803042377566971789, guid: bf108590b583cab448b6dcfc3d14cac7,
-    type: 3}
+  m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 9020727936771792723}
@@ -53,16 +50,15 @@ MonoBehaviour:
   size: {x: 7, y: 7}
   offsetY: 0
   grassNumber: 178
+  grassDensity: 0.426
   startHeight: 10
   thisLayerMask:
     serializedVersion: 2
     m_Bits: 1024
-  OffsetToStart: {x: 0, y: 0, z: 0}
 --- !u!23 &9020727936771792726
 MeshRenderer:
   m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 3803042377566971788, guid: bf108590b583cab448b6dcfc3d14cac7,
-    type: 3}
+  m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 9020727936771792723}
@@ -99,8 +95,7 @@ MeshRenderer:
 --- !u!33 &9020727936771792725
 MeshFilter:
   m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 3803042377566971791, guid: bf108590b583cab448b6dcfc3d14cac7,
-    type: 3}
+  m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 9020727936771792723}

@@ -18,6 +18,7 @@ public class GrassController : MonoBehaviour
         
     }
 
+    //maybe change this so it will switch when players enters next room -> in player movement script then!
     private void OnCollisionEnter(Collision collision)
     {
         Debug.Log("collided with " + collision.gameObject.name);

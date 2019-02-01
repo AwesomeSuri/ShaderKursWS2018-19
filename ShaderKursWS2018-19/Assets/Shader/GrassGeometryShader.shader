@@ -51,7 +51,7 @@
 				float4 pos : POSITION;
 				float3 normal : NORMAL;
 				float2 uv : TEXCOORD0;
-				float3 myColor : TEXCOORD1;
+				float4 myColor : TEXCOORD1;
 			};
 
 			struct g2f
@@ -60,7 +60,7 @@
 				float3 normal : NORMAL;
 				float3 faceNormal : TEXCOORD2;
 				float2 uv : TEXCOORD0;
-				float3 diffuseTerm : TEXCOORD1;
+				float4 diffuseTerm : TEXCOORD1;
 				
 				
 			};
@@ -91,12 +91,12 @@
 				o.pos = v.vertex;
 				o.normal = v.normal;
 				o.uv = v.texcoord;
-				o.myColor = v.color.rgb;// tex2Dlod(_MainTex, v.texcoord).rgb * v.color;
+				o.myColor = v.color;// tex2Dlod(_MainTex, v.texcoord).rgb * v.color;
 
 				return o;
 			}
 
-			void drawQuad(inout TriangleStream<g2f> tristream, g2f o, float3 v0, float3 v1, float3 perpendicularAngle, float3 faceNormal, float3 normal, float3 myColor){
+			void drawQuad(inout TriangleStream<g2f> tristream, g2f o, float3 v0, float3 v1, float3 perpendicularAngle, float3 faceNormal, float3 normal, float4 myColor){
 
 
 				//first corner at (0,0)
@@ -144,36 +144,30 @@
 
 				//computing offset for v1
 				float3 cameraWithOffset = float3(_WorldSpaceCameraPos.x + _CameraOffsetX, _WorldSpaceCameraPos.y, _WorldSpaceCameraPos.z + _CameraOffsetZ);
-				float3 perpendicularAngle = normalize(cameraWithOffset + v0);//float3(0, 0, 1);
+				float3 perpendicularAngle = normalize(cameraWithOffset - v0);
 
 				//creates line from which actual corners are computed
-				float3 v1 = float3(IN[0].pos.xyz + IN[0].normal.xyz * _GrassHeight);// + _GrassOffset * perpendicularAngle;
+				float3 v1 = float3(IN[0].pos.xyz + IN[0].normal.xyz * _GrassHeight);
 				float4 vertexWorld = mul(UNITY_MATRIX_M, v1);
 				//_PlayerPos -= _localPos;
 				if(distance((_PlayerPos), vertexWorld) < _Radius)
 				{
 					//get distance to player
-					float2 distance = min(_Radius / (pow(_PlayerPos.xz - vertexWorld.xz, 2) * 10), _Radius);
+					float2 distance = min(_GrassHeight / (pow(_PlayerPos.xz - vertexWorld.xz, 2) * 10), _GrassHeight * 1.5); 
+					//this line would stretch grass more so its more noticable but it makes grass longer than actual _GrassHeight 
+					//float2 distance = min(_Radius / (pow(_PlayerPos.xz - vertexWorld.xz, 2) * 10), _Radius);
 					float2 dir = normalize(_PlayerPos.xz - vertexWorld.xz);
 
 					//dir sets direction
-					v1.x -= distance.x * dir.x; //dir.x * 10;//(_PlayerPos.x - vertexWorld.x);
+					v1.x -= distance.x * dir.x;
 					v1.z -= distance.y * dir.y;
 					
 				}
 				
-				float3 myColor = (IN[0].myColor);
-
-				//calculations for creating 3 quads instead of just one...
-				float sin60 = 0.866;
-				float sin120 = sin60;
-				float cos60 = 0.5;
-				float cos120 = -cos60;
+				float4 myColor = (IN[0].myColor);
 
 				//reset perpendicularAngle so faceNormal will be rotated towards camera
 				perpendicularAngle = float3(1, 0, 0);
-				float3 perpendicularAngle2 = float3(sin60, 0, cos60);
-				float3 perpendicularAngle3 = float3(sin120, 0, cos120);
 				float3 faceNormal = cross(perpendicularAngle, IN[0].normal);
 				float3 normal = IN[0].normal;
 
@@ -183,18 +177,10 @@
 				v1 += wind * _WindStrength;
 
 
-				//defining 3 quads which are rotated to each other
+				
 				g2f o;
-
 				//void drawTriangle(TriangleStream<g2f> tristream, g2f o, float3 v0, float3 v1, float3 perpendicularAngle, float3 faceNormal, float3 color)
-				//first quad  normalize(cross(perpendicularAngle, IN[0].normal))
 				drawQuad(triStream, o, v0, v1, perpendicularAngle, faceNormal, normal, myColor);
-
-				////second quad
-				//drawQuad(triStream, o, v0, v1, perpendicularAngle2, faceNormal, normal, myColor);
-
-				////third quad
-				//drawQuad(triStream, o, v0, v1, perpendicularAngle3, faceNormal, normal, myColor);
 
 
 			}
@@ -204,8 +190,9 @@
 				fixed4 col = tex2D(_MainTex, IN.uv);
 				float3 normal = normalize(IN.normal);
 				float nl = max(_Ambient, dot(normal, _WorldSpaceLightPos0.xyz));
+				
+				col = col * _Color * IN.diffuseTerm * nl;
 				clip(col.a - _Cutoff);
-				col.rgb = col.rgb * _Color * IN.diffuseTerm * nl;//col.rgb * (IN.normal * 10) * _Color.rgb;
 				return col;
 
 			}

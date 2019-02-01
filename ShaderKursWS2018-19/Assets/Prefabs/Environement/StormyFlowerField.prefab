@@ -50,11 +50,11 @@ MonoBehaviour:
   size: {x: 7, y: 7}
   offsetY: 0
   grassNumber: 178
+  grassDensity: 0.422
   startHeight: 10
   thisLayerMask:
     serializedVersion: 2
     m_Bits: 1024
-  OffsetToStart: {x: 0, y: 0, z: 0}
 --- !u!23 &8323736876338966612
 MeshRenderer:
   m_ObjectHideFlags: 0

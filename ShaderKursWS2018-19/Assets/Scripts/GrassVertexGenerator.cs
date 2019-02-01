@@ -12,60 +12,70 @@ public class GrassVertexGenerator : MonoBehaviour
     public Vector2 size;
 
     public float offsetY;
-    [Range(1, 5000)]
+    [Range(1, 500)]
     public int grassNumber;
+    [Range(0, 1)]
+    public float grassDensity;
 
     public float startHeight = 1000;
 
     public LayerMask thisLayerMask;
 
     private Vector3 lastPosition;
-    
 
-    // Update is called once per frame
-    void Update()
+    private void OnValidate()
     {
-        if (lastPosition != this.transform.position)
+        Random.InitState(seed);
+        //Generates positions, Colors and normals for geometry shader
+        List<Vector3> positions = new List<Vector3>(grassNumber);
+        int[] indices = new int[grassNumber];
+        List<Color> colors = new List<Color>(grassNumber);
+        List<Vector3> normals = new List<Vector3>(grassNumber);
+        for (int i = 0; i < grassNumber; i++)
         {
+            Vector3 origin = transform.position;
+            origin.y = startHeight;
+            origin.x += (size.x * Random.Range(-0.5f, 0.5f));
+            origin.z += (size.y * Random.Range(-0.5f, 0.5f));
 
-            Random.InitState(seed);
-            //Generates positions, Colors and normals for geometry shader
-            List<Vector3> positions = new List<Vector3>(grassNumber);
-            int[] indices = new int[grassNumber];
-            List<Color> colors = new List<Color>(grassNumber);
-            List<Vector3> normals = new List<Vector3>(grassNumber);
-            for (int i = 0; i < grassNumber; i++)
+            float noiseCalc = Mathf.PerlinNoise(origin.x, origin.z);
+
+            Ray ray = new Ray(origin, Vector3.down);
+            RaycastHit hit;
+
+            indices[i] = i;
+
+            if (Physics.Raycast(ray, out hit, startHeight, thisLayerMask) && (noiseCalc < grassDensity))
             {
-                Vector3 origin = transform.position;
-                origin.y = startHeight;
-                origin.x += (size.x * Random.Range(-0.5f, 0.5f));
-                origin.z += (size.y * Random.Range(-0.5f, 0.5f));
-                Ray ray = new Ray(origin, Vector3.down);
-                RaycastHit hit;
+                origin = hit.point;
+                colors.Add(new Color(Random.Range(0.0f, 1.0f), Random.Range(0.0f, 1.0f), Random.Range(0.0f, 1.0f), 1));
+                origin.y += offsetY;
+                positions.Add(origin);
+                normals.Add(hit.normal);
+                indices[i] = i;
 
-                if (Physics.Raycast(ray, out hit, startHeight, thisLayerMask))
-                {
-                    origin = hit.point;
-                    colors.Add(new Color(Random.Range(0.0f, 1.0f), Random.Range(0.0f, 1.0f), Random.Range(0.0f, 1.0f), 1));
-                    origin.y += offsetY;
-                    positions.Add(origin);
-                    normals.Add(hit.normal);
-                    indices[i] = i;
-
-                    //Debug.DrawRay(origin, Vector3.up);
-                    //Debug.DrawLine(origin, hit.normal);
-                }
+                //Debug.DrawRay(origin, Vector3.up);
+                //Debug.DrawLine(origin, hit.normal);
             }
-            grassMesh = new Mesh();
-            grassMesh.SetVertices(positions);
-            grassMesh.SetIndices(indices, MeshTopology.Points, 0);
-            grassMesh.SetColors(colors);
-            grassMesh.SetNormals(normals);
+            else
+            {
+                //this should not be visible but will need to be initialized
+                origin.y = -origin.y;
+                positions.Add(origin);
+                normals.Add(new Vector3(0, 1, 0));
+                colors.Add(new Color(0, 0, 0, 0));
+            }
 
-
-            meshFilter.mesh = grassMesh;
-
-            lastPosition = this.transform.position;
         }
+        grassMesh = new Mesh();
+        grassMesh.SetVertices(positions);
+        grassMesh.SetIndices(indices, MeshTopology.Points, 0);
+        grassMesh.SetColors(colors);
+        grassMesh.SetNormals(normals);
+
+
+        meshFilter.mesh = grassMesh;
+
+        lastPosition = this.transform.position;
     }
 }
