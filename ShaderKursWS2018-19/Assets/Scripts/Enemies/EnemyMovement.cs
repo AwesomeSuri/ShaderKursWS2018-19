@@ -36,6 +36,11 @@ public class EnemyMovement : MonoBehaviour
     [Tooltip("Max time of pauses before going to next point.")]
     float maxPauseTime = 5;
 
+    [Space]
+    [SerializeField]
+    [Tooltip("Trigger that activates player detection.")]
+    Collider targetTrigger;
+
     EnemyAnimation anim;                        // component that controlls its animation
     EnemyStats stats;                           // component that stores its stats
     Rigidbody rigid;                            // rigidbody component of this object
@@ -44,6 +49,7 @@ public class EnemyMovement : MonoBehaviour
     EnemyType enemyType;                        // type of the enemy (sword, bow, bat)
     Vector3 room;                               // the room position where the enemy currently is 
     Transform target;                           // tranform of focused object, when close enough
+    IEnemyToPlayer player;                      // player interface to determine if player is active
     Vector3 toPos;                              // the position the enemy wants to go to in world pos
     float timer;                                // timer for the pause
 
@@ -82,8 +88,12 @@ public class EnemyMovement : MonoBehaviour
                 break;
         }
 
-        // set stats
+        // set collision and trigger
         col.enabled = true;
+        targetTrigger.enabled = true;
+        (targetTrigger as SphereCollider).radius = (spawn.type == EnemyType.Hunter) ? 5 : 2.5f;
+
+        // set stats
         Lifetime = 2;
         stats.SetStats(spawn.type);
 
@@ -91,14 +101,18 @@ public class EnemyMovement : MonoBehaviour
         anim.SetAnimation(spawn.type);
 
         // start moving
-        SetDirection();
+        if (spawn.type == EnemyType.Bat)
+        {
+            maxPauseTime = 0;
+        }
+        SetDirection(false);
     }
 
     // Update is called once per frame
     void Update()
     {
         // check if active
-        if(Lifetime <= 0)
+        if (Lifetime <= 0)
         {
             return;
         }
@@ -111,25 +125,33 @@ public class EnemyMovement : MonoBehaviour
             return;
         }
 
-        // set moving point after taking a break
-        if (timer <= 0)
+        // check target
+        if (target == null)
         {
-            SetDirection();
+            // set moving point after taking a break
+            if (timer < 0)
+            {
+                SetDirection(false);
 
-            // set next pause time
-            timer = Random.Range(0, maxPauseTime);
+                // set next pause time
+                timer = Random.Range(0, maxPauseTime);
+            }
+            else
+            {
+                // enemy is moving
+                // take a break if moving point is reached
+                if (Vector3.Distance(transform.position, toPos) < .3f)
+                {
+                    toPos = transform.position;
+
+                    // taking a break
+                    timer -= Time.deltaTime;
+                }
+            }
         }
         else
         {
-            // enemy is moving
-            // take a break if moving point is reached
-            if (Vector3.Distance(transform.position, toPos) < .3f)
-            {
-                toPos = transform.position;
-
-                // taking a break
-                timer -= Time.deltaTime;
-            }
+            SetDirection(true);
         }
     }
 
@@ -169,17 +191,37 @@ public class EnemyMovement : MonoBehaviour
 
     // Calculates AI for moving.
     // Moves to random position if target is null.
-    void SetDirection()
+    void SetDirection(bool hasTarget)
     {
         // if target is null, choose a random moving point
-        if(target == null)
+        if (!hasTarget)
         {
             float x = Random.Range(-3.5f, 3.5f);
             float y = Random.Range(-3.5f, 3.5f);
             toPos = room + new Vector3(x, 0, y);
         }
+        else if (Vector3.Distance(transform.position, target.position) < 1)
+        {
+            // stop moving to attack
+            if (anim.StartAttack())
+            {
+                toPos = transform.position;
+            }
+            else
+            {
+                // follow target
+                toPos = target.position;
+            }
+        }
+        else if (Vector3.Distance(transform.position, target.position) > (targetTrigger as SphereCollider).radius)
+        {
+            // lose target
+            target = null;
+            toPos = transform.position;
+        }
         else
         {
+            // follow target
             toPos = target.position;
         }
     }
@@ -257,10 +299,34 @@ public class EnemyMovement : MonoBehaviour
     // Called when dead or lifetime is zero
     public void DisableEnemy()
     {
+        target = null;
+
         // deactivate mesh
         col.enabled = false;
+        targetTrigger.enabled = false;
         swordsman.SetActive(false);
         hunter.SetActive(false);
         bat.SetActive(false);
+    }
+
+    // Detecting the player.
+    private void OnTriggerStay(Collider other)
+    {
+        if (other.tag == "Player")
+        {
+            if (player == null)
+            {
+                player = other.GetComponent<IEnemyToPlayer>();
+            }
+
+            if (player.PlayerActive && target == null)
+            {
+                target = other.transform;
+            }
+            else
+            {
+                target = null;
+            }
+        }
     }
 }

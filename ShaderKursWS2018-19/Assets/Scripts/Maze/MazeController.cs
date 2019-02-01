@@ -61,7 +61,7 @@ public class MazeController : MonoBehaviour, IPlayerToMaze
         rooms[coordinate.x + coordinate.y * 10].DeactivateRoom();
         collectibleSpawner.DecreaseCollectibleLifetime();
 
-        // TODO: deactivate enemies inside this room
+        enemySpawner.DecreaseEnemyLifetime();
     }
 
     // Called by player.

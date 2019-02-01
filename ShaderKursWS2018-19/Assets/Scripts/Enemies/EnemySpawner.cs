@@ -52,4 +52,14 @@ public class EnemySpawner : MonoBehaviour
 
         return -1;
     }
+
+    // Called when leaving the room.
+    // Decrease lifetime of all enemies.
+    public void DecreaseEnemyLifetime()
+    {
+        for (int i = 0; i < enemies.Length; i++)
+        {
+            enemies[i].DecreaseLifetime();
+        }
+    }
 }

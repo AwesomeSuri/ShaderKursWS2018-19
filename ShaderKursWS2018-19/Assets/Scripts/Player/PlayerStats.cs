@@ -22,7 +22,13 @@ public interface IUIToPlayerStats
     void Equip(Equipment equipment);
 }
 
-public class PlayerStats : MonoBehaviour, ICollectibleSpawnerToPlayerStats, IUIToPlayerStats, IGameManagerToPlayerStats
+public interface IEnemyToPlayer
+{
+    bool PlayerActive { get; }
+}
+
+public class PlayerStats : MonoBehaviour, 
+    ICollectibleSpawnerToPlayerStats, IUIToPlayerStats, IGameManagerToPlayerStats, IEnemyToPlayer
 {
     //---------------------------------------------------------------------------------------------//
     //---------------------------------------------------------------------------------------------//
