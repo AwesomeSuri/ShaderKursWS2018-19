@@ -311,7 +311,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1316939085469026369}
-  m_Layer: 0
+  m_Layer: 15
   m_Name: Ground
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -497,7 +497,7 @@ GameObject:
   - component: {fileID: 2761264103475647417}
   - component: {fileID: 5170674750784836107}
   - component: {fileID: 8087474551333029668}
-  m_Layer: 0
+  m_Layer: 15
   m_Name: Standard
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -695,10 +695,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 6658350788568034272}
     m_Modifications:
-    - target: {fileID: 100000, guid: 64afb1139040b9744934583ecb40569a, type: 3}
-      propertyPath: m_Name
-      value: Wall_Edge
-      objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 64afb1139040b9744934583ecb40569a, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -750,6 +746,10 @@ PrefabInstance:
     - target: {fileID: 400000, guid: 64afb1139040b9744934583ecb40569a, type: 3}
       propertyPath: m_LocalScale.z
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: 64afb1139040b9744934583ecb40569a, type: 3}
+      propertyPath: m_Name
+      value: Wall_Edge
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 64afb1139040b9744934583ecb40569a, type: 3}

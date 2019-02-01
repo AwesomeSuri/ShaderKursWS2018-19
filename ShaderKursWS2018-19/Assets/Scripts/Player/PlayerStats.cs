@@ -47,6 +47,8 @@ public class PlayerStats : MonoBehaviour,
     [SerializeField]
     [Tooltip("Mesh of the wings.")]
     GameObject wings;
+    [SerializeField]
+    Material barrier;
 
     IPlayerStatsToUI levelUI;                                    // interface between this script and the ui
 
@@ -139,6 +141,7 @@ public class PlayerStats : MonoBehaviour,
     public void Equip(Equipment equipment)
     {
         CurrentEquipment = equipment;
+        barrier.SetInt("_BarrierActive", 0);
 
         switch (CurrentEquipment)
         {
@@ -159,6 +162,7 @@ public class PlayerStats : MonoBehaviour,
                 bow.SetActive(false);
                 barrierEars.SetActive(true);
                 wings.SetActive(false);
+                barrier.SetInt("_BarrierActive", 1);
                 break;
             case Equipment.Wings:
                 sword.SetActive(false);

@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2373780260002640400}
   - component: {fileID: 7172704932702248157}
-  m_Layer: 0
+  m_Layer: 15
   m_Name: Room
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -60,7 +60,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7712887961019174077}
   - component: {fileID: 5507710656525963924}
-  m_Layer: 0
+  m_Layer: 15
   m_Name: BoxCollider (7)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -104,7 +104,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3597447350456828419}
   - component: {fileID: 5210423090848348437}
-  m_Layer: 0
+  m_Layer: 15
   m_Name: Right
   m_TagString: WallTransfer
   m_Icon: {fileID: 0}
@@ -150,7 +150,7 @@ GameObject:
   - component: {fileID: 599579543749692381}
   - component: {fileID: 7427704295962261111}
   - component: {fileID: 9304382067112435}
-  m_Layer: 0
+  m_Layer: 15
   m_Name: Standard
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -239,7 +239,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3824978680181957343}
-  m_Layer: 0
+  m_Layer: 15
   m_Name: Dynamic
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -271,7 +271,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4243861649130124663}
   - component: {fileID: 8924334855788768824}
-  m_Layer: 0
+  m_Layer: 15
   m_Name: Left
   m_TagString: WallTransfer
   m_Icon: {fileID: 0}
@@ -315,7 +315,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3185371126653926852}
   - component: {fileID: 6522070527492621229}
-  m_Layer: 0
+  m_Layer: 15
   m_Name: BoxCollider (4)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -359,7 +359,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8287455261650576140}
   - component: {fileID: 6198629537870799974}
-  m_Layer: 0
+  m_Layer: 15
   m_Name: BoxCollider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -403,7 +403,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3634006636326730242}
   - component: {fileID: 1084905401496787234}
-  m_Layer: 0
+  m_Layer: 15
   m_Name: BoxCollider (3)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -447,7 +447,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3761427167550972484}
   - component: {fileID: 8946657021007471376}
-  m_Layer: 0
+  m_Layer: 15
   m_Name: Up
   m_TagString: WallTransfer
   m_Icon: {fileID: 0}
@@ -490,7 +490,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1316939085469026369}
-  m_Layer: 0
+  m_Layer: 15
   m_Name: Ground
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -521,7 +521,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3737850214905471637}
-  m_Layer: 0
+  m_Layer: 15
   m_Name: TransferTrigger
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -556,7 +556,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5334153453516529058}
   - component: {fileID: 3032985022016140902}
-  m_Layer: 0
+  m_Layer: 15
   m_Name: BoxCollider (6)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -600,7 +600,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6072890126454452010}
   - component: {fileID: 4512700651182219511}
-  m_Layer: 0
+  m_Layer: 15
   m_Name: BoxCollider (5)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -643,7 +643,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5297745881948704127}
-  m_Layer: 0
+  m_Layer: 15
   m_Name: WallColliders
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -681,7 +681,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6084768172836241421}
-  m_Layer: 0
+  m_Layer: 15
   m_Name: Static
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -716,7 +716,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4349784569449322065}
   - component: {fileID: 1319774953872837349}
-  m_Layer: 0
+  m_Layer: 15
   m_Name: BoxCollider (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -760,7 +760,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2778977473504915880}
   - component: {fileID: 7427342928445888179}
-  m_Layer: 0
+  m_Layer: 15
   m_Name: Down
   m_TagString: WallTransfer
   m_Icon: {fileID: 0}
@@ -803,7 +803,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 617826926303689796}
-  m_Layer: 0
+  m_Layer: 15
   m_Name: Enemies
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -834,7 +834,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2573975251054748575}
   - component: {fileID: 6632853024937583914}
-  m_Layer: 0
+  m_Layer: 15
   m_Name: BoxCollider (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -878,6 +878,10 @@ PrefabInstance:
     - target: {fileID: 100000, guid: 39af0c7fe6285034085b6fbe925f0dde, type: 3}
       propertyPath: m_Name
       value: Wall
+      objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: 39af0c7fe6285034085b6fbe925f0dde, type: 3}
+      propertyPath: m_Layer
+      value: 15
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 39af0c7fe6285034085b6fbe925f0dde, type: 3}
       propertyPath: m_LocalPosition.x

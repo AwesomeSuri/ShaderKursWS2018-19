@@ -72,6 +72,7 @@ public class TDS_PlayerMovement : MonoBehaviour, IGameManagerToPlayerMovement, I
     bool running;                                       // if true, player moves at runSpeed
     bool lookAtMouse;                                   // true, if some mouse action is active (eg. shooting)
     RoomCoordinate room;                                // stores the coordinate of the current room
+    GrassController grass;
 
 
     //---------------------------------------------------------------------------------------------//
@@ -94,6 +95,7 @@ public class TDS_PlayerMovement : MonoBehaviour, IGameManagerToPlayerMovement, I
         room.x = 0;
         room.y = 0;
         lookAtMouse = false;
+        grass = GetComponent<GrassController>();
     }
 
     void Start()
@@ -220,6 +222,9 @@ public class TDS_PlayerMovement : MonoBehaviour, IGameManagerToPlayerMovement, I
         cam.JumpCamera(room);
         transform.position = Vector3.zero;
 
+        // set grass offset
+        grass.SetOffset(room);
+
         // enable moving
         stats.PlayerActive = true;
         stats.SetRoomTransfering(false);
@@ -298,6 +303,9 @@ public class TDS_PlayerMovement : MonoBehaviour, IGameManagerToPlayerMovement, I
 
         // move shader
         // TODO
+
+        // set grass offset
+        grass.SetOffset(room);
 
         // move player
         toPos += 1.5f * Vector3.right * transferDirection.x
