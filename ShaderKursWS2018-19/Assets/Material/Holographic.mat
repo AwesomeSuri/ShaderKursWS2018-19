@@ -28,9 +28,9 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Floats:
-    - _Ambient: 0.25
-    - _Emmision: 2.13
-    - _Rim: 2.46
-    - _Speed: 0.1
+    - _Ambient: 0.34
+    - _Emmision: 5
+    - _Rim: 5
+    - _Speed: 0.2
     m_Colors:
-    - _Color: {r: 0, g: 0.39215687, b: 1, a: 1}
+    - _Color: {r: 0, g: 0.3921566, b: 1, a: 1}

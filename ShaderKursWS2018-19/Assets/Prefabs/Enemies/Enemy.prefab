@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 5465637422609213854}
   - component: {fileID: 1734915471183050041}
   - component: {fileID: 5921974542361898874}
+  - component: {fileID: 7288738912650852832}
   m_Layer: 12
   m_Name: Enemy
   m_TagString: Untagged
@@ -89,6 +90,8 @@ MonoBehaviour:
   animSwordsman: {fileID: 9085951563250830094}
   animHunter: {fileID: 3568854419741258532}
   animBat: {fileID: 4233730818745996951}
+  weaponCollider: {fileID: 0}
+  wait: 5
 --- !u!54 &1734915471183050041
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -119,6 +122,24 @@ CapsuleCollider:
   m_Height: 1
   m_Direction: 1
   m_Center: {x: 0, y: 0.5, z: 0}
+--- !u!114 &7288738912650852832
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4610940526748159387}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f0cefb73b8485014381aef94e59a8f48, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GrassMat:
+  - {fileID: 2100000, guid: c2a84f7f28019fb44be5ccccb9a3a824, type: 2}
+  - {fileID: 2100000, guid: 1f7465fdb3f19104e8c0eb6024df180e, type: 2}
+  - {fileID: 2100000, guid: 7d8bc710955306c41a3e31b258b93a70, type: 2}
+  - {fileID: 2100000, guid: 57b933551182bc140968f72a5af7e1a0, type: 2}
+  offset: {x: 0, y: 0, z: 0}
 --- !u!1 &6905185873634193077
 GameObject:
   m_ObjectHideFlags: 0

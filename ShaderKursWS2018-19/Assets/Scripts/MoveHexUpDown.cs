@@ -5,6 +5,7 @@ using UnityEngine;
 public class MoveHexUpDown : MonoBehaviour
 {
     private float speed;
+    private float min;
     private float max;
     private Vector3 startPosition;
 
@@ -13,7 +14,9 @@ public class MoveHexUpDown : MonoBehaviour
     {
         startPosition = transform.position;
         speed = Random.Range(0.5f, 1.0f);
-        max = 3.0f;
+        min = .5f;
+        max = 1.0f;
+        transform.position = startPosition + Vector3.up * min;
     }
 
     // Update is called once per frame
@@ -27,7 +30,7 @@ public class MoveHexUpDown : MonoBehaviour
         {
             speed = -speed;
         }
-        else if(transform.position.y < startPosition.y - max)
+        else if(transform.position.y < startPosition.y + min)
         {
             speed = -speed;
         }

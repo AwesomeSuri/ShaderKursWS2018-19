@@ -14,7 +14,6 @@
 	{
 		Tags { "LightMode" = "ForwardBase" }
 
-		Blend SrcAlpha One
 		Cull Back
 		ZWrite On
 		//Cull off
@@ -66,7 +65,7 @@
 				{
 					//o.color = float4(0,0,1,1);
 					//vertexWorld.y = _PlayerPos.y - 1.0f;
-					o.worldPos.y = _PlayerPos.y - 1.0f;
+					o.worldPos.y = _PlayerPos.y - 0.5f;
 				}
 
 				o.pos = mul(UNITY_MATRIX_VP, o.worldPos/*vertexWorld*/);
@@ -97,11 +96,11 @@
 				float dist = distance(i.worldPos, _PlayerPos.xyz);
 				if(dist >= _Radius)
 				{
-					return fixed4(_Color.rgb * diffuseTerm, alpha);
+					return fixed4(_Color.rgb * diffuseTerm, 1);
 				}
 				else
 				{
-					return fixed4(_Glow * fresnelEffect * _Color.rgb * diffuseTerm, alpha);
+					return fixed4(_Glow * fresnelEffect * _Color.rgb * diffuseTerm, 1);
 				}
 			}
 
