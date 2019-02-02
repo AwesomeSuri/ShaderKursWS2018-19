@@ -42,9 +42,9 @@ public class MazeController : MonoBehaviour, IPlayerToMaze
     private void Start()
     {
         // deactivate all rooms
-        foreach (RoomController room in rooms)
+        for (int i = 0; i < rooms.Length; i++)
         {
-            room.DeactivateRoom();
+            rooms[i].DeactivateRoom();
         }
 
         // activate first room
