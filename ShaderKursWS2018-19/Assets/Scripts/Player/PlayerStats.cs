@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum Equipment { Sword, Bow, Barrier, Wings }
+public enum Equipment { None, Sword, Bow, Barrier, Wings }
 
 public interface IGameManagerToPlayerStats
 {

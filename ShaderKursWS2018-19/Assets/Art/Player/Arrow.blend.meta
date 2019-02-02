@@ -1,27 +1,16 @@
 fileFormatVersion: 2
-guid: dbc13707f9c892a4dac4d207ca64feae
+guid: 62f34ad425fbb9142897503d0402fb63
 ModelImporter:
   serializedVersion: 23
   fileIDToRecycleName:
     100000: //RootNode
-    100002: Armature
-    100004: Bone
-    100006: Bone_001
-    100008: Bone_002
-    100010: Bow
     400000: //RootNode
-    400002: Armature
-    400004: Bone
-    400006: Bone_001
-    400008: Bone_002
-    400010: Bow
-    2100000: None__Bow
+    2100000: unnamed
     2300000: //RootNode
     3300000: //RootNode
-    4300000: Bow
+    4300000: Cube
     7400000: Default Take
     9500000: //RootNode
-    13700000: Bow
   externalObjects: {}
   materials:
     importMaterials: 1

@@ -9642,14 +9642,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8826404882897662578}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalRotation: {x: 0, y: 0, z: 0.7071068, w: 0.7071068}
+  m_LocalPosition: {x: 0, y: 0.3, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
-  - {fileID: 3722124255963031755}
+  - {fileID: 4923548768225750874}
   m_Father: {fileID: 5910517056645281222}
   m_RootOrder: 2
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 90}
 --- !u!1 &8882990537454724396
 GameObject:
   m_ObjectHideFlags: 0
@@ -9688,11 +9688,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1473289183671827275}
     m_Modifications:
-    - target: {fileID: 6854458307019133551, guid: 1a828628e46dd5942b4b8ddd64980c20,
-        type: 3}
-      propertyPath: m_Name
-      value: Bow
-      objectReference: {fileID: 0}
     - target: {fileID: 870941682467788774, guid: 1a828628e46dd5942b4b8ddd64980c20,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -9748,11 +9743,16 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6854458307019133551, guid: 1a828628e46dd5942b4b8ddd64980c20,
+        type: 3}
+      propertyPath: m_Name
+      value: Bow
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1a828628e46dd5942b4b8ddd64980c20, type: 3}
---- !u!4 &3722124255963031755 stripped
+--- !u!4 &4923548768225750874 stripped
 Transform:
-  m_CorrespondingSourceObject: {fileID: 870941682467788774, guid: 1a828628e46dd5942b4b8ddd64980c20,
+  m_CorrespondingSourceObject: {fileID: 8926808556589551735, guid: 1a828628e46dd5942b4b8ddd64980c20,
     type: 3}
   m_PrefabInstance: {fileID: 4589608455313588013}
   m_PrefabAsset: {fileID: 0}

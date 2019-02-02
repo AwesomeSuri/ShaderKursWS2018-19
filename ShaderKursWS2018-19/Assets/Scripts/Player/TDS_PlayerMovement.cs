@@ -72,11 +72,12 @@ public class TDS_PlayerMovement : MonoBehaviour, IGameManagerToPlayerMovement, I
     bool running;                                       // if true, player moves at runSpeed
     bool lookAtMouse;                                   // true, if some mouse action is active (eg. shooting)
     RoomCoordinate room;                                // stores the coordinate of the current room
-    GrassController grass;
+    GrassController grass;                              // component that moves the grass near the player
 
 
     //---------------------------------------------------------------------------------------------//
     //---------------------------------------------------------------------------------------------//
+    #region Init
     // Use this for initialization
     void Awake()
     {
@@ -102,7 +103,9 @@ public class TDS_PlayerMovement : MonoBehaviour, IGameManagerToPlayerMovement, I
     {
         levelUI.EnterRoom(room.x, room.y);
     }
+    #endregion
 
+    #region Update
     // Update is called once per frame
     void Update()
     {
@@ -114,7 +117,7 @@ public class TDS_PlayerMovement : MonoBehaviour, IGameManagerToPlayerMovement, I
         }
 
         // check falling
-        if(transform.position.y < -.1f)
+        if (transform.position.y < -.1f)
         {
             Death();
         }
@@ -129,7 +132,9 @@ public class TDS_PlayerMovement : MonoBehaviour, IGameManagerToPlayerMovement, I
     {
         UpdateAnimation();
     }
+    #endregion
 
+    #region Input
     // Update the input.
     void GetInput()
     {
@@ -159,6 +164,18 @@ public class TDS_PlayerMovement : MonoBehaviour, IGameManagerToPlayerMovement, I
 
         // get mouse input for running
         running = Input.GetButton(runButton);
+
+        // get mouse input for attacking
+        if (Input.GetButtonDown("Fire1")
+            && !UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject()
+            && !anim.IsSwinging && anim.IsAiming <= 0)
+        {
+            Attack();
+        }
+        if(Input.GetButtonUp("Fire1") && anim.IsAiming > 0)
+        {
+            Shoot();
+        }
     }
 
     // Externally set the player movements.
@@ -169,7 +186,9 @@ public class TDS_PlayerMovement : MonoBehaviour, IGameManagerToPlayerMovement, I
         this.lookDirection = lookDirection;
         this.running = running;
     }
+    #endregion
 
+    #region Walk
     // Execute the movement using the stored variables.
     void UpdateMovement()
     {
@@ -204,47 +223,6 @@ public class TDS_PlayerMovement : MonoBehaviour, IGameManagerToPlayerMovement, I
         else
         {
             anim.UpdateMovement(0, 0);
-        }
-    }
-
-    // Called when player y position is below 0.
-    // Death animation plays.
-    // Respawn.
-    void Death()
-    {
-        stats.PlayerActive = false;
-
-        // TODO: add spawn anim
-        maze.DeactivateRoom(room);
-        room.x = 0;
-        room.y = 0;
-        maze.ActivateRoom(room);
-        cam.JumpCamera(room);
-        transform.position = Vector3.zero;
-
-        // set grass offset
-        grass.SetOffset(room);
-
-        // enable moving
-        stats.PlayerActive = true;
-        stats.SetRoomTransfering(false);
-    }
-
-    private void OnTriggerEnter(Collider other)
-    {
-        if (!stats.PlayerActive || stats.RoomTranfering)
-        {
-            return;
-        }
-
-        if (other.tag == "WallTransfer")
-        {
-            StartCoroutine(TransferingRoom(other.transform));
-        }
-
-        if (other.tag == "Collectible")
-        {
-            PickUp(other.transform.GetComponent<IPlayerToCollectible>().PickUp());
         }
     }
 
@@ -326,7 +304,7 @@ public class TDS_PlayerMovement : MonoBehaviour, IGameManagerToPlayerMovement, I
             // enable moving
             stats.PlayerActive = true;
             stats.SetRoomTransfering(false);
-            
+
             // TODO: add wumpus event
 
         }
@@ -347,6 +325,90 @@ public class TDS_PlayerMovement : MonoBehaviour, IGameManagerToPlayerMovement, I
         yield return new WaitWhile(() => Vector3.Distance(transform.position, toPos) > .1f);
         moveDirection = Vector3.zero;
     }
+    #endregion
+
+    #region Attack
+    void Attack()
+    {
+        if (stats.CurrentEquipment == Equipment.Sword)
+        {
+            StartCoroutine(Swinging());
+        }
+
+        if(stats.CurrentEquipment == Equipment.Bow)
+        {
+            Aim();
+        }
+    }
+
+    IEnumerator Swinging()
+    {
+        lookAtMouse = true;
+
+        yield return anim.Swinging();
+
+        yield return new WaitForSeconds(.5f);
+
+        if (!anim.IsSwinging)
+        {
+            lookAtMouse = false;
+        }
+    }
+
+    void Aim()
+    {
+        lookAtMouse = true;
+        anim.StartAiming(stats.ArrowAmount > 0);
+    }
+
+    void Shoot()
+    {
+        // TODO: shoot arrow if available
+        lookAtMouse = false;
+        anim.StopAiming();
+    }
+    #endregion
+
+    // Called when player y position is below 0.
+    // Death animation plays.
+    // Respawn.
+    void Death()
+    {
+        stats.PlayerActive = false;
+
+        // TODO: add spawn anim
+        maze.DeactivateRoom(room);
+        room.x = 0;
+        room.y = 0;
+        maze.ActivateRoom(room);
+        cam.JumpCamera(room);
+        transform.position = Vector3.zero;
+
+        // set grass offset
+        grass.SetOffset(room);
+
+        // enable moving
+        stats.PlayerActive = true;
+        stats.SetRoomTransfering(false);
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (!stats.PlayerActive || stats.RoomTranfering)
+        {
+            return;
+        }
+
+        if (other.tag == "WallTransfer")
+        {
+            StartCoroutine(TransferingRoom(other.transform));
+        }
+
+        if (other.tag == "Collectible")
+        {
+            PickUp(other.transform.GetComponent<IPlayerToCollectible>().PickUp());
+        }
+    }
 
     // When a collectible is touched.
     // Change stats.
@@ -359,6 +421,8 @@ public class TDS_PlayerMovement : MonoBehaviour, IGameManagerToPlayerMovement, I
     public void SetWings(bool wings)
     {
         anim.SetFlying(wings);
-        rigid.constraints = wings ? RigidbodyConstraints.FreezePositionY : RigidbodyConstraints.None;
+        rigid.constraints = wings ? RigidbodyConstraints.FreezePositionY 
+            | RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ
+            : RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
     }
 }
