@@ -77,7 +77,6 @@ public class MazeController : MonoBehaviour, IPlayerToMaze
         EnemySpawn[] enemies = room.EnemySpawns;
         for (int i = 0; i < enemies.Length; i++)
         {
-            print(enemies[i].type);
             enemySpawner.SpawnEnemy(enemies[i], coordinate);
         }
 

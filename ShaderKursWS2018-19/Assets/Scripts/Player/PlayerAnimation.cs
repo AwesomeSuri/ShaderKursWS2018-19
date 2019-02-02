@@ -49,7 +49,7 @@ public class PlayerAnimation : MonoBehaviour
         float weight = 0;
         while (anim.GetLayerWeight(1) < 1)
         {
-            weight += Time.deltaTime * 50;
+            weight += Time.deltaTime * 20;
 
             sword.transform.localScale = Vector3.one * (1 + weight * .5f);
             anim.SetLayerWeight(1, weight);
@@ -59,7 +59,7 @@ public class PlayerAnimation : MonoBehaviour
 
         sword.enabled = true;
 
-        yield return new WaitForSeconds(.15f);
+        yield return new WaitForSeconds(.1f);
 
         sword.enabled = false;
 
@@ -74,6 +74,8 @@ public class PlayerAnimation : MonoBehaviour
         }
 
         IsSwinging = false;
+
+        yield return null;
     }
 
     public void StartAiming(bool hasArrow)
@@ -107,7 +109,7 @@ public class PlayerAnimation : MonoBehaviour
             while (aimTo && IsAiming < 1
                 || !aimTo && IsAiming > 0)
             {
-                IsAiming += Time.deltaTime * 10 * (aimTo ? 1 : -.5f);
+                IsAiming += Time.deltaTime * 5 * (aimTo ? 1 : -1f);
 
                 anim.SetLayerWeight(2, IsAiming);
 

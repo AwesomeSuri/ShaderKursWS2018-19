@@ -40,6 +40,9 @@ public class EnemyMovement : MonoBehaviour
     [SerializeField]
     [Tooltip("Trigger that activates player detection.")]
     Collider targetTrigger;
+    [SerializeField]
+    [Tooltip("Pool of collectibles drops an item when enemy is dead.")]
+    CollectibleSpawner collectible;
 
     EnemyAnimation anim;                        // component that controlls its animation
     EnemyStats stats;                           // component that stores its stats
@@ -91,7 +94,7 @@ public class EnemyMovement : MonoBehaviour
         // set collision and trigger
         col.enabled = true;
         targetTrigger.enabled = true;
-        (targetTrigger as SphereCollider).radius = (spawn.type == EnemyType.Hunter) ? 5 : 2.5f;
+        (targetTrigger as SphereCollider).radius = (spawn.type == EnemyType.Hunter) ? 4 : 2.5f;
 
         // set stats
         Lifetime = 2;
@@ -200,10 +203,10 @@ public class EnemyMovement : MonoBehaviour
             float y = Random.Range(-3.5f, 3.5f);
             toPos = room + new Vector3(x, 0, y);
         }
-        else if (Vector3.Distance(transform.position, target.position) < 1)
+        else if (Vector3.Distance(transform.position, target.position) < .5f)
         {
-            // stop moving to attack
-            if (anim.StartAttack())
+            // stop moving to attack if swordsman
+            if (enemyType == EnemyType.Swordsman && anim.StartAttack())
             {
                 toPos = transform.position;
             }
@@ -216,8 +219,17 @@ public class EnemyMovement : MonoBehaviour
         else if (Vector3.Distance(transform.position, target.position) > (targetTrigger as SphereCollider).radius)
         {
             // lose target
-            target = null;
-            toPos = transform.position;
+            // hunters lose targets only after shooting
+            if(enemyType != EnemyType.Hunter)
+            {
+                target = null;
+                toPos = transform.position;
+            }
+            else
+            {
+                // follow target
+                toPos = target.position;
+            }
         }
         else
         {
@@ -233,10 +245,28 @@ public class EnemyMovement : MonoBehaviour
         moveDirection = toPos - transform.position;
         if (moveDirection.magnitude > .1f)
         {
-            rigid.MovePosition(transform.position
-                + moveDirection.normalized
-                * ((target == null) ? speed : followSpeed)
-                * Time.fixedDeltaTime);
+            // check if being pushed
+            if (stats.InvincibleTimer > 0)
+            {
+                rigid.AddForce(moveDirection.normalized
+                    * ((target == null) ? speed : followSpeed)
+                    * Time.fixedDeltaTime);
+            }
+            // check if hunter has target
+            else if (enemyType == EnemyType.Hunter && target != null)
+            {
+                rigid.velocity = Vector3.zero;
+            }
+            else
+            {
+                rigid.velocity = Vector3.zero;
+
+                rigid.MovePosition(transform.position
+                    + moveDirection.normalized
+                    * ((target == null) ? speed : followSpeed)
+                    * Time.fixedDeltaTime);
+            }
+
 
             // turn the enemy
             rigid.MoveRotation(Quaternion.Lerp(
@@ -289,9 +319,15 @@ public class EnemyMovement : MonoBehaviour
     {
         // TODO: play death anim
 
-        yield return new WaitForSeconds(3);
+        yield return new WaitForSeconds(.5f);
 
-        // TODO: drop item
+        // drop item
+        CollectibleType collectibleType = CollectibleType.Heart;
+        if (enemyType == EnemyType.Hunter)
+        {
+            collectibleType = CollectibleType.Arrow;
+        }
+        collectible.Drop(transform.position, collectibleType);
 
         DisableEnemy();
     }
@@ -322,11 +358,38 @@ public class EnemyMovement : MonoBehaviour
             if (player.PlayerActive && target == null)
             {
                 target = other.transform;
+
+                if(enemyType == EnemyType.Hunter && !anim.IsAttacking)
+                {
+                    StartCoroutine(AimShoot());
+                }
             }
-            else
+            else if(enemyType != EnemyType.Hunter)
             {
                 target = null;
             }
         }
+    }
+
+    // Getting hit.
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.layer == LayerMask.NameToLayer("PlayerWeapon")
+            && stats.InvincibleTimer <= 0)
+        {
+            // push back
+            rigid.AddForce(other.transform.forward * 1000);
+
+            stats.GetHit();
+        }
+    }
+
+    // Aim and shoot
+    IEnumerator AimShoot()
+    {
+        yield return anim.AimingAndShooting();
+
+        target = null;
+        SetDirection(false);
     }
 }

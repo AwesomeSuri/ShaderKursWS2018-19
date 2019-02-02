@@ -17,10 +17,19 @@ public class EnemyStats : MonoBehaviour
     int startHealthBat;
 
     public int Health { get; private set; }             // current health of this enemy
+    public float InvincibleTimer { get; private set; }  // the time left where the enemy is invincible
 
 
     //---------------------------------------------------------------------------------------------//
     //---------------------------------------------------------------------------------------------//
+    private void Update()
+    {
+        if (InvincibleTimer > 0)
+        {
+            InvincibleTimer -= Time.deltaTime;
+        }
+    }
+
     // Called when enemy is spawned.
     public void SetStats(EnemyType type)
     {
@@ -38,11 +47,9 @@ public class EnemyStats : MonoBehaviour
         }
     }
 
-    private void OnTriggerEnter(Collider other)
+    public void GetHit()
     {
-        if(other.tag == "PlayerWeapon")
-        {
-            Health--;
-        }
+        Health--;
+        InvincibleTimer = (Health <= 0) ? .5f : .2f;
     }
 }

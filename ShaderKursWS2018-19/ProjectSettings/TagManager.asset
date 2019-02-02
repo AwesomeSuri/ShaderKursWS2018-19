@@ -6,6 +6,7 @@ TagManager:
   tags:
   - WallTransfer
   - Collectible
+  - PlayerWeapon
   layers:
   - Default
   - TransparentFX
@@ -23,8 +24,8 @@ TagManager:
   - PlayerWeapon
   - EnemyWeapon
   - Ground
-  - 
-  - 
+  - EnemyTargetTrigger
+  - Collectible
   - 
   - 
   - 

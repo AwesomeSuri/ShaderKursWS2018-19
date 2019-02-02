@@ -59,6 +59,12 @@ public class TDS_PlayerMovement : MonoBehaviour, IGameManagerToPlayerMovement, I
     [SerializeField]
     [Tooltip("Controller of the UI.")]
     LevelUIController levelUIObject;
+    [SerializeField]
+    [Tooltip("Parent of the player arrow pool.")]
+    ArrowSpawner arrow;
+    [SerializeField]
+    [Tooltip("Transform where the arrows shoot from.")]
+    Transform arrowOrigin;
 
 
     IPlayerMovementToCamera cam;                        // interface between this script and the camera
@@ -73,6 +79,7 @@ public class TDS_PlayerMovement : MonoBehaviour, IGameManagerToPlayerMovement, I
     bool lookAtMouse;                                   // true, if some mouse action is active (eg. shooting)
     RoomCoordinate room;                                // stores the coordinate of the current room
     GrassController grass;                              // component that moves the grass near the player
+    bool arrowLoaded;                                   // true if aiming with an arrow
 
 
     //---------------------------------------------------------------------------------------------//
@@ -235,6 +242,10 @@ public class TDS_PlayerMovement : MonoBehaviour, IGameManagerToPlayerMovement, I
         lookAtMouse = false;
         running = false;
         stats.SetRoomTransfering(true);
+        if (arrowLoaded)
+        {
+            Shoot();
+        }
 
         // check transfer direction
         // update room coordinate
@@ -357,13 +368,30 @@ public class TDS_PlayerMovement : MonoBehaviour, IGameManagerToPlayerMovement, I
 
     void Aim()
     {
+        // check if arrow available
+        if(stats.ArrowAmount > 0)
+        {
+            // TODO: add stretch sound
+
+            arrowLoaded = true;
+        }
+
         lookAtMouse = true;
         anim.StartAiming(stats.ArrowAmount > 0);
     }
 
     void Shoot()
     {
-        // TODO: shoot arrow if available
+        // shoot arrow if loaded
+        if(arrowLoaded)
+        {
+            // TODO: add shoot sound
+
+            arrow.Shoot(arrowOrigin, anim.IsAiming);
+
+            arrowLoaded = false;
+        }
+
         lookAtMouse = false;
         anim.StopAiming();
     }

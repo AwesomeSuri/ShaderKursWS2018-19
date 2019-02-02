@@ -40,7 +40,7 @@ public class BowController : MonoBehaviour
         // bend
         if (Mathf.Abs(currentAngle - toAngle) > .1f)
         {
-            currentAngle = Mathf.Lerp(currentAngle, toAngle, Time.deltaTime * 50);
+            currentAngle = Mathf.Lerp(currentAngle, toAngle, Time.deltaTime * 1);
 
             for (int i = 0; i < bones.Length; i++)
             {
@@ -79,7 +79,6 @@ public class BowController : MonoBehaviour
 
     public void BendBow(bool bend)
     {
-        print("bendbow");
         bended = bend;
         toAngle = bend ? bendedAngle : startAngle;
     }
