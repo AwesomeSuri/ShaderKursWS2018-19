@@ -4,24 +4,19 @@
     {
         _Color ("Color", Color) = (1,1,1,1)
         _MainTex ("Albedo (RGB)", 2D) = "white" {}
-        _Glossiness ("Smoothness", Range(0,1)) = 0.5
-        _Metallic ("Metallic", Range(0,1)) = 0.0
 
 		_Cutoff("Cutoff", Range(0,1)) = 0.25
 
-		_GrassHeight("Grass Height", float) = 0.25
-		_GrassWidth("Grass Width", float) = 1.0
-		_CameraOffsetX("Camera Offset X", float) = 0.0
-		_CameraOffsetZ("Camera Offset Z", float) = 5.0
-		_GrassOffset("Grass Offset", float) = -4.0
+		_GrassHeight("Grass Height", Range(0, 3)) = 0.25
+		_GrassWidth("Grass Width", Range(0, 3)) = 1.0
 
-		_WindStrength("Wind Strength", float) = 0.2
-		_WindSpeed("Wind Speed", float) = 10
+		_WindRange("Range of Grass affected by Wind", Range(0, 0.5)) = 0.2
+		_WindSpeed("Wind Speed", float) = 5
 
 		_Ambient ("Ambient", float) = 0.5
 		_Radius ("Radius", float) = 1.0
 		_PlayerPos ("Player Position", Vector) = (0, 0, 0)
-		_localPos ("Local Position", Vector) = (0, 0, 0)
+		_PlayerOffset ("Player Position Offset", Vector) = (0, 0, 0.7)
     }
     SubShader
     {
@@ -70,19 +65,15 @@
 			half _GrassHeight;
 			half _GrassWidth;
 			half _Cutoff;
-			float _WindStrength;
 			float _WindSpeed;
+			float _WindRange;
 			sampler2D _WindNormalMap;
 			float4 _Color;
-
-			float _CameraOffsetX;
-			float _CameraOffsetZ;
-			float _GrassOffset;
 
 			float _Ambient;
 			float _Radius;
 			float3 _PlayerPos;
-			float3 _localPos;
+			float3 _PlayerOffset;
 
 			v2g vert(appdata_full v)
 			{
@@ -96,11 +87,11 @@
 				return o;
 			}
 
-			void drawQuad(inout TriangleStream<g2f> tristream, g2f o, float3 v0, float3 v1, float3 perpendicularAngle, float3 faceNormal, float3 normal, float4 myColor){
+			void drawQuad(inout TriangleStream<g2f> tristream, g2f o, float3 v0, float3 v1, float3 widthDirection, float3 faceNormal, float3 normal, float4 myColor){
 
 
 				//first corner at (0,0)
-				o.pos = UnityObjectToClipPos(v0 - perpendicularAngle * 0.5 * _GrassWidth);
+				o.pos = UnityObjectToClipPos(v0 - widthDirection * 0.5 * _GrassWidth);
 				o.faceNormal = faceNormal;
 				o.normal = normal;
 				o.diffuseTerm = myColor;
@@ -108,7 +99,7 @@
 				tristream.Append(o);
 
 				//second corner at (1,0)
-				o.pos = UnityObjectToClipPos(v0 + perpendicularAngle * 0.5 * _GrassWidth);
+				o.pos = UnityObjectToClipPos(v0 + widthDirection * 0.5 * _GrassWidth);
 				o.faceNormal = faceNormal;
 				o.normal = normal;
 				o.diffuseTerm = myColor;
@@ -116,7 +107,7 @@
 				tristream.Append(o);
 
 				//third corner at (0,1)
-				o.pos = UnityObjectToClipPos(v1 - perpendicularAngle * 0.5 * _GrassWidth);
+				o.pos = UnityObjectToClipPos(v1 - widthDirection * 0.5 * _GrassWidth);
 				o.faceNormal = faceNormal;
 				o.normal = normal;
 				o.diffuseTerm = myColor;
@@ -124,7 +115,7 @@
 				tristream.Append(o);
 
 				//fourth corner at (1,1)
-				o.pos = UnityObjectToClipPos(v1 + perpendicularAngle * 0.5 * _GrassWidth);
+				o.pos = UnityObjectToClipPos(v1 + widthDirection * 0.5 * _GrassWidth);
 				o.faceNormal = faceNormal;
 				o.normal = normal;
 				o.diffuseTerm = myColor;
@@ -138,49 +129,49 @@
 			[maxvertexcount(4)]
 			void geom(point v2g IN[1], inout TriangleStream<g2f> triStream)
 			{
-				float3 lightPosition = _WorldSpaceLightPos0;
-
+				
 				float3 v0 = IN[0].pos.xyz;
 
 				//computing offset for v1
-				float3 cameraWithOffset = float3(_WorldSpaceCameraPos.x + _CameraOffsetX, _WorldSpaceCameraPos.y, _WorldSpaceCameraPos.z + _CameraOffsetZ);
-				float3 perpendicularAngle = normalize(cameraWithOffset - v0);
-
+				float3 cameraInObj = mul(unity_WorldToObject, float4(_WorldSpaceCameraPos, 1));
+				float3 angleToCamera = normalize(cameraInObj - v0);
+				//compute vector perpendicular to angleToCamera for the growing direction -> so quad will always have correct Z offset to camera
+				float3 growDirection = cross(float3(1, 0, 0), angleToCamera);
 				//creates line from which actual corners are computed
-				float3 v1 = float3(IN[0].pos.xyz + IN[0].normal.xyz * _GrassHeight);
+				float3 v1 = IN[0].pos.xyz + growDirection * _GrassHeight;
 				float4 vertexWorld = mul(UNITY_MATRIX_M, v1);
-				//_PlayerPos -= _localPos;
+				
+				//calculates distance to Player and moves grass accordingly
+				_PlayerPos += _PlayerOffset;
 				if(distance((_PlayerPos), vertexWorld) < _Radius)
 				{
 					//get distance to player
-					float2 distance = min(_GrassHeight / (pow(_PlayerPos.xz - vertexWorld.xz, 2) * 10), _GrassHeight * 1.5); 
+					float distance = min(_GrassHeight / (pow(_PlayerPos.x - vertexWorld.x, 2) * 10), _GrassHeight); 
 					//this line would stretch grass more so its more noticable but it makes grass longer than actual _GrassHeight 
 					//float2 distance = min(_Radius / (pow(_PlayerPos.xz - vertexWorld.xz, 2) * 10), _Radius);
 					float2 dir = normalize(_PlayerPos.xz - vertexWorld.xz);
 
 					//dir sets direction
-					v1.x -= distance.x * dir.x;
-					v1.z -= distance.y * dir.y;
+					v1.x -= distance * dir.x;
+					//v1.z -= distance.y * dir.y;
 					
 				}
 				
 				float4 myColor = (IN[0].myColor);
-
-				//reset perpendicularAngle so faceNormal will be rotated towards camera
-				perpendicularAngle = float3(1, 0, 0);
-				float3 faceNormal = cross(perpendicularAngle, IN[0].normal);
+				float3 faceNormal = angleToCamera;
 				float3 normal = IN[0].normal;
 
 				//wind calculations
-				float3 wind = float3(sin(_Time.x * _WindSpeed + v0.x) + sin(_Time.x * _WindSpeed + v0.z * 2 + cos(_Time.x * _WindSpeed + v0.x)), 
-				 0,max(_CameraOffsetZ, cos(_Time.x * _WindSpeed + v0.x) + cos(_Time.x * _WindSpeed + v0.z)));
-				v1 += wind * _WindStrength;
+				float3 wind = float3(sin(_Time.x * _WindSpeed + v0.x) + sin(_Time.x * _WindSpeed + v0.z * 2 + cos(_Time.x * _WindSpeed + v0.x)), 0, 0);
+				v1 += wind * _WindRange;
 
-
+				//should be just X axis -> otherwise grass will go in circles
+				float3 widthDirAngle = float3(1, 0, 0);
 				
 				g2f o;
-				//void drawTriangle(TriangleStream<g2f> tristream, g2f o, float3 v0, float3 v1, float3 perpendicularAngle, float3 faceNormal, float3 color)
-				drawQuad(triStream, o, v0, v1, perpendicularAngle, faceNormal, normal, myColor);
+				//void drawQuad(inout TriangleStream<g2f> tristream, g2f o, float3 v0, float3 v1, float3 widthDirection, 
+				//              float3 faceNormal, float3 normal, float4 myColor)
+				drawQuad(triStream, o, v0, v1, widthDirAngle, faceNormal, normal, myColor);
 
 
 			}
