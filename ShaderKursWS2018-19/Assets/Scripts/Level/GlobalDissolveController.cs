@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DissolveController : MonoBehaviour
+public class GlobalDissolveController : MonoBehaviour
 {
     public Material matDissolve;
     public Vector4 dissolve;
