@@ -14,9 +14,12 @@
 		_WindSpeed("Wind Speed", float) = 5
 
 		_Ambient ("Ambient", float) = 0.5
+
 		_Radius ("Radius", float) = 1.0
 		_PlayerPos ("Player Position", Vector) = (0, 0, 0)
 		_PlayerOffset ("Player Position Offset", Vector) = (0, 0, 0.7)
+
+
     }
     SubShader
     {
@@ -60,8 +63,7 @@
 				
 			};
 
-			half _Glossiness;
-			half _Metallic;
+			
 			half _GrassHeight;
 			half _GrassWidth;
 			half _Cutoff;
@@ -142,20 +144,24 @@
 				float4 vertexWorld = mul(UNITY_MATRIX_M, v1);
 				
 				//calculates distance to Player and moves grass accordingly
+				//_PlayerPos is set via script
 				_PlayerPos += _PlayerOffset;
 				if(distance((_PlayerPos), vertexWorld) < _Radius)
 				{
 					//get distance to player
-					float distance = min(_GrassHeight / (pow(_PlayerPos.x - vertexWorld.x, 2) * 10), _GrassHeight); 
+					float2 distance = min(_GrassHeight / (pow(_PlayerPos.xz - vertexWorld.xz, 2) * 10), _GrassHeight); 
 					//this line would stretch grass more so its more noticable but it makes grass longer than actual _GrassHeight 
 					//float2 distance = min(_Radius / (pow(_PlayerPos.xz - vertexWorld.xz, 2) * 10), _Radius);
 					float2 dir = normalize(_PlayerPos.xz - vertexWorld.xz);
 
 					//dir sets direction
-					v1.x -= distance * dir.x;
+					v1.x -= distance.x * dir.x;
+					//this could be used if camera was not fix
 					//v1.z -= distance.y * dir.y;
 					
 				}
+
+				
 				
 				float4 myColor = (IN[0].myColor);
 				float3 faceNormal = angleToCamera;
