@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 2177215794278709868}
   - component: {fileID: 2177215794278709871}
   - component: {fileID: 2177215794278709870}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: GrassField
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -50,7 +50,7 @@ MonoBehaviour:
   size: {x: 7, y: 7}
   offsetY: 0
   grassNumber: 339
-  grassDensity: 0.477
+  grassDensity: 1
   startHeight: 10
   thisLayerMask:
     serializedVersion: 2
