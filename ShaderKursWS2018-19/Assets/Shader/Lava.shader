@@ -104,6 +104,8 @@
 
 			ENDHLSL
 		}
+
+		UsePass "Custom/GlobalDissolveToBlack/DissolveToBlack"
 	}
-	Fallback "Custom/GlobalDissolveToBlack"
+	Fallback "Standard"
 }

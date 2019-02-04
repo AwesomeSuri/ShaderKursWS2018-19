@@ -112,6 +112,8 @@
 
 		ENDHLSL
 		}
+
+		UsePass "Custom/GlobalDissolveToBlack/DissolveToBlack"
 	}
 
 }
