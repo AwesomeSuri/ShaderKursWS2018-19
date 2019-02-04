@@ -105,5 +105,5 @@
 			ENDHLSL
 		}
 	}
-	Fallback "Standard"
+	Fallback "Custom/GlobalDissolveToBlack"
 }
