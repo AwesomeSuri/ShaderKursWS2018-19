@@ -81,6 +81,7 @@
 				float timedOffset = _Speed * time;
 
 				// Twirl Effect
+				// Source: https://github.com/Unity-Technologies/ShaderGraph/wiki/Twirl-Node
 				float2 center = float2(0.5f, 0.5f);
 				float2 offset = timedOffset; //float2(0.0f, 0.0f);
 				float2 delta = i.uv - center;
@@ -90,6 +91,7 @@
 				float2 twirlOut = float2(xTwirl + center.x + offset.x, yTwirl + center.y + offset.y);
 
 				// Voronoi Effect
+				// Source: https://github.com/Unity-Technologies/ShaderGraph/wiki/Voronoi-Node
 				float2 UV = twirlOut; //i.uv;
 				float AngleOffset = 2.0f;
 
@@ -124,6 +126,8 @@
 
 			ENDHLSL
 		}
+
+		UsePass "Custom/GlobalDissolveToBlack/DissolveToBlack"
 	}
 	Fallback "Standard"
 }

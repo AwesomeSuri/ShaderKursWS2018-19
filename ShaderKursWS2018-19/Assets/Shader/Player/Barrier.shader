@@ -18,14 +18,12 @@
 
 
 		//Barrier pulse properties
-		//_PulseTex ("Hex Pulse Texture", 2D) = "white" {}
 		_PulseIntensity ("Pulse Intensity", float) = 4.0
 		_PulseDistanceModifier ("Pulse Distance Modifier", float) = 20.0
 		_PulseTextureModifier ("Pulse Distance Texture Modifier", float) = 0.5
 		_PulseCycleModifier ("Pulse Cycle Modifier", float) = 3.0
 		
 		//Hex edge pulse properties
-		//_EdgePulseTex ("Edge Pulse Texture", 2D) = "white" {}
 		_EdgePulseColor ("Edge Pulse Color", COLOR) = (0,0,0,0)
 		_EdgePulseIntensity ("Edge Pulse Intensity", float) = 10.0
 		_EdgeDistanceModifier ("Edge Pulse Distance Modifier", float) = 20.0
@@ -67,14 +65,12 @@
 
 
 		
-			//sampler2D _PulseTex;
-			//float4 _PulseTex_ST;
+			
 			float _PulseIntensity;
 			float _PulseDistanceModifier;
 			float _PulseTextureModifier;
 			float _PulseCycleModifier;
 
-			//sampler2D _EdgePulseTex;
 			float4 _EdgePulseColor;
 			float _EdgePulseIntensity;
 			float _EdgeDistanceModifier;
@@ -111,19 +107,18 @@
 				// Albedo comes from a texture tinted by color
 				fixed4 barrierTex = tex2D (_BarrierTex, IN.uv_MainTex);
 
-				//if we have a texture like this...
 				//Calculate pulse term
-				fixed4 pulseTex = barrierTex.g; //tex2D(_PulseTex, i.uv);
+				fixed4 pulseTex = barrierTex.g;
 				fixed4 pulseTerm = abs(sin(horizontalDist * _PulseDistanceModifier - _Time.y * _PulseCycleModifier - barrierTex.r * _PulseTextureModifier)) * pulseTex * _BarrierColor * _PulseIntensity;
 
 				//Calculate edge pulse term
-				fixed4 edgePulseTex = barrierTex.r; //tex2D(_EdgePulseTex, i.uv);
+				fixed4 edgePulseTex = barrierTex.r;
 				fixed4 edgePulseTerm = max(sin((horizontalDist + verticalDist) * _EdgeDistanceModifier - _Time.y * _EdgeCycleModifier) - _EdgeWidthModifier, 0.0f) * edgePulseTex * _EdgePulseColor * _EdgePulseIntensity * (1 / (1-_EdgeWidthModifier));
 
 
 
-				o.Albedo = _BarrierColor * (pulseTerm + edgePulseTerm).rgb;//barrierTex.rgb;
-				// Metallic and smoothness come from slider variables
+				o.Albedo = _BarrierColor * (pulseTerm + edgePulseTerm).rgb;
+				
 				o.Metallic = _Metallic;
 				o.Smoothness = _Glossiness;
 				o.Alpha = _BarrierAlpha;
