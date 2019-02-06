@@ -27,7 +27,10 @@
 			float4 _GlobalDissolveToBlackVisualArea;
 			float _GlobalDissolveToBlackGlowThickness;
 			float _GlobalDissolveToBlackGlowIntensity;
-			float4 _GlobalDissolveToBlackColor;
+			float4 _GlobalDissolveToBlackColorTop;
+			float4 _GlobalDissolveToBlackColorBottom;
+			float _GlobalDissolveToBlackEquator;
+			float _GlobalDissolveToBlackAmplitude;
 
 			struct appdata
 			{
@@ -77,7 +80,10 @@
 					&& i.worldPos.x < borderRight - 1 + _GlobalDissolveToBlackGlowThickness
 					&& i.worldPos.z > borderBottom - _GlobalDissolveToBlackGlowThickness
 					&& i.worldPos.z < borderTop - 1 + _GlobalDissolveToBlackGlowThickness) {
-					result = _GlobalDissolveToBlackColor.rgb * _GlobalDissolveToBlackGlowIntensity;
+					result = lerp(_GlobalDissolveToBlackColorBottom.rgb,
+						_GlobalDissolveToBlackColorTop.rgb,
+						(i.worldPos.y - _GlobalDissolveToBlackEquator + _GlobalDissolveToBlackAmplitude) / (2 * _GlobalDissolveToBlackAmplitude))
+						* _GlobalDissolveToBlackGlowIntensity;
 				}
 
 				// draw only on non visible area

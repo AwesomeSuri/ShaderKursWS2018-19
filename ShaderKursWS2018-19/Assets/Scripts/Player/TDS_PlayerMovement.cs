@@ -45,6 +45,9 @@ public class TDS_PlayerMovement : MonoBehaviour, IGameManagerToPlayerMovement, I
     [SerializeField]
     [Tooltip("Layer that detects the ray casted from mouse position.")]
     LayerMask floorMask;
+    [SerializeField]
+    [Tooltip("The component of GamManager that controls the global dissolve.")]
+    GlobalDissolveToBlackController dissolve;
 
     [Space]
     [SerializeField]
@@ -121,12 +124,12 @@ public class TDS_PlayerMovement : MonoBehaviour, IGameManagerToPlayerMovement, I
             // get user's input if able
             // otherwise it's probably during a cutscene
             GetInput();
-        }
 
-        // check falling
-        if (transform.position.y < -.1f)
-        {
-            Death();
+            // check falling
+            if (transform.position.y < -.1f)
+            {
+                StartCoroutine(Death());
+            }
         }
     }
 
@@ -249,6 +252,7 @@ public class TDS_PlayerMovement : MonoBehaviour, IGameManagerToPlayerMovement, I
 
         // check transfer direction
         // update room coordinate
+        char dissolveDir = ' ';
         RoomCoordinate roomOld = room;
         Vector3 roomPosition = new Vector3(10 * room.x, 0, 10 * room.y);
         Vector3 transferDirection = (transferTrigger.position - roomPosition).normalized;
@@ -256,21 +260,29 @@ public class TDS_PlayerMovement : MonoBehaviour, IGameManagerToPlayerMovement, I
         {
             transferDirection = Vector3.right;
             room.x++;
+
+            dissolveDir = 'r';
         }
         else if (transferDirection.x < -.5f)
         {
             transferDirection = Vector3.left;
             room.x--;
+
+            dissolveDir = 'l';
         }
         else if (transferDirection.z > .5f)
         {
             transferDirection = Vector3.forward;
             room.y++;
+
+            dissolveDir = 't';
         }
         else if (transferDirection.z < -.5f)
         {
             transferDirection = Vector3.back;
             room.y--;
+
+            dissolveDir = 'b';
         }
         Vector3 toPos = roomPosition
             + 5 * Vector3.right * transferDirection.x
@@ -284,14 +296,14 @@ public class TDS_PlayerMovement : MonoBehaviour, IGameManagerToPlayerMovement, I
         yield return MovePlayer(toPos);
 
         // move shader
-        // TODO
+        yield return dissolve.CloseRoom(dissolveDir);
 
         // move camera
         cam.MoveCamera(room);
         yield return new WaitWhile(() => cam.IsMoving);
 
         // move shader
-        // TODO
+        yield return dissolve.OpenRoom(dissolveDir);
 
         // set grass offset
         grass.SetOffset(room);
@@ -324,7 +336,7 @@ public class TDS_PlayerMovement : MonoBehaviour, IGameManagerToPlayerMovement, I
             // TODO: add death anim
 
             // respawn at start
-            Death();
+            yield return Death();
         }
     }
 
@@ -400,17 +412,22 @@ public class TDS_PlayerMovement : MonoBehaviour, IGameManagerToPlayerMovement, I
     // Called when player y position is below 0.
     // Death animation plays.
     // Respawn.
-    void Death()
+    IEnumerator Death()
     {
         stats.PlayerActive = false;
 
         // TODO: add spawn anim
+        yield return dissolve.DissolveAll();
+
         maze.DeactivateRoom(room);
         room.x = 0;
         room.y = 0;
+
         maze.ActivateRoom(room);
         cam.JumpCamera(room);
         transform.position = Vector3.zero;
+
+        yield return dissolve.JumpIntoRoom(room);
 
         // set grass offset
         grass.SetOffset(room);

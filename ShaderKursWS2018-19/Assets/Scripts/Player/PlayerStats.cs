@@ -81,6 +81,8 @@ public class PlayerStats : MonoBehaviour,
         bow.SetActive(false);
         barrierEars.SetActive(false);
         wings.SetActive(false);
+
+        barrier.SetInt("_BarrierActive", 0);
     }
 
     // Called by player movement transfering room. 

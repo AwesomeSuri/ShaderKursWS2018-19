@@ -69,7 +69,7 @@ public class RoomController : MonoBehaviour, IMazeToRoom
     public void ActivateRoom()
     {
         // activate room
-        staticObjects.SetActive(true);
+        //staticObjects.SetActive(true);
         dynamicObjects.SetActive(true);
 
         // reset all changes
@@ -82,7 +82,7 @@ public class RoomController : MonoBehaviour, IMazeToRoom
     public void DeactivateRoom()
     {
         // deactivate room
-        staticObjects.SetActive(false);
+        //staticObjects.SetActive(false);
         dynamicObjects.SetActive(false);
 
         // deactivate all objects

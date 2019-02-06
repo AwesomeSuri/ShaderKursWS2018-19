@@ -196,6 +196,8 @@
 
 			ENDCG
 		}
+
+		UsePass "Custom/GlobalDissolveToBlack/DissolveToBlack"
 		
     }
 	FallBack "Diffuse"

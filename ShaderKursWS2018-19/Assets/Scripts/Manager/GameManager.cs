@@ -12,8 +12,10 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     GameObject playerObject;
 
+
     IGameManagerToUI levelUI;
     IGameManagerToPlayerStats playerStats;
+    IGameManagerToGlobalDissolve dissolve;
 
 
     // Start is called before the first frame update
@@ -25,7 +27,7 @@ public class GameManager : MonoBehaviour
         playerStats = playerObject.GetComponent<IGameManagerToPlayerStats>();
         playerObject = null;
 
-        playerStats.PlayerActive = true;
+        dissolve = GetComponent<IGameManagerToGlobalDissolve>();
 
         levelUI.UpdateTime(timeLeft);
         StartCoroutine(Intro());
@@ -44,6 +46,13 @@ public class GameManager : MonoBehaviour
     IEnumerator Intro()
     {
         yield return null;
+
+        RoomCoordinate room;
+        room.x = 0;
+        room.y = 0;
+        yield return dissolve.JumpIntoRoom(room);
+
+        playerStats.PlayerActive = true;
 
         playerStats.PickUp(CollectibleType.Sword);
 
