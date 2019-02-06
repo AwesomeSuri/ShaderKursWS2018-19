@@ -110,8 +110,8 @@ public class GrassVertexGenerator : MonoBehaviour
                 normals.Add(hit.normal);
                 indices[i] = i;
 
-                Debug.DrawRay(origin, Vector3.up, Color.green);
-                Debug.DrawLine(origin, hit.normal, Color.red);
+                //Debug.DrawRay(origin, Vector3.up, Color.green);
+                //Debug.DrawLine(origin, hit.normal, Color.red);
             }
             else
             {
