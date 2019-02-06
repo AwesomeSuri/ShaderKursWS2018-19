@@ -202,7 +202,7 @@ MonoBehaviour:
   bow: {fileID: 100000}
   barrierEars: {fileID: 1033043295490263819}
   wings: {fileID: 5947445850534796243}
-  barrier: {fileID: 0}
+  barrier: {fileID: 2100000, guid: 646aae1940261f3409f319f6c06a82d7, type: 2}
 --- !u!54 &54629265374502960
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -570,22 +570,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 4429848419202142}
     m_Modifications:
-    - target: {fileID: 100034, guid: cdd5a08cd8d5c3145ac1ce2d490ba533, type: 3}
-      propertyPath: m_Name
-      value: Player
-      objectReference: {fileID: 0}
-    - target: {fileID: 100034, guid: cdd5a08cd8d5c3145ac1ce2d490ba533, type: 3}
-      propertyPath: m_Layer
-      value: 10
-      objectReference: {fileID: 0}
-    - target: {fileID: 100000, guid: cdd5a08cd8d5c3145ac1ce2d490ba533, type: 3}
-      propertyPath: m_Layer
-      value: 10
-      objectReference: {fileID: 0}
-    - target: {fileID: 100068, guid: cdd5a08cd8d5c3145ac1ce2d490ba533, type: 3}
-      propertyPath: m_Layer
-      value: 10
-      objectReference: {fileID: 0}
     - target: {fileID: 400034, guid: cdd5a08cd8d5c3145ac1ce2d490ba533, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -629,6 +613,22 @@ PrefabInstance:
     - target: {fileID: 400034, guid: cdd5a08cd8d5c3145ac1ce2d490ba533, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 100034, guid: cdd5a08cd8d5c3145ac1ce2d490ba533, type: 3}
+      propertyPath: m_Name
+      value: Player
+      objectReference: {fileID: 0}
+    - target: {fileID: 100034, guid: cdd5a08cd8d5c3145ac1ce2d490ba533, type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: cdd5a08cd8d5c3145ac1ce2d490ba533, type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 100068, guid: cdd5a08cd8d5c3145ac1ce2d490ba533, type: 3}
+      propertyPath: m_Layer
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 9500000, guid: cdd5a08cd8d5c3145ac1ce2d490ba533, type: 3}
       propertyPath: m_Controller
@@ -1054,6 +1054,11 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 10
       objectReference: {fileID: 0}
+    - target: {fileID: 9184625637897604499, guid: 1a828628e46dd5942b4b8ddd64980c20,
+        type: 3}
+      propertyPath: linePointMid
+      value: 
+      objectReference: {fileID: 4877613801475805335}
     - target: {fileID: 8926808556589551735, guid: 1a828628e46dd5942b4b8ddd64980c20,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -1109,11 +1114,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 9184625637897604499, guid: 1a828628e46dd5942b4b8ddd64980c20,
-        type: 3}
-      propertyPath: linePointMid
-      value: 
-      objectReference: {fileID: 4877613801475805335}
     - target: {fileID: 7771296912756108554, guid: 1a828628e46dd5942b4b8ddd64980c20,
         type: 3}
       propertyPath: m_Layer
