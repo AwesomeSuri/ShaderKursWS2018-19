@@ -67,9 +67,13 @@ Material:
     - _GlossMapScale: 1
     - _Glossiness: 0.5
     - _GlossyReflections: 1
+<<<<<<< HEAD
     - _GrassHeight: 1
+=======
+    - _GrassHeight: 0.64
+>>>>>>> Jana
     - _GrassOffset: -4
-    - _GrassWidth: 1
+    - _GrassWidth: 1.02
     - _Metallic: 0
     - _Mode: 0
     - _OcclusionStrength: 1
