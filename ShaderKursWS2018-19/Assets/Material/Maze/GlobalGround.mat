@@ -39,8 +39,20 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _Layer1:
+        m_Texture: {fileID: 2800000, guid: 205beb6bc60489a498309ec235b8fe27, type: 3}
+        m_Scale: {x: 0.2, y: 0.2}
+        m_Offset: {x: 0, y: 0}
+    - _Layer2:
+        m_Texture: {fileID: 2800000, guid: 652468a4d7664cf46866e3fa0132650a, type: 3}
+        m_Scale: {x: 0.2, y: 0.2}
+        m_Offset: {x: 0, y: 0}
+    - _Layer3:
+        m_Texture: {fileID: 2800000, guid: 95d67c3c6d03c1b4387bff2d4cb4bc1e, type: 3}
+        m_Scale: {x: 0.5, y: 0.5}
+        m_Offset: {x: 0, y: 0}
     - _MainTex:
-        m_Texture: {fileID: 2800000, guid: f072cc08971ca05468e3ac0c437e72c7, type: 3}
+        m_Texture: {fileID: 2800000, guid: 94c83206bbaf88846a81e59aae89f5ff, type: 3}
         m_Scale: {x: 0.1, y: 0.1}
         m_Offset: {x: 0, y: 0}
     - _MainTexSide:
@@ -59,13 +71,18 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _Pattern:
+        m_Texture: {fileID: 2800000, guid: 52e78443232435f4495948f483882439, type: 3}
+        m_Scale: {x: 0.07, y: 0.07}
+        m_Offset: {x: 0, y: 0}
     m_Floats:
+    - _Blend: 0.1
     - _Bottom: -1
     - _BumpScale: 1
     - _Cutoff: 0.5
     - _DetailNormalMapScale: 1
     - _DstBlend: 0
-    - _Equator: -0.01
+    - _Equator: -0.3
     - _GlossMapScale: 1
     - _Glossiness: 0.5
     - _GlossyReflections: 1
@@ -76,6 +93,9 @@ Material:
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
     - _SrcBlend: 1
+    - _Threshold1: 0.3
+    - _Threshold2: 0.6
+    - _Threshold3: 0.8
     - _UVSec: 0
     - _ZWrite: 1
     m_Colors:

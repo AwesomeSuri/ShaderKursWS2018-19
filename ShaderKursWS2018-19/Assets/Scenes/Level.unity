@@ -1014,8 +1014,8 @@ Light:
   m_Enabled: 1
   serializedVersion: 8
   m_Type: 1
-  m_Color: {r: 1, g: 0.95686275, b: 0.8392157, a: 1}
-  m_Intensity: 1
+  m_Color: {r: 1, g: 0.94052005, b: 0.7783019, a: 1}
+  m_Intensity: 1.5
   m_Range: 10
   m_SpotAngle: 30
   m_CookieSize: 10
@@ -1786,10 +1786,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a13da3590339a0d40a5fc950d8828746, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pattern: {fileID: 2800000, guid: 503526d7ab0278a46bb5b2ea3549d468, type: 3}
-  size: {x: 15, y: 15}
+  pattern: {fileID: 2800000, guid: 3bec311da981aff4480634a0432b409c, type: 3}
+  size: {x: 70, y: 70}
   offset: {x: 0, y: 0}
-  glowColorTop: {r: 0, g: 1, b: 1, a: 1}
+  glowColorTop: {r: 1, g: 1, b: 1, a: 1}
   glowColorBottom: {r: 0, g: 0, b: 0, a: 1}
   glowThickness: 0.1
   glowIntensity: 3
@@ -1797,7 +1797,7 @@ MonoBehaviour:
   glowAmplitude: 1
   visualArea: {x: -5.5, y: 95, z: -5.5, w: 95}
   speed: 10
-  areaSizeOffset: 1
+  areaSizeOffset: 0.5
   fog: {x: 1, y: -1}
 --- !u!1001 &250881277
 PrefabInstance:
@@ -3234,6 +3234,11 @@ PrefabInstance:
       propertyPath: dissolve
       value: 
       objectReference: {fileID: 249070258}
+    - target: {fileID: 1955758283029328737, guid: 5448c15de19bea742acb90e49cff6a5f,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 5cd6f451575b32444bb6a224b7863c6d, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5448c15de19bea742acb90e49cff6a5f, type: 3}
 --- !u!4 &493744605 stripped
