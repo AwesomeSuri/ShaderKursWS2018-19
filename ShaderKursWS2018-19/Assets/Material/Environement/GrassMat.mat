@@ -60,7 +60,7 @@ Material:
     - _BumpScale: 1
     - _CameraOffsetX: 0
     - _CameraOffsetZ: -2
-    - _Cutoff: 0.5
+    - _Cutoff: 0.293
     - _DetailNormalMapScale: 1
     - _DstBlend: 0
     - _EnemyNumber: 10
