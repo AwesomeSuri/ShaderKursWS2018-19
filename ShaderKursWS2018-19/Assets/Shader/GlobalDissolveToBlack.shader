@@ -2,24 +2,30 @@
 {
 	// this shader is used as additional pass for other shaders that will also be globally dissolved to black
 	// add at the end of the used shader: UsePass "Custom/GlobalDissolveToBlack/DissolveToBlack"
+	Properties
+	{
+		_MainTex("Alpha", 2D) = "bump" {}
+	}
 
-	SubShader{
-		Tags { "RenderType" = "Transparent"}
+		SubShader{
+			Tags { "RenderType" = "Transparent"}
 
-		// not perfect behaviour for transparent objects but whatever...
-		AlphaToMask On
+			Blend SrcAlpha OneMinusSrcAlpha
 
 
-		Pass
-		{
-			Name "DissolveToBlack"
-			HLSLPROGRAM
+			Pass
+			{
+				Name "DissolveToBlack"
+				HLSLPROGRAM
 
-			// not using surf shader because it's somehow still lit even though it's completely black
-			#pragma vertex vert
-			#pragma fragment frag
+		// not using surf shader because it's somehow still lit even though it's completely black
+		#pragma vertex vert
+		#pragma fragment frag
 
-			#include "UnityCG.cginc"
+		#include "UnityCG.cginc"
+
+			sampler2D _MainTex;
+			float4 _MainTex_ST;
 
 			// controll these via script
 			sampler2D _GlobalDissolveToBlackPattern;
@@ -93,6 +99,11 @@
 					&& i.worldPos.z >= borderBottom
 					&& i.worldPos.z <= borderTop - 1) {
 					alpha = 0;
+				}
+				else {
+					// multiply alpha with alpha of object
+					float2 newUV = TRANSFORM_TEX(i.uv, _MainTex);
+					alpha *= tex2D(_MainTex, newUV).a;
 				}
 
 				return float4(result, alpha);

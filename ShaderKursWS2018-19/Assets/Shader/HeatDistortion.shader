@@ -5,11 +5,11 @@
 		// Properties inspired by After Effects Heat Distortion Plug-in
 		// Shader can only be used on overlay canvases or on worldspace meshes iff camera is set to orthographic
 
-		_MainTex ("Noise Pattern", 2D) = "white" {}		// red channel for tint intensity
+		_Pattern ("Noise Pattern", 2D) = "white" {}		// red channel for tint intensity
 														// green channel for horizonal distortion, blue for vertical
 														// needs to be seamless
 														// use plasma.png for testing
-		_Shape("Effect Shape", 2D) = "white" {}			// determines how the effect shape looks like
+		_MainTex ("Effect Shape", 2D) = "white" {}			// determines how the effect shape looks like
 														// red/white for full opaque
 														// use the unity standard particle for testing
 		_Amount ("Distortion Amount", Float) = .02		// how much the image is distorted
@@ -54,8 +54,8 @@
 
 			sampler2D _BackgroundTexture;
 
+			sampler2D _Pattern;
 			sampler2D _MainTex;
-			sampler2D _Shape;
 			float _Amount;
 			float _Size;
 			float _SpeedX;
@@ -92,7 +92,7 @@
 
 			fixed4 frag(v2f i) : SV_Target
 			{
-				fixed3 noise = tex2D(_MainTex, i.noiseUV);
+				fixed3 noise = tex2D(_Pattern, i.noiseUV);
 
 			// calculate uv offset
 			float2 offset = float2(noise.g - .5, noise.b - .5) * _Amount;
@@ -105,7 +105,7 @@
 			fixed3 tint = _Color.rgb * _Intensity * noise.r;
 
 			// effect shape
-			float alpha = tex2D(_Shape, i.shapeUV).r;
+			float alpha = tex2D(_MainTex, i.shapeUV).r;
 
 			return float4(background + tint, alpha);
 		}
