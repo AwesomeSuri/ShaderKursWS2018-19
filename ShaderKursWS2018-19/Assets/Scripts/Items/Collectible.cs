@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum CollectibleType { Heart, Arrow, Sword, Bow, Barrier, Wings, WumpusSlayer }
+public enum CollectibleType { Nothing, Heart, Arrow, Sword, Bow, Barrier, Wings, WumpusSlayer }
 
 public interface ICollectibleSpawnerToCollectible
 {
