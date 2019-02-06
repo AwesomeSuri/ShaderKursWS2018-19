@@ -7,17 +7,19 @@
 	}
 		SubShader
 		{
-			Tags { "RenderType" = "Opaque" }
+			Tags { "RenderType" = "Opaque"}
 			LOD 100
 
 			Pass
 			{
+
 				CGPROGRAM
 				#pragma vertex vert
 				#pragma fragment frag
 
 				#include "UnityCG.cginc"
 				#include "UnityLightingCommon.cginc"
+				#include "AutoLight.cginc"
 
 				struct appdata
 				{
@@ -32,6 +34,7 @@
 					float2 uv : TEXCOORD0;
 					float3 normal : TEXCOORD1;
 					float4 worldPos : TEXCOORD2;
+					LIGHTING_COORDS(3, 4)
 				};
 
 				sampler2D _MainTex;
@@ -46,6 +49,7 @@
 					o.uv = v.uv;
 					o.normal = UnityObjectToWorldNormal(v.normal);
 					o.worldPos = mul(unity_ObjectToWorld, v.vertex);
+					TRANSFER_VERTEX_TO_FRAGMENT(o);
 					return o;
 				}
 
@@ -56,8 +60,9 @@
 					col = tex2D(_MainTex, i.uv);
 
 					// Diffuse lightning
+					float atten = LIGHT_ATTENUATION(i);
 					float nl = max(unity_AmbientSky, dot(normalize(i.normal), _WorldSpaceLightPos0.xyz));
-					col = nl * col * _LightColor0;
+					col = nl * col * _LightColor0 * atten;
 
 					// Vertical fog
 					col *= min(max(0, (i.worldPos.y - _GlobalBottom) / (_GlobalEquator - _GlobalBottom)), 1);

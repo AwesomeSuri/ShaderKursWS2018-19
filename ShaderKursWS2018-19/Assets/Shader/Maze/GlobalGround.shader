@@ -16,17 +16,19 @@
     }
     SubShader
     {
-        Tags { "RenderType"="Opaque" }
-        LOD 100
-
         Pass
         {
+			Tags {"LightMode" = "ForwardBase"}
+
             CGPROGRAM
             #pragma vertex vert
             #pragma fragment frag
 
             #include "UnityCG.cginc"
-			#include "UnityLightingCommon.cginc"
+			#include "Lighting.cginc"
+
+			#pragma multi_compile_fwdbase nolightmap nodirlightmap nodynlightmap novertexlight
+			#include "AutoLight.cginc"
 
             struct appdata
             {
@@ -36,9 +38,10 @@
 
             struct v2f
             {
-                float4 vertex : SV_POSITION;
+                float4 pos : SV_POSITION;
 				float3 normal : TEXCOORD0;
 				float4 worldPos : TEXCOORD1;
+				SHADOW_COORDS(2)
             };
 
 			fixed4 _Color;
@@ -63,9 +66,10 @@
             v2f vert (appdata v)
             {
                 v2f o;
-                o.vertex = UnityObjectToClipPos(v.vertex);
+                o.pos = UnityObjectToClipPos(v.vertex);
 				o.normal = UnityObjectToWorldNormal(v.normal);
 				o.worldPos = mul(unity_ObjectToWorld, v.vertex);
+				TRANSFER_SHADOW(o)
                 return o;
             }
 
@@ -114,8 +118,10 @@
 				}
 
 				// Diffuse lightning
-				float nl = max(unity_AmbientSky, dot(normalize(i.normal), _WorldSpaceLightPos0.xyz));
-				col = nl * col * _LightColor0;
+				float atten = SHADOW_ATTENUATION(i);
+				float nl = dot(normalize(i.normal), _WorldSpaceLightPos0.xyz);
+				float intensity = nl * atten + unity_AmbientSky;
+				col = intensity * col * _LightColor0;
 
 				// Vertical fog
 				col *= min(max(0, (i.worldPos.y - _GlobalBottom) / (_GlobalEquator - _GlobalBottom)), 1);
@@ -127,5 +133,9 @@
 
 
 		UsePass "Custom/GlobalDissolveToBlack/DissolveToBlack"
+
+		// shadow casting support
+		UsePass "Legacy Shaders/VertexLit/SHADOWCASTER"
     }
+	Fallback "Diffuse"
 }
