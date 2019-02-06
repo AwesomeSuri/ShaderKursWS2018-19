@@ -54,7 +54,7 @@ MonoBehaviour:
   startHeight: 10
   thisLayerMask:
     serializedVersion: 2
-    m_Bits: 32768
+    m_Bits: 1024
 --- !u!23 &9020727936771792726
 MeshRenderer:
   m_ObjectHideFlags: 0

@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1296230522910059110}
-  m_Layer: 0
+  m_Layer: 15
   m_Name: Static
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -43,7 +43,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1614701762024085961}
-  m_Layer: 0
+  m_Layer: 15
   m_Name: WallColliders
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -81,7 +81,7 @@ GameObject:
   m_Component:
   - component: {fileID: 867652221154504143}
   - component: {fileID: 456995938093997936}
-  m_Layer: 0
+  m_Layer: 15
   m_Name: Room_Border
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -133,7 +133,7 @@ GameObject:
   - component: {fileID: 2730930130137142596}
   - component: {fileID: 3523612875823635735}
   - component: {fileID: 5311007489888196395}
-  m_Layer: 0
+  m_Layer: 15
   m_Name: Standard
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -223,7 +223,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4742090291187382439}
   - component: {fileID: 2920488468621029892}
-  m_Layer: 0
+  m_Layer: 15
   m_Name: BoxCollider (4)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -267,7 +267,7 @@ GameObject:
   m_Component:
   - component: {fileID: 695543025828067693}
   - component: {fileID: 6335668711317523744}
-  m_Layer: 0
+  m_Layer: 15
   m_Name: BoxCollider (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -310,7 +310,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7493736729259724505}
-  m_Layer: 0
+  m_Layer: 15
   m_Name: Dynamic
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -342,7 +342,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1967203362932605304}
   - component: {fileID: 4776582090412516465}
-  m_Layer: 0
+  m_Layer: 15
   m_Name: BoxCollider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -386,7 +386,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4029574234395344378}
   - component: {fileID: 1967360022791627145}
-  m_Layer: 0
+  m_Layer: 15
   m_Name: BoxCollider (3)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -430,7 +430,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6286639105134219581}
   - component: {fileID: 8213197630140325918}
-  m_Layer: 0
+  m_Layer: 15
   m_Name: BoxCollider (6)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -473,7 +473,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6633241022828669695}
-  m_Layer: 0
+  m_Layer: 15
   m_Name: TransferTrigger
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -509,7 +509,7 @@ GameObject:
   - component: {fileID: 7952271055973364}
   - component: {fileID: 805675092927663564}
   - component: {fileID: 1490545973375930240}
-  m_Layer: 0
+  m_Layer: 15
   m_Name: Wall_Border
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -604,7 +604,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5483098833034292170}
   - component: {fileID: 2471061291395893962}
-  m_Layer: 0
+  m_Layer: 15
   m_Name: Down
   m_TagString: WallTransfer
   m_Icon: {fileID: 0}
@@ -648,7 +648,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7514372909722169990}
   - component: {fileID: 735691109615850723}
-  m_Layer: 0
+  m_Layer: 15
   m_Name: BoxCollider (5)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -691,7 +691,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5517022836898932325}
-  m_Layer: 0
+  m_Layer: 15
   m_Name: Ground
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -723,7 +723,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1062555541557735847}
   - component: {fileID: 8832234470505225563}
-  m_Layer: 0
+  m_Layer: 15
   m_Name: Left
   m_TagString: WallTransfer
   m_Icon: {fileID: 0}
@@ -766,7 +766,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4019961271939638884}
-  m_Layer: 0
+  m_Layer: 15
   m_Name: Enemies
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -797,7 +797,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8795323637382041107}
   - component: {fileID: 4205899543617249125}
-  m_Layer: 0
+  m_Layer: 15
   m_Name: Right
   m_TagString: WallTransfer
   m_Icon: {fileID: 0}
@@ -841,7 +841,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4163210709180509488}
   - component: {fileID: 52238053790992690}
-  m_Layer: 0
+  m_Layer: 15
   m_Name: BoxCollider (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
