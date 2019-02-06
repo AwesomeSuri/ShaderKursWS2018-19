@@ -8,6 +8,7 @@ ModelImporter:
     400000: //RootNode
     400002: Wings_Fire
     2100000: unnamed
+    2100002: None__Wings
     2300000: //RootNode
     2300002: Wings_Fire
     3300000: //RootNode
@@ -16,6 +17,7 @@ ModelImporter:
     4300002: Wings_Fire
     7400000: Default Take
     9500000: //RootNode
+    2186277476908879412: ImportLogs
   externalObjects: {}
   materials:
     importMaterials: 1

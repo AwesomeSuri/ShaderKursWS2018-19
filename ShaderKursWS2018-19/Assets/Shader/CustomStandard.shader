@@ -4,6 +4,9 @@
 	{
 		_Color("Color", Color) = (1,1,1,1)
 		_MainTex("Top", 2D) = "white" {}
+		_Emission("Emission", 2D) = "white" {}
+		_EmissionColor("Emission Color", Color) = (1,1,1,1)
+		_EmissionIntensity("Intensity", Float) = 0
 	}
 		SubShader
 		{
@@ -30,22 +33,28 @@
 
 				struct v2f
 				{
-					float4 vertex : SV_POSITION;
+					float4 pos : SV_POSITION;
 					float2 uv : TEXCOORD0;
 					float3 normal : TEXCOORD1;
 					float4 worldPos : TEXCOORD2;
 					LIGHTING_COORDS(3, 4)
 				};
 
+				fixed4 _Color;
 				sampler2D _MainTex;
 				float4 _MainTex_ST;
+				sampler2D _Emission;
+				float4 _Emission_ST;
+				fixed4 _EmissionColor;
+				float _EmissionIntensity;
+
 				float _GlobalEquator;
 				float _GlobalBottom;
 
 				v2f vert(appdata v)
 				{
 					v2f o;
-					o.vertex = UnityObjectToClipPos(v.vertex);
+					o.pos = UnityObjectToClipPos(v.vertex);
 					o.uv = v.uv;
 					o.normal = UnityObjectToWorldNormal(v.normal);
 					o.worldPos = mul(unity_ObjectToWorld, v.vertex);
@@ -55,17 +64,24 @@
 
 				fixed4 frag(v2f i) : SV_Target
 				{
-					// sample the texture
+					// Albedo
 					fixed4 col;
-					col = tex2D(_MainTex, i.uv);
+					float2 uv = (i.uv - _MainTex_ST.zw) / _MainTex_ST.xy;
+					col = tex2D(_MainTex, uv) * _Color;
 
 					// Diffuse lightning
 					float atten = LIGHT_ATTENUATION(i);
 					float nl = max(unity_AmbientSky, dot(normalize(i.normal), _WorldSpaceLightPos0.xyz));
 					col = nl * col * _LightColor0 * atten;
 
+					// Emission
+					fixed4 emit;
+					uv = (i.uv - _Emission_ST.zw) / _Emission_ST.xy;
+					emit = tex2D(_Emission, uv) * _EmissionColor * _EmissionIntensity;
+					col += emit;
+
 					// Vertical fog
-					col *= min(max(0, (i.worldPos.y - _GlobalBottom) / (_GlobalEquator - _GlobalBottom)), 1);
+					col *= max(0, min(1, (i.worldPos.y - _GlobalBottom) / (_GlobalEquator - _GlobalBottom)));
 
 					return col;
 				}

@@ -6,11 +6,13 @@ ModelImporter:
     100000: //RootNode
     400000: //RootNode
     2100000: unnamed
+    2100002: None__Barrier_Ears
     2300000: //RootNode
     3300000: //RootNode
     4300000: Barrier_Ear
     7400000: Default Take
     9500000: //RootNode
+    2186277476908879412: ImportLogs
   externalObjects: {}
   materials:
     importMaterials: 1
