@@ -6,7 +6,7 @@ using UnityEngine.SceneManagement;
 public class GameManager : MonoBehaviour
 {
     [SerializeField]
-    float timeLeft = 300;
+    float countDown = 300;
     [SerializeField]
     LevelUIController levelUIObject;
     [SerializeField]
@@ -16,6 +16,9 @@ public class GameManager : MonoBehaviour
     IGameManagerToUI levelUI;
     IGameManagerToPlayerStats playerStats;
     IGameManagerToGlobalDissolve dissolve;
+
+    float timeTo;
+    float timeLeft;
 
 
     // Start is called before the first frame update
@@ -29,7 +32,10 @@ public class GameManager : MonoBehaviour
 
         dissolve = GetComponent<IGameManagerToGlobalDissolve>();
 
-        levelUI.UpdateTime(timeLeft);
+        timeTo = Time.time + countDown;
+        timeLeft = timeTo - Time.time;
+
+        levelUI.UpdateTime(countDown);
         StartCoroutine(Intro());
     }
 
@@ -63,9 +69,9 @@ public class GameManager : MonoBehaviour
     // Initiated after intro.
     IEnumerator CountingDown()
     {
-        while (timeLeft > 0)
+        while (Time.time < timeTo)
         {
-            timeLeft -= Time.deltaTime;
+            timeLeft = timeTo - Time.time;
             if (timeLeft > 0)
             {
                 levelUI.UpdateTime(timeLeft);
@@ -73,8 +79,7 @@ public class GameManager : MonoBehaviour
 
             yield return null;
         }
-
-        timeLeft = 0;
-        levelUI.UpdateTime(timeLeft);
+        
+        levelUI.UpdateTime(0);
     }
 }

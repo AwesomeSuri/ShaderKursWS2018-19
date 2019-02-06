@@ -49,7 +49,7 @@ public class EnemyStats : MonoBehaviour
 
     public void GetHit()
     {
-        Health--;
+        //Health--;
         InvincibleTimer = (Health <= 0) ? .5f : .2f;
     }
 }

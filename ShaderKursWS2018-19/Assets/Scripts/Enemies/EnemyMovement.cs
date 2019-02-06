@@ -33,6 +33,9 @@ public class EnemyMovement : MonoBehaviour
     [Tooltip("The speed how fast the enemy turns.")]
     float turnSpeed = 10;
     [SerializeField]
+    [Tooltip("Min time of pauses before going to next point.")]
+    float minPauseTime = 1;
+    [SerializeField]
     [Tooltip("Max time of pauses before going to next point.")]
     float maxPauseTime = 5;
 
@@ -106,8 +109,10 @@ public class EnemyMovement : MonoBehaviour
         // start moving
         if (spawn.type == EnemyType.Bat)
         {
+            minPauseTime = 0;
             maxPauseTime = 0;
         }
+        timer = -1;
         SetDirection(false);
     }
 
@@ -128,27 +133,34 @@ public class EnemyMovement : MonoBehaviour
             return;
         }
 
+        // let be pushed if hit
+        if (stats.InvincibleTimer > 0)
+        {
+            return;
+        }
+
         // check target
         if (target == null)
         {
             // set moving point after taking a break
-            if (timer < 0)
+            // timer -1 => enemy is moving
+            if (timer > 0 && Time.time > timer)
             {
                 SetDirection(false);
 
-                // set next pause time
-                timer = Random.Range(0, maxPauseTime);
+                // set moving
+                timer = -1;
             }
             else
             {
                 // enemy is moving
                 // take a break if moving point is reached
-                if (Vector3.Distance(transform.position, toPos) < .3f)
+                if (Vector3.Distance(transform.position, toPos) < .5f && timer < 0)
                 {
                     toPos = transform.position;
 
-                    // taking a break
-                    timer -= Time.deltaTime;
+                    // set breaktime
+                    timer = Time.time + Random.Range(minPauseTime, maxPauseTime);
                 }
             }
         }
@@ -206,9 +218,14 @@ public class EnemyMovement : MonoBehaviour
         else if (Vector3.Distance(transform.position, target.position) < .5f)
         {
             // stop moving to attack if swordsman
-            if (enemyType == EnemyType.Swordsman && anim.StartAttack())
+            if (enemyType == EnemyType.Swordsman)
             {
                 toPos = transform.position;
+
+                if (!anim.IsAttacking)
+                {
+                    StartCoroutine(anim.Swinging());
+                }
             }
             else
             {
@@ -223,6 +240,7 @@ public class EnemyMovement : MonoBehaviour
             if(enemyType != EnemyType.Hunter)
             {
                 target = null;
+                timer = 1;
                 toPos = transform.position;
             }
             else
@@ -248,31 +266,28 @@ public class EnemyMovement : MonoBehaviour
             // check if being pushed
             if (stats.InvincibleTimer > 0)
             {
-                rigid.AddForce(moveDirection.normalized
-                    * ((target == null) ? speed : followSpeed)
-                    * Time.fixedDeltaTime);
-            }
-            // check if hunter has target
-            else if (enemyType == EnemyType.Hunter && target != null)
-            {
-                rigid.velocity = Vector3.zero;
+                transform.Translate(moveDirection.normalized
+                    * 10
+                    * Time.fixedDeltaTime,
+                    Space.World);
             }
             else
             {
-                rigid.velocity = Vector3.zero;
+                // check if hunter has target
+                if (!(enemyType == EnemyType.Hunter && target != null))
+                {
+                    transform.Translate(moveDirection.normalized
+                        * ((target == null) ? speed : followSpeed)
+                        * Time.fixedDeltaTime,
+                        Space.World);
+                }
 
-                rigid.MovePosition(transform.position
-                    + moveDirection.normalized
-                    * ((target == null) ? speed : followSpeed)
-                    * Time.fixedDeltaTime);
+                // turn the enemy
+                transform.rotation = (Quaternion.Lerp(
+                    transform.rotation,
+                    Quaternion.LookRotation(moveDirection.normalized),
+                    turnSpeed * Time.fixedDeltaTime));
             }
-
-
-            // turn the enemy
-            rigid.MoveRotation(Quaternion.Lerp(
-                rigid.rotation,
-                Quaternion.LookRotation(moveDirection.normalized),
-                turnSpeed * Time.fixedDeltaTime));
         }
 
         // clamp enemy position inside the room
@@ -336,6 +351,7 @@ public class EnemyMovement : MonoBehaviour
     public void DisableEnemy()
     {
         target = null;
+        Lifetime = 0;
 
         // deactivate mesh
         col.enabled = false;
@@ -355,7 +371,7 @@ public class EnemyMovement : MonoBehaviour
                 player = other.GetComponent<IEnemyToPlayer>();
             }
 
-            if (player.PlayerActive && target == null)
+            if (player.PlayerActive && target == null && stats.InvincibleTimer <= 0)
             {
                 target = other.transform;
 
@@ -378,7 +394,11 @@ public class EnemyMovement : MonoBehaviour
             && stats.InvincibleTimer <= 0)
         {
             // push back
-            rigid.AddForce(other.transform.forward * 1000);
+            target = null;
+            toPos = transform.position + (transform.position - other.transform.position).normalized * 10;
+
+            // set next toPos
+            timer = 1;
 
             stats.GetHit();
         }

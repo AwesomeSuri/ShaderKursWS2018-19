@@ -113,13 +113,41 @@ public class TDS_PlayerMovement : MonoBehaviour, IGameManagerToPlayerMovement, I
     {
         levelUI.EnterRoom(room.x, room.y);
     }
+    
+    // Called when player y position is below 0.
+    // Death animation plays.
+    // Respawn.
+    IEnumerator Death()
+    {
+        stats.PlayerActive = false;
+
+        // TODO: add spawn anim
+        yield return dissolve.DissolveAll();
+
+        maze.DeactivateRoom(room);
+        room.x = 0;
+        room.y = 0;
+
+        maze.ActivateRoom(room);
+        cam.JumpCamera(room);
+        transform.position = Vector3.zero;
+
+        yield return dissolve.JumpIntoRoom(room);
+
+        // set grass offset
+        grass.SetOffset(room);
+
+        // enable moving
+        stats.PlayerActive = true;
+        stats.SetRoomTransfering(false);
+    }
     #endregion
 
     #region Update
     // Update is called once per frame
     void Update()
     {
-        if (stats.PlayerActive)
+        if (stats.PlayerActive && Time.time > stats.InvincibleTimer)
         {
             // get user's input if able
             // otherwise it's probably during a cutscene
@@ -203,16 +231,20 @@ public class TDS_PlayerMovement : MonoBehaviour, IGameManagerToPlayerMovement, I
     void UpdateMovement()
     {
         // move the player
-        rigid.MovePosition(transform.position
-            + moveDirection.normalized
-            * (stats.PlayerActive ? (running ? runSpeed : walkSpeed) : walkSpeedCutscene)
-            * Time.fixedDeltaTime);
+        transform.Translate(moveDirection.normalized
+            * ((Time.time < stats.InvincibleTimer) ? 10 : 
+            (stats.PlayerActive ? (running ? runSpeed : walkSpeed) : walkSpeedCutscene))
+            * Time.fixedDeltaTime,
+            Space.World);
 
-        // turn the player
-        rigid.MoveRotation(Quaternion.Lerp(
-            rigid.rotation,
-            Quaternion.LookRotation(lookDirection.normalized),
-            turnSpeed * Time.fixedDeltaTime));
+        if(Time.time > stats.InvincibleTimer)
+        {
+            // turn the player if not being pushed
+            transform.rotation = (Quaternion.Lerp(
+                transform.rotation,
+                Quaternion.LookRotation(lookDirection.normalized),
+                turnSpeed * Time.fixedDeltaTime));
+        }
     }
 
     // Apply movement values into the animation
@@ -240,7 +272,6 @@ public class TDS_PlayerMovement : MonoBehaviour, IGameManagerToPlayerMovement, I
     IEnumerator TransferingRoom(Transform transferTrigger)
     {
         // deactivate all movements
-        rigid.isKinematic = true;
         stats.PlayerActive = false;
         lookAtMouse = false;
         running = false;
@@ -312,7 +343,6 @@ public class TDS_PlayerMovement : MonoBehaviour, IGameManagerToPlayerMovement, I
         toPos += 1.5f * Vector3.right * transferDirection.x
             + 1.5f * Vector3.forward * transferDirection.z;
         yield return MovePlayer(toPos);
-        rigid.isKinematic = false;
 
         // deactivate previous room
         maze.DeactivateRoom(roomOld);
@@ -409,33 +439,20 @@ public class TDS_PlayerMovement : MonoBehaviour, IGameManagerToPlayerMovement, I
     }
     #endregion
 
-    // Called when player y position is below 0.
-    // Death animation plays.
-    // Respawn.
-    IEnumerator Death()
+    #region Item
+    // When a collectible is touched.
+    // Change stats.
+    // Disable collectible.
+    void PickUp(CollectibleType type)
     {
-        stats.PlayerActive = false;
-
-        // TODO: add spawn anim
-        yield return dissolve.DissolveAll();
-
-        maze.DeactivateRoom(room);
-        room.x = 0;
-        room.y = 0;
-
-        maze.ActivateRoom(room);
-        cam.JumpCamera(room);
-        transform.position = Vector3.zero;
-
-        yield return dissolve.JumpIntoRoom(room);
-
-        // set grass offset
-        grass.SetOffset(room);
-
-        // enable moving
-        stats.PlayerActive = true;
-        stats.SetRoomTransfering(false);
+        stats.PickUp(type);
     }
+
+    public void SetWings(bool wings)
+    {
+        anim.SetFlying(wings);
+    }
+    #endregion
 
     private void OnTriggerEnter(Collider other)
     {
@@ -453,21 +470,15 @@ public class TDS_PlayerMovement : MonoBehaviour, IGameManagerToPlayerMovement, I
         {
             PickUp(other.transform.GetComponent<IPlayerToCollectible>().PickUp());
         }
-    }
 
-    // When a collectible is touched.
-    // Change stats.
-    // Disable collectible.
-    void PickUp(CollectibleType type)
-    {
-        stats.PickUp(type);
-    }
+        if (other.gameObject.layer == LayerMask.NameToLayer("EnemyWeapon")
+            && Time.time > stats.InvincibleTimer)
+        {
+            print("here");
+            moveDirection = (transform.position - other.transform.position).normalized * 10;
+            moveDirection = new Vector3(moveDirection.x, 0, moveDirection.z);
 
-    public void SetWings(bool wings)
-    {
-        anim.SetFlying(wings);
-        rigid.constraints = wings ? RigidbodyConstraints.FreezePositionY 
-            | RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ
-            : RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
+            stats.GetHit();
+        }
     }
 }

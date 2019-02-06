@@ -22,7 +22,7 @@ public class EnemyAnimation : MonoBehaviour
     BowController bow;
     [SerializeField]
     [Tooltip("Collider of the weapon.")]
-    Collider weaponCollider;
+    Collider sword;
     [SerializeField]
     [Tooltip("Wait before next attack.")]
     float wait = 5;
@@ -39,7 +39,6 @@ public class EnemyAnimation : MonoBehaviour
     Transform origin;
 
     Animator anim;                                  // animator that is currently used
-    float attackTimer;                              // timer for the wait
 
     public bool IsAttacking { get; private set; }   // true if enemy is currently in attack animation
 
@@ -61,9 +60,9 @@ public class EnemyAnimation : MonoBehaviour
                 break;
         }
 
-        if(weaponCollider != null)
+        if(sword != null)
         {
-            weaponCollider.enabled = false;
+            sword.enabled = false;
         }
     }
 
@@ -73,34 +72,41 @@ public class EnemyAnimation : MonoBehaviour
         anim.SetFloat("SpeedY", y);
     }
 
-    private void Update()
+    public IEnumerator Swinging()
     {
-        if(IsAttacking)
-        attackTimer -= Time.deltaTime;
-    }
+        IsAttacking = true;
 
-    public bool StartAttack()
-    {
-        if(anim.parameterCount > 2)
+        anim.Play("Swing", 1);
+
+        float weight = 0;
+        while (anim.GetLayerWeight(1) < 1)
         {
-            IsAttacking = true;
+            weight += Time.deltaTime * 20;
 
-            if (attackTimer < 0)
-            {
-                anim.SetTrigger("Attack");
-                attackTimer = wait;
-            }
+            sword.transform.localScale = Vector3.one * (1 + weight * .5f);
+            anim.SetLayerWeight(1, weight);
 
-            return true;
+            yield return null;
         }
-        else
+
+        sword.enabled = true;
+
+        yield return new WaitForSeconds(.2f);
+
+        sword.enabled = false;
+
+        while (anim.GetLayerWeight(1) > 0)
         {
-            return false;
-        }
-    }
+            weight -= Time.deltaTime * 10;
 
-    public void EndAttack()
-    {
+            sword.transform.localScale = Vector3.one * (1 + weight * .5f);
+            anim.SetLayerWeight(1, weight);
+
+            yield return null;
+        }
+
+        yield return new WaitForSeconds(wait);
+
         IsAttacking = false;
     }
 

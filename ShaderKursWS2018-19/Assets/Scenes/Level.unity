@@ -1757,7 +1757,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8770b445425bd9142b020edbc3ba2c53, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  timeLeft: 300
+  countDown: 300
   levelUIObject: {fileID: 738157795}
   playerObject: {fileID: 182259466}
 --- !u!4 &249070257
@@ -3234,6 +3234,16 @@ PrefabInstance:
       propertyPath: dissolve
       value: 
       objectReference: {fileID: 249070258}
+    - target: {fileID: 54629265374502960, guid: 5448c15de19bea742acb90e49cff6a5f,
+        type: 3}
+      propertyPath: m_IsKinematic
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 54629265374502960, guid: 5448c15de19bea742acb90e49cff6a5f,
+        type: 3}
+      propertyPath: m_UseGravity
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1955758283029328737, guid: 5448c15de19bea742acb90e49cff6a5f,
         type: 3}
       propertyPath: m_Materials.Array.data[0]

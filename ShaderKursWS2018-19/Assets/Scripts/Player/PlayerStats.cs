@@ -50,7 +50,7 @@ public class PlayerStats : MonoBehaviour,
     [SerializeField]
     Material barrier;
 
-    IPlayerStatsToUI levelUI;                                    // interface between this script and the ui
+    IPlayerStatsToUI levelUI;                               // interface between this script and the ui
 
     public int Health { get; private set; }                 // stores the amount of hearts
     public int ArrowAmount { get; private set; }            // stores the amount of arrows
@@ -59,6 +59,7 @@ public class PlayerStats : MonoBehaviour,
     public Equipment CurrentEquipment { get; private set; } // says what item is currently used
     public bool PlayerActive { get; set; }                  // true if player can controll this object
     public bool RoomTranfering { get; private set; }        // true if player moves to another room
+    public float InvincibleTimer { get; private set; }      // time after getting hit
 
     //---------------------------------------------------------------------------------------------//
     //---------------------------------------------------------------------------------------------//
@@ -173,5 +174,14 @@ public class PlayerStats : MonoBehaviour,
                 wings.SetActive(true);
                 break;
         }
+    }
+    
+
+    // Hit /---------------------------------------------------------------------------------------//
+    // Player is invincible after getting hit.
+    public void GetHit()
+    {
+        Health--;
+        InvincibleTimer = Time.time + .2f;
     }
 }

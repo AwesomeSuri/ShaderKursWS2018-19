@@ -59,7 +59,7 @@ public class PlayerAnimation : MonoBehaviour
 
         sword.enabled = true;
 
-        yield return new WaitForSeconds(.1f);
+        yield return new WaitForSeconds(.2f);
 
         sword.enabled = false;
 
