@@ -30,14 +30,14 @@ public class GlobalDissolveToBlackController : MonoBehaviour, IPlayerToGlobalDis
 
     [Tooltip("(left, right, bottom, top) on xz-plane")]
     public Vector4 visualArea = new Vector4(-5, 5, -5, 5);
+    [Tooltip("Speed of the transition effect.")]
+    public float speed = 5;
+    [Tooltip("Offset of the visible area added to room radius of 5.")]
+    public float areaSizeOffset = .5f;
 
     [Space]
-    [SerializeField]
-    [Tooltip("Speed of the transition effect.")]
-    float speed = 5;
-    [SerializeField]
-    [Tooltip("Offset of the visible area added to room radius of 5.")]
-    float areaSizeOffset = .5f;
+    public Vector2 fog = new Vector2(1, -1);
+
 
     RoomCoordinate room;    // stores the current visual area location
 
@@ -52,6 +52,9 @@ public class GlobalDissolveToBlackController : MonoBehaviour, IPlayerToGlobalDis
         Shader.SetGlobalFloat("_GlobalDissolveToBlackEquator", glowEquator);
         Shader.SetGlobalFloat("_GlobalDissolveToBlackAmplitude", glowAmplitude);
         Shader.SetGlobalVector("_GlobalDissolveToBlackVisualArea", visualArea);
+
+        Shader.SetGlobalFloat("_GlobalEquator", fog.x);
+        Shader.SetGlobalFloat("_GlobalBottom", fog.y);
     }
 
     // Called by player when jumping into a room.
