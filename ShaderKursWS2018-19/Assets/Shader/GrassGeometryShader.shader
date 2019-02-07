@@ -104,8 +104,7 @@ Shader "Custom/GrassGeometryShader"
 				return o;
 			}
 
-			void drawQuad(inout TriangleStream<g2f> tristream, g2f o, float3 v0, float3 v1, float3 widthDirection, float3 faceNormal, float3 normal, float4 myColor){
-
+			void drawQuad(inout TriangleStream<g2f> tristream, g2f o, float3 v0, float3 v1, float3 widthDirection, float3 faceNormal, float3 normal, float4 myColor, float4 worldPos0, float4 worldPos1){
 
 				//first corner at (0,0)
 				o.pos = UnityObjectToClipPos(v0 - widthDirection * 0.5 * _GrassWidth);
@@ -113,7 +112,7 @@ Shader "Custom/GrassGeometryShader"
 				o.normal = normal;
 				o.diffuseTerm = myColor;
 				o.uv = float2(0, 0);
-				o.worldPos.xyz = v0 - widthDirection * 0.5 * _GrassWidth;
+				o.worldPos.xyz = worldPos0 - widthDirection * 0.5 * _GrassWidth;
 				tristream.Append(o);
 
 				//second corner at (1,0)
@@ -122,7 +121,7 @@ Shader "Custom/GrassGeometryShader"
 				o.normal = normal;
 				o.diffuseTerm = myColor;
 				o.uv = float2(1, 0);
-				o.worldPos.xyz = v0 + widthDirection * 0.5 * _GrassWidth;
+				o.worldPos.xyz = worldPos0 + widthDirection * 0.5 * _GrassWidth;
 				tristream.Append(o);
 
 				//third corner at (0,1)
@@ -131,7 +130,7 @@ Shader "Custom/GrassGeometryShader"
 				o.normal = normal;
 				o.diffuseTerm = myColor;
 				o.uv = float2(0, 1);
-				o.worldPos.xyz = v1 - widthDirection * 0.5 * _GrassWidth;
+				o.worldPos.xyz = worldPos1 - widthDirection * 0.5 * _GrassWidth;
 				tristream.Append(o);
 
 				//fourth corner at (1,1)
@@ -140,7 +139,7 @@ Shader "Custom/GrassGeometryShader"
 				o.normal = normal;
 				o.diffuseTerm = myColor;
 				o.uv = float2(1, 1);
-				o.worldPos.xyz = v1 + widthDirection * 0.5 * _GrassWidth;
+				o.worldPos.xyz = worldPos1 + widthDirection * 0.5 * _GrassWidth;
 				tristream.Append(o);
 
 				tristream.RestartStrip();
@@ -195,11 +194,14 @@ Shader "Custom/GrassGeometryShader"
 				
 				g2f o;
 
-				o.worldPos = vertexWorld;
+				float4 worldPos0 = mul(unity_ObjectToWorld, float4(v0, 1));
+				float4 worldPos1 = mul(unity_ObjectToWorld, float4(v1, 1));
+
+				o.worldPos = worldPos0;
 
 				//void drawQuad(inout TriangleStream<g2f> tristream, g2f o, float3 v0, float3 v1, float3 widthDirection, 
 				//              float3 faceNormal, float3 normal, float4 myColor)
-				drawQuad(triStream, o, v0, v1, widthDirAngle, faceNormal, normal, myColor);
+				drawQuad(triStream, o, v0, v1, widthDirAngle, faceNormal, normal, myColor,worldPos0,worldPos1);
 
 
 			}

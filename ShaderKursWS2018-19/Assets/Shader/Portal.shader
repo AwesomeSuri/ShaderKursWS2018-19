@@ -41,6 +41,7 @@
 				float4 vertex : SV_POSITION;
 				float3 worldNormal : TEXCOORD1;
 				float2 uv : TEXCOORD0;
+				float4 worldPos : TEXCOORD2;
 			};
 				
 			sampler2D _MainTex;
@@ -52,6 +53,10 @@
 			float _CellDensity;
 			float _DissolveAmount;
 			float _Intensity;
+
+			sampler2D _GlobalDissolveToBlackPattern;
+			float4 _GlobalDissolveToBlackPatternST;
+			float4 _GlobalDissolveToBlackVisualArea;
 			
 			v2f vert (appdata v)
 			{
@@ -59,6 +64,8 @@
 				o.vertex = UnityObjectToClipPos(v.vertex);
 				o.worldNormal = UnityObjectToWorldNormal(v.normal);
 				o.uv = TRANSFORM_TEX(v.uv, _MainTex);
+
+				o.worldPos = mul(unity_ObjectToWorld, v.vertex);;
 				return o;
 			}
 
@@ -121,7 +128,31 @@
 
 				float voronoiOutPow = pow(voronoiOut, _DissolveAmount);
 
-				return voronoiOutPow * tex * _Color * _Intensity;
+
+				// Global Dissolve
+				// get borders of visible area
+				float alpha = 1;
+				float2 coord = i.worldPos.xz / _GlobalDissolveToBlackPatternST.xy + _GlobalDissolveToBlackPatternST.zw;
+				if (coord.x > 1)
+					coord.x - 1;
+				if (coord.y > 1)
+					coord.y - 1;
+				if (coord.x < 0)
+					coord.x + 1;
+				if (coord.y < 0)
+					coord.y + 1;
+				float borderLeft = (_GlobalDissolveToBlackVisualArea.r + tex2D(_GlobalDissolveToBlackPattern, coord));
+				float borderRight = (_GlobalDissolveToBlackVisualArea.g + (1 - tex2D(_GlobalDissolveToBlackPattern, coord)));
+				float borderBottom = (_GlobalDissolveToBlackVisualArea.b + tex2D(_GlobalDissolveToBlackPattern, coord));
+				float borderTop = (_GlobalDissolveToBlackVisualArea.a + (1 - tex2D(_GlobalDissolveToBlackPattern, coord)));
+				if (i.worldPos.x < borderLeft
+					|| i.worldPos.x > borderRight - 1
+					|| i.worldPos.z < borderBottom
+					|| i.worldPos.z > borderTop - 1) {
+					alpha = 0;
+				}
+
+				return voronoiOutPow * tex * _Color * _Intensity * alpha;
 			}
 
 			ENDHLSL

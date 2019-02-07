@@ -50,6 +50,7 @@
 				float2 uv : TEXCOORD0;
 				float2 noiseUV : TEXCOORD1;
 				float2 shapeUV : TEXCOORD2;
+				float4 worldPos : TEXCOORD3;
 			};
 
 			sampler2D _BackgroundTexture;
@@ -62,6 +63,10 @@
 			float _SpeedY;
 			fixed4 _Color;
 			float _Intensity;
+
+			sampler2D _GlobalDissolveToBlackPattern;
+			float4 _GlobalDissolveToBlackPatternST;
+			float4 _GlobalDissolveToBlackVisualArea;
 
 			v2f vert(appdata v)
 			{
@@ -87,6 +92,8 @@
 
 				o.shapeUV = v.uv;
 
+				o.worldPos = mul(unity_ObjectToWorld, v.vertex);;
+
 				return o;
 			}
 
@@ -106,6 +113,29 @@
 
 			// effect shape
 			float alpha = tex2D(_MainTex, i.shapeUV).r;
+
+
+			// Global Dissolve
+			// get borders of visible area
+			float2 coord = i.worldPos.xz / _GlobalDissolveToBlackPatternST.xy + _GlobalDissolveToBlackPatternST.zw;
+			if (coord.x > 1)
+				coord.x - 1;
+			if (coord.y > 1)
+				coord.y - 1;
+			if (coord.x < 0)
+				coord.x + 1;
+			if (coord.y < 0)
+				coord.y + 1;
+			float borderLeft = (_GlobalDissolveToBlackVisualArea.r + tex2D(_GlobalDissolveToBlackPattern, coord));
+			float borderRight = (_GlobalDissolveToBlackVisualArea.g + (1 - tex2D(_GlobalDissolveToBlackPattern, coord)));
+			float borderBottom = (_GlobalDissolveToBlackVisualArea.b + tex2D(_GlobalDissolveToBlackPattern, coord));
+			float borderTop = (_GlobalDissolveToBlackVisualArea.a + (1 - tex2D(_GlobalDissolveToBlackPattern, coord)));
+			if (i.worldPos.x < borderLeft
+				|| i.worldPos.x > borderRight - 1
+				|| i.worldPos.z < borderBottom
+				|| i.worldPos.z > borderTop - 1) {
+				alpha = 0;
+				}
 
 			return float4(background + tint, alpha);
 		}
