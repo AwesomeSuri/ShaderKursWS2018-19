@@ -47,6 +47,17 @@ public class EnemyMovement : MonoBehaviour
     [Tooltip("Pool of collectibles drops an item when enemy is dead.")]
     CollectibleSpawner collectible;
 
+    [Space]
+    [SerializeField]
+    [Tooltip("Particle System that is played when enemy gets a normal hit.")]
+    ParticleSystem hit;
+    [SerializeField]
+    [Tooltip("Particle System that is played when enemy gets a critical hit.")]
+    ParticleSystem lightning;
+    [SerializeField]
+    [Tooltip("Particle System that is played when enemy dies.")]
+    ParticleSystem explosion;
+
     EnemyAnimation anim;                        // component that controlls its animation
     EnemyStats stats;                           // component that stores its stats
     Rigidbody rigid;                            // rigidbody component of this object
@@ -91,6 +102,7 @@ public class EnemyMovement : MonoBehaviour
                 break;
             case EnemyType.Bat:
                 bat.SetActive(true);
+                bat.GetComponent<Collider>().enabled = true;
                 break;
         }
 
@@ -125,22 +137,14 @@ public class EnemyMovement : MonoBehaviour
             return;
         }
 
-        // check health
-        if (stats.Health <= 0)
-        {
-            StartCoroutine(Death());
-
-            return;
-        }
-
         // let be pushed if hit
-        if (stats.InvincibleTimer > 0)
+        if (stats.InvincibleTimer > Time.time)
         {
             return;
         }
 
-        // do nothing if is hitting
-        if (anim.IsAttacking)
+        // do nothing if is attacking unless hunter
+        if (anim.IsAttacking && enemyType != EnemyType.Hunter)
         {
             return;
         }
@@ -180,12 +184,6 @@ public class EnemyMovement : MonoBehaviour
     {
         // check if active
         if (Lifetime <= 0)
-        {
-            return;
-        }
-
-        // check health
-        if (stats.Health <= 0)
         {
             return;
         }
@@ -268,10 +266,10 @@ public class EnemyMovement : MonoBehaviour
         if (moveDirection.magnitude > .1f)
         {
             // check if being pushed
-            if (stats.InvincibleTimer > 0)
+            if (stats.InvincibleTimer > Time.time)
             {
                 transform.Translate(moveDirection.normalized
-                    * 10
+                    * 5
                     * Time.fixedDeltaTime,
                     Space.World);
             }
@@ -336,15 +334,20 @@ public class EnemyMovement : MonoBehaviour
     // Deactivates enemy.
     IEnumerator Death()
     {
-        // TODO: play death anim
+        anim.Die();
 
-        yield return new WaitForSeconds(.5f);
+        yield return new WaitForSeconds(1f);
+
+        // explode
+        explosion.transform.position = transform.position + Vector3.up * .5f;
+        explosion.Emit(1);
+        explosion.GetComponent<AudioSource>().Play();
 
         // drop item
         CollectibleType collectibleType = CollectibleType.Heart;
         if (enemyType == EnemyType.Hunter)
         {
-            collectibleType = CollectibleType.Arrow;
+            collectibleType = CollectibleType.Bow;
         }
         collectible.Drop(transform.position, collectibleType);
 
@@ -375,7 +378,7 @@ public class EnemyMovement : MonoBehaviour
                 player = other.GetComponent<IEnemyToPlayer>();
             }
 
-            if (player.PlayerActive && target == null && stats.InvincibleTimer <= 0 && !anim.IsAttacking)
+            if (player.PlayerActive && target == null && stats.InvincibleTimer < Time.time && !anim.IsAttacking)
             {
                 target = other.transform;
 
@@ -395,7 +398,7 @@ public class EnemyMovement : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.layer == LayerMask.NameToLayer("PlayerWeapon")
-            && stats.InvincibleTimer <= 0)
+            && stats.InvincibleTimer < Time.time)
         {
             // push back
             target = null;
@@ -406,6 +409,28 @@ public class EnemyMovement : MonoBehaviour
             timer = 1;
 
             stats.GetHit();
+
+            // check health
+            if (stats.Health <= 0)
+            {
+                StopAllCoroutines();
+                StartCoroutine(Death());
+
+                bat.GetComponent<Collider>().enabled = false;
+
+                // lightning effect
+                lightning.transform.position = transform.position + Vector3.up * .5f;
+                lightning.Emit(1);
+                lightning.GetComponent<AudioSource>().Play();
+            }
+            else
+            {
+                // hit effect
+                Vector3 hitPos = (transform.position + other.transform.position) / 2;
+                hit.transform.position = hitPos + Vector3.up * .5f;
+                hit.Emit(1);
+                hit.GetComponent<AudioSource>().Play();
+            }
         }
     }
 

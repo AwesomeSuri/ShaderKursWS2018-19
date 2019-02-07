@@ -22,14 +22,6 @@ public class EnemyStats : MonoBehaviour
 
     //---------------------------------------------------------------------------------------------//
     //---------------------------------------------------------------------------------------------//
-    private void Update()
-    {
-        if (InvincibleTimer > 0)
-        {
-            InvincibleTimer -= Time.deltaTime;
-        }
-    }
-
     // Called when enemy is spawned.
     public void SetStats(EnemyType type)
     {
@@ -49,7 +41,7 @@ public class EnemyStats : MonoBehaviour
 
     public void GetHit()
     {
-        //Health--;
-        InvincibleTimer = (Health <= 0) ? .5f : .2f;
+        Health--;
+        InvincibleTimer = Time.time + ((Health <= 0) ? .5f : .2f);
     }
 }

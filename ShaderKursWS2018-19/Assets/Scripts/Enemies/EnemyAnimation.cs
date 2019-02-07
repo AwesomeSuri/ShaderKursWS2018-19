@@ -38,9 +38,16 @@ public class EnemyAnimation : MonoBehaviour
     [Tooltip("Position where the arrow shoots from.")]
     Transform origin;
 
+    [Space]
+    [SerializeField]
+    SoundEffectPlayer sfx;
+
     Animator anim;                                  // animator that is currently used
 
     public bool IsAttacking { get; private set; }   // true if enemy is currently in attack animation
+
+    Vector3 swordIdlePos;                               // bug workaround
+    Vector3 swordIdleRot;
 
 
     //---------------------------------------------------------------------------------------------//
@@ -60,10 +67,13 @@ public class EnemyAnimation : MonoBehaviour
                 break;
         }
 
-        if(sword != null)
+        if (sword != null)
         {
             sword.enabled = false;
         }
+
+        anim.Play("Idle");
+        IsAttacking = false;
     }
 
     public void UpdateMovement(float x, float y)
@@ -77,6 +87,7 @@ public class EnemyAnimation : MonoBehaviour
         IsAttacking = true;
 
         anim.Play("Swing", 1);
+        sfx.PlayAudio("WhooshMetal");
 
         float weight = 0;
         while (anim.GetLayerWeight(1) < 1)
@@ -107,6 +118,9 @@ public class EnemyAnimation : MonoBehaviour
 
         yield return new WaitForSeconds(wait);
 
+        sword.transform.localPosition = swordIdlePos;
+        sword.transform.localEulerAngles = swordIdleRot;
+
         IsAttacking = false;
     }
 
@@ -117,6 +131,7 @@ public class EnemyAnimation : MonoBehaviour
         anim.SetBool("Aiming", true);
         bow.BendBow(true);
         arrow.SetActive(true);
+        sfx.PlayAudio("BowReady");
 
         yield return new WaitForSeconds(wait);
 
@@ -125,9 +140,17 @@ public class EnemyAnimation : MonoBehaviour
         anim.SetBool("Aiming", false);
         bow.BendBow(false);
         arrow.SetActive(false);
+        sfx.PlayAudio("BowFire");
 
         yield return new WaitForSeconds(1);
 
         IsAttacking = false;
+    }
+
+    public void Die()
+    {
+        StopAllCoroutines();
+
+        anim.Play("Dying");
     }
 }

@@ -67,7 +67,7 @@ public class GlobalDissolveToBlackController : MonoBehaviour, IPlayerToGlobalDis
         Vector4 mid = new Vector4(x, x, y, y);
 
         // animate until area is complete
-        float currentSize = 0;
+        float currentSize = -5;
         while(currentSize < 5 + areaSizeOffset)
         {
             currentSize += Time.deltaTime * speed;
@@ -91,7 +91,7 @@ public class GlobalDissolveToBlackController : MonoBehaviour, IPlayerToGlobalDis
 
         // animate until area is zero
         float currentSize = 5 + areaSizeOffset;
-        while (currentSize > 0)
+        while (currentSize > -5)
         {
             currentSize -= Time.deltaTime * speed;
 
@@ -100,7 +100,7 @@ public class GlobalDissolveToBlackController : MonoBehaviour, IPlayerToGlobalDis
 
             yield return null;
         }
-        visualArea = mid;
+        visualArea = mid + new Vector4(-1, 1, -1, 1) * -5;
         Shader.SetGlobalVector("_GlobalDissolveToBlackVisualArea", visualArea);
     }
 

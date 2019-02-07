@@ -11,6 +11,12 @@ public class Arrow : MonoBehaviour
     [Tooltip("The max speed the arrow moves forward.")]
     float maxSpeed = 5;
 
+    [Space]
+    [SerializeField]
+    [Tooltip("Particle System that is played when the arrow hits.")]
+    ParticleSystem hit;
+
+
     Rigidbody rigid;
     GameObject mesh;
 
@@ -64,12 +70,20 @@ public class Arrow : MonoBehaviour
         Hit();
     }
 
+    private void OnCollisionEnter(Collision collision)
+    {
+        //Hit();
+    }
+
     void Hit()
     {
         Lifetime = 0;
         DeactivateArrow();
 
-        // TODO: add sound and effect
+        // hit effect
+        hit.transform.position = transform.position + Vector3.up * .5f;
+        hit.Emit(1);
+        hit.GetComponent<AudioSource>().Play();
     }
 
     public void DeactivateArrow()

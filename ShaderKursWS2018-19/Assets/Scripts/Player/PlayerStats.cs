@@ -27,7 +27,7 @@ public interface IEnemyToPlayer
     bool PlayerActive { get; }
 }
 
-public class PlayerStats : MonoBehaviour, 
+public class PlayerStats : MonoBehaviour,
     ICollectibleSpawnerToPlayerStats, IUIToPlayerStats, IGameManagerToPlayerStats, IEnemyToPlayer
 {
     //---------------------------------------------------------------------------------------------//
@@ -49,6 +49,10 @@ public class PlayerStats : MonoBehaviour,
     GameObject wings;
     [SerializeField]
     Material barrier;
+
+    [Space]
+    [SerializeField]
+    SoundEffectPlayer sfx;
 
     IPlayerStatsToUI levelUI;                               // interface between this script and the ui
 
@@ -102,13 +106,20 @@ public class PlayerStats : MonoBehaviour,
                 if (Health < 3)
                 {
                     Health++;
+                    levelUI.UpdateHearts(Health);
                 }
                 break;
 
             case CollectibleType.Arrow:
                 if (ArrowAmount < 15)
                 {
-                    ArrowAmount++;
+                    ArrowAmount += 3;
+                    if (ArrowAmount > 15)
+                    {
+                        ArrowAmount = 15;
+                    }
+
+                    levelUI.UpdateArrows(ArrowAmount);
                 }
                 break;
 
@@ -153,12 +164,16 @@ public class PlayerStats : MonoBehaviour,
                 bow.SetActive(false);
                 barrierEars.SetActive(false);
                 wings.SetActive(false);
+
+                sfx.PlayAudio("WhooshMetal");
                 break;
             case Equipment.Bow:
                 sword.SetActive(false);
                 bow.SetActive(true);
                 barrierEars.SetActive(false);
                 wings.SetActive(false);
+
+                sfx.PlayAudio("Wood");
                 break;
             case Equipment.Barrier:
                 sword.SetActive(false);
@@ -175,16 +190,27 @@ public class PlayerStats : MonoBehaviour,
                 break;
         }
     }
-    
+
 
     // Hit /---------------------------------------------------------------------------------------//
     // Player is invincible after getting hit.
     public void GetHit()
     {
         Health--;
-        print(Health);
         levelUI.UpdateHearts(Health);
 
         InvincibleTimer = Time.time + .2f;
+    }
+
+    public void ResetStats()
+    {
+        Health = 3;
+        levelUI.UpdateHearts(Health);
+    }
+
+    public void Shoot()
+    {
+        ArrowAmount--;
+        levelUI.UpdateArrows(ArrowAmount);
     }
 }

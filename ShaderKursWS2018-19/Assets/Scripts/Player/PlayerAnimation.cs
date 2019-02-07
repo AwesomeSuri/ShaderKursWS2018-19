@@ -11,16 +11,28 @@ public class PlayerAnimation : MonoBehaviour
     [SerializeField]
     GameObject arrow;
 
+    [Space]
+    [SerializeField]
+    SoundEffectPlayer sfx;
+
     Animator anim;
     bool aimTo;
 
     public bool IsSwinging { get; private set; }
     public float IsAiming { get; private set; }
 
+    Vector3 swordIdlePos;                               // bug workaround
+    Vector3 swordIdleRot;
+
     // Start is called before the first frame update
     void Awake()
     {
         anim = GetComponent<Animator>();
+
+        swordIdlePos = sword.transform.localPosition;
+        swordIdleRot = sword.transform.localEulerAngles;
+
+        ResetAnim();
     }
 
     // Update is called once per frame
@@ -45,6 +57,7 @@ public class PlayerAnimation : MonoBehaviour
         IsSwinging = true;
 
         anim.Play("Swing", 1);
+        sfx.PlayAudio("WhooshMetal");
 
         float weight = 0;
         while (anim.GetLayerWeight(1) < 1)
@@ -75,6 +88,9 @@ public class PlayerAnimation : MonoBehaviour
 
         IsSwinging = false;
 
+        sword.transform.localPosition = swordIdlePos;
+        sword.transform.localEulerAngles = swordIdleRot;
+
         yield return null;
     }
 
@@ -86,6 +102,7 @@ public class PlayerAnimation : MonoBehaviour
         StartCoroutine(Aiming());
 
         bow.BendBow(true);
+        sfx.PlayAudio("BowReady");
 
         if (hasArrow)
         {
@@ -98,6 +115,8 @@ public class PlayerAnimation : MonoBehaviour
         aimTo = false;
 
         bow.BendBow(false);
+        sfx.PlayAudio("BowFire");
+        sfx.StopAudio("BowReady");
 
         arrow.SetActive(false);
     }
@@ -118,5 +137,22 @@ public class PlayerAnimation : MonoBehaviour
 
             yield return null;
         }
+
+        IsAiming = -1;
+    }
+
+    public void Die()
+    {
+        StopAllCoroutines();
+
+        anim.Play("Dying");
+    }
+
+    public void ResetAnim()
+    {
+        anim.Play("Idle");
+
+        IsAiming = -1;
+        IsSwinging = false;
     }
 }

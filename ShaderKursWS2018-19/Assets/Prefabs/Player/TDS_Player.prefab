@@ -329,6 +329,22 @@ Transform:
   m_Father: {fileID: 4429848419202142}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!54 &8212900259554519535
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8212900259554519534}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: Infinity
+  m_AngularDrag: Infinity
+  m_UseGravity: 0
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 126
+  m_CollisionDetection: 2
 --- !u!65 &25488752
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -342,22 +358,6 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 0.07402214, y: 0.13202007, z: 0.8302483}
   m_Center: {x: -0.000000027817556, y: 0.00000005803287, z: 0.3421921}
---- !u!54 &8212900259554519535
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8212900259554519534}
-  serializedVersion: 2
-  m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: 0.05
-  m_UseGravity: 0
-  m_IsKinematic: 0
-  m_Interpolate: 0
-  m_Constraints: 0
-  m_CollisionDetection: 2
 --- !u!1001 &1798326460
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -501,11 +501,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: -98.87601
       objectReference: {fileID: 0}
-    - target: {fileID: 9025386938275770562, guid: 5d5e035b6509eff489a75e8ce35c620e,
-        type: 3}
-      propertyPath: m_Materials.Array.data[0]
-      value: 
-      objectReference: {fileID: 2100000, guid: dbebb20f0906f0d45a9c05da95faf917, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5d5e035b6509eff489a75e8ce35c620e, type: 3}
 --- !u!1 &8212900259554519534 stripped
@@ -1171,11 +1166,6 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 10
       objectReference: {fileID: 0}
-    - target: {fileID: 6973360982006151574, guid: 1a828628e46dd5942b4b8ddd64980c20,
-        type: 3}
-      propertyPath: m_Materials.Array.data[0]
-      value: 
-      objectReference: {fileID: 2100000, guid: 5cd6f451575b32444bb6a224b7863c6d, type: 2}
     - target: {fileID: 6973360982019749022, guid: 1a828628e46dd5942b4b8ddd64980c20,
         type: 3}
       propertyPath: m_Layer

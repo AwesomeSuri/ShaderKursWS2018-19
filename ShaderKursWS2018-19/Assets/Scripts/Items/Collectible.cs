@@ -62,6 +62,8 @@ public class Collectible : MonoBehaviour, ICollectibleSpawnerToCollectible, IPla
         // set drop zone
         transform.position = position;
 
+        print(type);
+
         // activate the right mesh
         this.type = type;
         switch (type)

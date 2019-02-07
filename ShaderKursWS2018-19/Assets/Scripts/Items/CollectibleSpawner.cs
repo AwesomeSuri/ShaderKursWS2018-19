@@ -84,16 +84,19 @@ public class CollectibleSpawner : MonoBehaviour, IEnemyToCollectibleSpawner, IMa
         }
 
         // check if something will be dropped
-        if (Random.Range(0, 1) > probability)
+        if (Random.Range(0f, 1f) > probability)
         {
             return;
         }
 
         // check if player already has a bow
         // drop heart if not
+        print(player.BowCollected);
         if (!player.BowCollected)
         {
             collectibles[index].Drop(position, CollectibleType.Heart);
+
+            return;
         }
 
         // check if player needs a heart
@@ -101,7 +104,7 @@ public class CollectibleSpawner : MonoBehaviour, IEnemyToCollectibleSpawner, IMa
         float heartProbability = (4 - player.Health) * .25f;
 
         // drop heart if randomizer is lower
-        if(Random.Range(0,1) <= heartProbability)
+        if(Random.Range(0f, 1f) <= heartProbability)
         {
             collectibles[index].Drop(position, CollectibleType.Heart);
         }

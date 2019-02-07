@@ -51,6 +51,14 @@ public class TDS_PlayerMovement : MonoBehaviour, IGameManagerToPlayerMovement, I
 
     [Space]
     [SerializeField]
+    [Tooltip("Particle System that is played when player gets a normal hit.")]
+    ParticleSystem hit;
+    [SerializeField]
+    [Tooltip("Particle System that is played when player gets a critical hit.")]
+    ParticleSystem lightning;
+
+    [Space]
+    [SerializeField]
     [Tooltip("PlayerAnimator component of the mesh.")]
     PlayerAnimation anim;
     [SerializeField]
@@ -84,7 +92,6 @@ public class TDS_PlayerMovement : MonoBehaviour, IGameManagerToPlayerMovement, I
     GrassController grass;                              // component that moves the grass near the player
     bool arrowLoaded;                                   // true if aiming with an arrow
 
-
     //---------------------------------------------------------------------------------------------//
     //---------------------------------------------------------------------------------------------//
     #region Init
@@ -113,17 +120,24 @@ public class TDS_PlayerMovement : MonoBehaviour, IGameManagerToPlayerMovement, I
     {
         levelUI.EnterRoom(room.x, room.y);
     }
-    
+
     // Called when player y position is below 0.
     // Death animation plays.
     // Respawn.
-    IEnumerator Death()
+    IEnumerator DeathAndSpawn()
     {
         stats.PlayerActive = false;
 
+        anim.Die();
+
+        yield return new WaitForSeconds(2);
+        print("start");
         // TODO: add spawn anim
         yield return dissolve.DissolveAll();
 
+        yield return new WaitForSeconds(.5f);
+
+        print("end");
         maze.DeactivateRoom(room);
         room.x = 0;
         room.y = 0;
@@ -132,10 +146,16 @@ public class TDS_PlayerMovement : MonoBehaviour, IGameManagerToPlayerMovement, I
         cam.JumpCamera(room);
         transform.position = Vector3.zero;
 
-        yield return dissolve.JumpIntoRoom(room);
+        // reset stats
+        stats.ResetStats();
+
+        // reset anim
+        anim.ResetAnim();
 
         // set grass offset
         grass.SetOffset(room);
+
+        yield return dissolve.JumpIntoRoom(room);
 
         // enable moving
         stats.PlayerActive = true;
@@ -149,16 +169,24 @@ public class TDS_PlayerMovement : MonoBehaviour, IGameManagerToPlayerMovement, I
     {
         if (stats.PlayerActive && Time.time > stats.InvincibleTimer)
         {
-            // get user's input if able
-            // otherwise it's probably during a cutscene
-            GetInput();
-
-            // check falling
-            if (transform.position.y < -.1f)
+            if (Time.time > stats.InvincibleTimer)
             {
-                stats.GetHit();
-                stats.GetHit();
-                stats.GetHit();
+                // get user's input if able
+                // otherwise it's probably during a cutscene
+                GetInput();
+
+                // check falling
+                if (transform.position.y < -.1f)
+                {
+                    stats.GetHit();
+                    stats.GetHit();
+                    stats.GetHit();
+                }
+            }
+
+            if (stats.Health <= 0)
+            {
+                StartCoroutine(DeathAndSpawn());
             }
         }
     }
@@ -182,6 +210,15 @@ public class TDS_PlayerMovement : MonoBehaviour, IGameManagerToPlayerMovement, I
         float horizontal = Input.GetAxisRaw(horizontalAxis);
         float vertical = Input.GetAxisRaw(verticalAxis);
         moveDirection = new Vector3(horizontal, 0, vertical);
+
+        if (moveDirection.magnitude < .1f)
+        {
+            moveDirection = Vector3.zero;
+        }
+        else
+        {
+            moveDirection = moveDirection.normalized;
+        }
 
         // get mouse input for lookDirection
         if (lookAtMouse)
@@ -212,7 +249,7 @@ public class TDS_PlayerMovement : MonoBehaviour, IGameManagerToPlayerMovement, I
         {
             Attack();
         }
-        if(Input.GetButtonUp("Fire1") && anim.IsAiming > 0)
+        if (Input.GetButtonUp("Fire1") && anim.IsAiming > 0)
         {
             Shoot();
         }
@@ -234,18 +271,27 @@ public class TDS_PlayerMovement : MonoBehaviour, IGameManagerToPlayerMovement, I
     {
         // move the player
         transform.Translate(moveDirection.normalized
-            * ((Time.time < stats.InvincibleTimer) ? 10 : 
+            * ((Time.time < stats.InvincibleTimer) ? 10 :
             (stats.PlayerActive ? (running ? runSpeed : walkSpeed) : walkSpeedCutscene))
             * Time.fixedDeltaTime,
             Space.World);
 
-        if(Time.time > stats.InvincibleTimer)
+        if (Time.time > stats.InvincibleTimer)
         {
             // turn the player if not being pushed
             transform.rotation = (Quaternion.Lerp(
                 transform.rotation,
                 Quaternion.LookRotation(lookDirection.normalized),
                 turnSpeed * Time.fixedDeltaTime));
+        }
+
+        // clamp if being pushed
+        if (stats.InvincibleTimer > Time.time)
+        {
+            Vector3 room = new Vector3(this.room.x, 0, this.room.y) * 10;
+            float x = Mathf.Clamp(transform.position.x, room.x - 3.5f, room.x + 3.5f);
+            float y = Mathf.Clamp(transform.position.z, room.z - 3.5f, room.z + 3.5f);
+            transform.position = new Vector3(x, 0, y);
         }
     }
 
@@ -278,7 +324,7 @@ public class TDS_PlayerMovement : MonoBehaviour, IGameManagerToPlayerMovement, I
         lookAtMouse = false;
         running = false;
         stats.SetRoomTransfering(true);
-        if (arrowLoaded)
+        if (anim.IsAiming > 0)
         {
             Shoot();
         }
@@ -368,7 +414,7 @@ public class TDS_PlayerMovement : MonoBehaviour, IGameManagerToPlayerMovement, I
             // TODO: add death anim
 
             // respawn at start
-            yield return Death();
+            yield return DeathAndSpawn();
         }
     }
 
@@ -390,7 +436,7 @@ public class TDS_PlayerMovement : MonoBehaviour, IGameManagerToPlayerMovement, I
             StartCoroutine(Swinging());
         }
 
-        if(stats.CurrentEquipment == Equipment.Bow)
+        if (stats.CurrentEquipment == Equipment.Bow)
         {
             Aim();
         }
@@ -412,28 +458,33 @@ public class TDS_PlayerMovement : MonoBehaviour, IGameManagerToPlayerMovement, I
 
     void Aim()
     {
-        // check if arrow available
-        if(stats.ArrowAmount > 0)
+        // check if currently aiming
+        if (anim.IsAiming <= -1)
         {
-            // TODO: add stretch sound
+            anim.StartAiming(stats.ArrowAmount > 0);
 
-            arrowLoaded = true;
+            // check if arrow available
+            if (stats.ArrowAmount > 0)
+            {
+                arrowLoaded = true;
+            }
+
+            lookAtMouse = true;
         }
-
-        lookAtMouse = true;
-        anim.StartAiming(stats.ArrowAmount > 0);
     }
 
     void Shoot()
     {
         // shoot arrow if loaded
-        if(arrowLoaded)
+        if (arrowLoaded)
         {
             // TODO: add shoot sound
 
             arrow.Shoot(arrowOrigin, anim.IsAiming);
 
             arrowLoaded = false;
+
+            stats.Shoot();
         }
 
         lookAtMouse = false;
@@ -476,10 +527,29 @@ public class TDS_PlayerMovement : MonoBehaviour, IGameManagerToPlayerMovement, I
         if (other.gameObject.layer == LayerMask.NameToLayer("EnemyWeapon")
             && Time.time > stats.InvincibleTimer)
         {
-            moveDirection = (transform.position - other.transform.position).normalized * 10;
-            moveDirection = new Vector3(moveDirection.x, 0, moveDirection.z);
-
             stats.GetHit();
+
+            if (stats.Health > 0)
+            {
+                moveDirection = (transform.position - other.transform.position).normalized * 10;
+                moveDirection = new Vector3(moveDirection.x, 0, moveDirection.z);
+
+                // hit effect
+                Vector3 hitPos = (transform.position + other.transform.position) / 2;
+                hit.transform.position = hitPos + Vector3.up * .5f;
+                hit.Emit(1);
+                hit.GetComponent<AudioSource>().Play();
+            }
+            else
+            {
+                moveDirection = Vector3.zero;
+                StartCoroutine(DeathAndSpawn());
+
+                // lightning effect
+                lightning.transform.position = transform.position + Vector3.up * .5f;
+                lightning.Emit(1);
+                lightning.GetComponent<AudioSource>().Play();
+            }
         }
     }
 }
