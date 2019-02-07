@@ -16,6 +16,8 @@
     }
     SubShader
     {
+		Tags{ "Queue" = "Geometry" }
+
         Pass
         {
 			Tags {"LightMode" = "ForwardBase"}
