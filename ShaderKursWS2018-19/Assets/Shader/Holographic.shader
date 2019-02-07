@@ -53,6 +53,13 @@
             float _Speed;
             sampler2D _UndoEffectTexture; 
             float4 _UndoEffectTexture_ST;
+
+			sampler2D _Pattern;
+			float _Dissolve;
+			float _DissolveEdge;
+			fixed4 _DissolveGlow;
+			float _DissolveIntensity;
+
 			
 			v2f vert (appdata v)
 			{
@@ -90,7 +97,15 @@
 
 				// Diffuse lightning
 				float nl = max(_Ambient, dot(normalDir, _WorldSpaceLightPos0.xyz));
-				final = nl * final * _LightColor0;
+				final = nl * final * _LightColor0; 
+				
+				// Dissolve
+				float pattern = tex2D(_Pattern, i.uv).r;
+				clip(pattern - _Dissolve);
+				if (pattern - _Dissolve < _DissolveEdge && pattern > _DissolveEdge)
+				{
+					final = _DissolveGlow * _DissolveIntensity;
+				}
 
                 // Return final color
                 return fixed4(final, mainTex.a * alpha);

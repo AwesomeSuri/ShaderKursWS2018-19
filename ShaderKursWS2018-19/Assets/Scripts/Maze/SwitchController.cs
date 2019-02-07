@@ -10,9 +10,26 @@ public class SwitchController : MonoBehaviour
     Transform switchObject;
     [SerializeField]
     Transform activatedObjects;
+    [SerializeField]
+    float offset;
 
     int current;
     float toRot;
+    int maxChildCount;
+    bool IsSwitching;
+
+    private void Awake()
+    {
+        for (int i = 0; i < activatedObjects.childCount; i++)
+        {
+            maxChildCount = Mathf.Max(maxChildCount, activatedObjects.GetChild(i).childCount);
+        }
+    }
+
+    private void OnEnable()
+    {
+        StartCoroutine(Switching());
+    }
 
     private void Update()
     {
@@ -30,19 +47,41 @@ public class SwitchController : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         //print(LayerMask.other.gameObject.layer);
-        if (other.gameObject.layer == LayerMask.NameToLayer("PlayerWeapon"))
+        if (other.gameObject.layer == LayerMask.NameToLayer("PlayerWeapon") && !IsSwitching)
         {
             toRot = (toRot + 90) % 360;
             current = (current + 1) % activatedObjects.childCount;
 
-            // switch off all objects
-            for (int i = 0; i < activatedObjects.childCount; i++)
+            StartCoroutine(Switching());
+        }
+    }
+
+    IEnumerator Switching()
+    {
+        IsSwitching = true;
+
+        for (int i = 0; i < maxChildCount; i++)
+        {
+            for (int j = 0; j < activatedObjects.childCount; j++)
             {
-                activatedObjects.GetChild(i).gameObject.SetActive(false);
+                if(i < activatedObjects.GetChild(j).childCount)
+                {
+                    ISwitchToActivatedObject activatedObject = activatedObjects.GetChild(j).GetChild(i).GetComponent<ISwitchToActivatedObject>();
+
+                    if(j == current)
+                    {
+                        activatedObject.Activate(true);
+                    }
+                    else
+                    {
+                        activatedObject.Activate(false);
+                    }
+                }
             }
 
-            // switch on current object
-            activatedObjects.GetChild(current).gameObject.SetActive(true);
+            yield return new WaitForSeconds(offset);
         }
+
+        IsSwitching = false;
     }
 }
