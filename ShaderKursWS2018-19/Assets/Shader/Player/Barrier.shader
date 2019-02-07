@@ -16,6 +16,8 @@
 		_BarrierThickness ("Barrier Thickness", Range(0, 0.5)) = 0.05
 		_BarrierAlpha ("Barrier Alpha", Range(0, 1)) = 0.25
 
+		_BarrierShiftSpeed("Barrier Shift Speed", float) = 0.5
+
 
 		//Barrier pulse properties
 		_PulseIntensity ("Pulse Intensity", float) = 4.0
@@ -62,7 +64,7 @@
 		int _BarrierActive;
 		float _BarrierThickness;
 		float _BarrierAlpha;
-
+		float _BarrierShiftSpeed;
 
 		
 			
@@ -105,7 +107,8 @@
 				float verticalDist = abs(IN.vertex.z);
 
 				// Albedo comes from a texture tinted by color
-				fixed4 barrierTex = tex2D (_BarrierTex, IN.uv_MainTex);
+				float2 uv_withOffset = IN.uv_MainTex + float2(sin(_Time.x * _BarrierShiftSpeed), cos(_Time.y * _BarrierShiftSpeed));
+				fixed4 barrierTex = tex2D (_BarrierTex, uv_withOffset);
 
 				//Calculate pulse term
 				fixed4 pulseTex = barrierTex.g;
