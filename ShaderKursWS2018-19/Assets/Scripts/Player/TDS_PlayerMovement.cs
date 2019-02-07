@@ -199,6 +199,13 @@ public class TDS_PlayerMovement : MonoBehaviour, IGameManagerToPlayerMovement, I
     void LateUpdate()
     {
         UpdateAnimation();
+
+        Shader.SetGlobalVector("_PlayerPos", transform.position);
+    }
+
+    void OnValidate()
+    {
+        Shader.SetGlobalVector("_PlayerPos", transform.position);
     }
     #endregion
 
