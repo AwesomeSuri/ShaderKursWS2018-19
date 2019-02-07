@@ -23,6 +23,8 @@ public class Collectible : MonoBehaviour, ICollectibleSpawnerToCollectible, IPla
     //---------------------------------------------------------------------------------------------//
     //---------------------------------------------------------------------------------------------//
     [SerializeField]
+    Transform items;
+    [SerializeField]
     [Tooltip("GameObject of the heart mesh.")]
     GameObject heart;
     [SerializeField]
@@ -40,9 +42,18 @@ public class Collectible : MonoBehaviour, ICollectibleSpawnerToCollectible, IPla
     [SerializeField]
     [Tooltip("GameObject of the wumpus slayer mesh.")]
     GameObject wumpusSlayer;
+    [SerializeField]
+    float floatSpeed = 1;
+    [SerializeField]
+    float floatAmplitude = .5f;
+    [SerializeField]
+    float rotSpeed = 1;
+    [SerializeField]
+    Transform effect;
 
     CollectibleType type;                       // stores the type of collectible
     Collider col;                               // collider component of this collectible
+    ParticleSystem[] shines;
 
     public bool IsActive { get; private set; }  // true if lootable, false when ready to be dropped
 
@@ -54,6 +65,27 @@ public class Collectible : MonoBehaviour, ICollectibleSpawnerToCollectible, IPla
     void Awake()
     {
         col = GetComponent<Collider>();
+
+        if (shines == null)
+        {
+            SetParticles();
+        }
+    }
+
+    void SetParticles()
+    {
+        shines = new ParticleSystem[effect.childCount];
+        for (int i = 0; i < shines.Length; i++)
+        {
+            shines[i] = effect.GetChild(i).GetComponent<ParticleSystem>();
+        }
+    }
+
+    void Update()
+    {
+        float y = Mathf.Sin(Time.time * floatSpeed) * floatAmplitude;
+        items.localPosition = Vector3.up * y;
+        items.Rotate(Vector3.up, Time.time * rotSpeed);
     }
 
     // Called when dropped
@@ -63,6 +95,10 @@ public class Collectible : MonoBehaviour, ICollectibleSpawnerToCollectible, IPla
         transform.position = position;
 
         // activate the right mesh
+        if (shines == null)
+        {
+            SetParticles();
+        }
         this.type = type;
         switch (type)
         {
@@ -74,15 +110,39 @@ public class Collectible : MonoBehaviour, ICollectibleSpawnerToCollectible, IPla
                 break;
             case CollectibleType.Bow:
                 bow.SetActive(true);
+
+                for (int i = 0; i < shines.Length; i++)
+                {
+                    shines[i].Play();
+                }
+
                 break;
             case CollectibleType.Barrier:
                 barrier.SetActive(true);
+
+                for (int i = 0; i < shines.Length; i++)
+                {
+                    shines[i].Play();
+                }
+
                 break;
             case CollectibleType.Wings:
                 wings.SetActive(true);
+
+                for (int i = 0; i < shines.Length; i++)
+                {
+                    shines[i].Play();
+                }
+
                 break;
             case CollectibleType.WumpusSlayer:
                 wumpusSlayer.SetActive(true);
+
+                for (int i = 0; i < shines.Length; i++)
+                {
+                    shines[i].Play();
+                }
+
                 break;
         }
 
@@ -117,7 +177,7 @@ public class Collectible : MonoBehaviour, ICollectibleSpawnerToCollectible, IPla
     {
         Lifetime--;
 
-        if(Lifetime <= 0)
+        if (Lifetime <= 0)
         {
             DisableCollectible();
         }
@@ -138,6 +198,12 @@ public class Collectible : MonoBehaviour, ICollectibleSpawnerToCollectible, IPla
         barrier.SetActive(false);
         wings.SetActive(false);
         wumpusSlayer.SetActive(false);
+
+        for (int i = 0; i < shines.Length; i++)
+        {
+            shines[i].Stop();
+        }
+
 
         // set ready to be dropped
         IsActive = false;
