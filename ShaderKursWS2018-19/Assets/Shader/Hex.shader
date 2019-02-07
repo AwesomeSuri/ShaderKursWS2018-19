@@ -51,6 +51,10 @@
 			float _RimValue;
 			float _Glow;
 			float _FresnelPower;
+
+			sampler2D _GlobalDissolveToBlackPattern;
+			float4 _GlobalDissolveToBlackPatternST;
+			float4 _GlobalDissolveToBlackVisualArea;
 			
 			v2f vert (appdata v)
 			{
@@ -93,18 +97,46 @@
 				float fresnelEffect = pow((1.0f - saturate(dot(normalize(normalDir), normalize(viewDirection)))), _FresnelPower);
 
 				// Cirlce
+				fixed4 final;
 				float dist = distance(i.worldPos, _PlayerPos.xyz);
 				if(dist >= _Radius)
 				{
-					return fixed4(_Color.rgb * diffuseTerm, 1);
+					final = fixed4(_Color.rgb * diffuseTerm, 1);
 				}
 				else
 				{
-					return fixed4(_Glow * fresnelEffect * _Color.rgb * diffuseTerm, 1);
+					final = fixed4(_Glow * fresnelEffect * _Color.rgb * diffuseTerm, 1);
 				}
+
+				// Global Dissolve
+				// get borders of visible area
+				alpha = 1;
+				float2 coord = i.worldPos.xz / _GlobalDissolveToBlackPatternST.xy + _GlobalDissolveToBlackPatternST.zw;
+				if (coord.x > 1)
+					coord.x - 1;
+				if (coord.y > 1)
+					coord.y - 1;
+				if (coord.x < 0)
+					coord.x + 1;
+				if (coord.y < 0)
+					coord.y + 1;
+				float borderLeft = (_GlobalDissolveToBlackVisualArea.r + tex2D(_GlobalDissolveToBlackPattern, coord));
+				float borderRight = (_GlobalDissolveToBlackVisualArea.g + (1 - tex2D(_GlobalDissolveToBlackPattern, coord)));
+				float borderBottom = (_GlobalDissolveToBlackVisualArea.b + tex2D(_GlobalDissolveToBlackPattern, coord));
+				float borderTop = (_GlobalDissolveToBlackVisualArea.a + (1 - tex2D(_GlobalDissolveToBlackPattern, coord)));
+				if (i.worldPos.x < borderLeft
+					|| i.worldPos.x > borderRight - 1
+					|| i.worldPos.z < borderBottom
+					|| i.worldPos.z > borderTop - 1) {
+					alpha = 0;
+				}
+
+				return final * alpha;
 			}
 
 			ENDHLSL
 		}
+
+		UsePass "Custom/GlobalDissolveToBlack/DissolveToBlack"
 	}
 }
