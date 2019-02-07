@@ -4,6 +4,8 @@
         _Color ("Colour", Color) = (1,1,1,1)
 		_Ambient ("Ambient", Range (0, 1)) = 0.25
         _RefNumber("Stencil number", Int) = 1
+
+		_MainTex("Albedo (RGB)", 2D) = "white"{}
     }
     SubShader 
 	{
@@ -35,12 +37,14 @@
 			struct v2f
 			{
 				float4 vertex : SV_POSITION;
+				float4 worldPos : TEXCOORD0;
 			};
 			
 			v2f vert (appdata v)
 			{
 				v2f o;
 				o.vertex = UnityObjectToClipPos(v.vertex);
+				o.worldPos = mul(unity_ObjectToWorld, o.vertex);
 				return o;
 			}
 			
@@ -98,5 +102,7 @@
 
 			ENDHLSL
 		}
+
+			UsePass "Custom/GlobalDissolveToBlack/DissolveToBlack"
     }
 }

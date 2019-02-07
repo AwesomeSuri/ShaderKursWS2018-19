@@ -17,7 +17,7 @@
 	}
 	SubShader
 	{
-		Tags { "Queue" = "Transparent"}
+		Tags { "Queue" = "AlphaTest"}
 
 		Blend SrcAlpha OneMinusSrcAlpha
 		//Cull off

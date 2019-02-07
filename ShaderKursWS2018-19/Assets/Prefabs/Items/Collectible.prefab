@@ -148,7 +148,7 @@ ParticleSystem:
     startLifetime:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 3
+      scalar: 1.5
       minScalar: 5
       maxCurve:
         serializedVersion: 2
@@ -201,7 +201,7 @@ ParticleSystem:
     startSpeed:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 0.2
+      scalar: 0.4
       minScalar: 5
       maxCurve:
         serializedVersion: 2
@@ -837,7 +837,7 @@ ParticleSystem:
           m_RotationOrder: 4
     arc:
       value: 360
-      mode: 0
+      mode: 1
       spread: 0
       speed:
         serializedVersion: 2
@@ -898,7 +898,7 @@ ParticleSystem:
     rateOverTime:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 10
+      scalar: 20
       minScalar: 10
       maxCurve:
         serializedVersion: 2
@@ -4877,8 +4877,8 @@ MonoBehaviour:
   wings: {fileID: 3934368546134749410}
   wumpusSlayer: {fileID: 2117040783665302990}
   floatSpeed: 1
-  floatAmplitude: 0.2
-  rotSpeed: 0.05
+  floatAmplitude: 0.1
+  rotSpeed: 0.02
   effect: {fileID: 8839917786041194736}
 --- !u!65 &9044541229561656487
 BoxCollider:
@@ -5076,7 +5076,7 @@ ParticleSystem:
     startLifetime:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 3
+      scalar: 1.5
       minScalar: 5
       maxCurve:
         serializedVersion: 2
@@ -5129,7 +5129,7 @@ ParticleSystem:
     startSpeed:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 0.1
+      scalar: 0.2
       minScalar: 5
       maxCurve:
         serializedVersion: 2
@@ -5765,12 +5765,12 @@ ParticleSystem:
           m_RotationOrder: 4
     arc:
       value: 360
-      mode: 0
+      mode: 1
       spread: 0
       speed:
         serializedVersion: 2
         minMaxState: 0
-        scalar: 1
+        scalar: -1
         minScalar: 1
         maxCurve:
           serializedVersion: 2
@@ -5826,7 +5826,7 @@ ParticleSystem:
     rateOverTime:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 10
+      scalar: 20
       minScalar: 10
       maxCurve:
         serializedVersion: 2
