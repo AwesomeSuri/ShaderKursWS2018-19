@@ -13,7 +13,7 @@ public class GrassController : MonoBehaviour
     {
         for(int i = 0; i < GrassMat.Length; i++)
         {
-            GrassMat[i].SetVector("_PlayerPos", transform.position + offset);
+            Shader.SetGlobalVector("_PlayerPos", transform.position);
         }
         
     }

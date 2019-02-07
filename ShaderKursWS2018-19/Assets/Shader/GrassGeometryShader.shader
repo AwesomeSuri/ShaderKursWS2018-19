@@ -18,7 +18,7 @@ Shader "Custom/GrassGeometryShader"
 		_Ambient ("Ambient", float) = 0.5
 
 		_Radius ("Radius", float) = 1.0
-		_PlayerPos ("Player Position", Vector) = (0, 0, 0)
+		
 		_PlayerOffset ("Player Position Offset", Vector) = (0, 0, 0.7)
 
 
@@ -159,7 +159,7 @@ Shader "Custom/GrassGeometryShader"
 				float3 growDirection = cross(float3(1, 0, 0), angleToCamera);
 				//creates line from which actual corners are computed
 				float3 v1 = IN[0].pos.xyz + growDirection * _GrassHeight;
-				float4 vertexWorld = mul(UNITY_MATRIX_M, v1);
+				float4 vertexWorld = mul(unity_ObjectToWorld, float4(v1, 1));
 				
 				//calculates distance to Player and moves grass accordingly
 				//_PlayerPos is set via script
