@@ -156,7 +156,9 @@ public class TDS_PlayerMovement : MonoBehaviour, IGameManagerToPlayerMovement, I
             // check falling
             if (transform.position.y < -.1f)
             {
-                StartCoroutine(Death());
+                stats.GetHit();
+                stats.GetHit();
+                stats.GetHit();
             }
         }
     }
@@ -474,7 +476,6 @@ public class TDS_PlayerMovement : MonoBehaviour, IGameManagerToPlayerMovement, I
         if (other.gameObject.layer == LayerMask.NameToLayer("EnemyWeapon")
             && Time.time > stats.InvincibleTimer)
         {
-            print("here");
             moveDirection = (transform.position - other.transform.position).normalized * 10;
             moveDirection = new Vector3(moveDirection.x, 0, moveDirection.z);
 

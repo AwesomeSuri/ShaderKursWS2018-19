@@ -94,7 +94,7 @@ MonoBehaviour:
   animBat: {fileID: 4233730818745996951}
   bow: {fileID: 4721719793248796950}
   sword: {fileID: 6009616000911261096}
-  wait: 3
+  wait: 0.5
   arrow: {fileID: 4496846094553310956}
   spawner: {fileID: 0}
   origin: {fileID: 5265686222818223653}

@@ -118,11 +118,20 @@ public class LevelUIController : MonoBehaviour, IPlayerStatsToUI, IGameManagerTo
                 {
                     hearts.GetChild(2).GetComponent<Image>().color = Color.white;
                 }
-                hearts.GetChild(2).GetComponent<Image>().color = Color.black;
+                else
+                {
+                    hearts.GetChild(2).GetComponent<Image>().color = Color.black;
+                }
             }
-            hearts.GetChild(1).GetComponent<Image>().color = Color.black;
+            else
+            {
+                hearts.GetChild(1).GetComponent<Image>().color = Color.black;
+            }
         }
-        hearts.GetChild(0).GetComponent<Image>().color = Color.black;
+        else
+        {
+            hearts.GetChild(0).GetComponent<Image>().color = Color.black;
+        }
     }
 
     // Called by game manager.

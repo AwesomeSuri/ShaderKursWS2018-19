@@ -1560,17 +1560,17 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 532848431375500693}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: -0.13052624, w: 0.9914449}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 2, y: 2, z: 1}
   m_Children: []
   m_Father: {fileID: 532848430439717252}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: -15}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: -50, y: 0}
-  m_SizeDelta: {x: 100, y: 100}
+  m_SizeDelta: {x: 54, y: 86.1}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &532848431375500688
 CanvasRenderer:
@@ -1593,14 +1593,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0, b: 0, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_Sprite: {fileID: 0}
+  m_Sprite: {fileID: 21300000, guid: 9dbcd1e1552339d4d91d217fa41a437d, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -4194,12 +4194,12 @@ PrefabInstance:
     - target: {fileID: 4615491043791608043, guid: b7edadf5591085d4fb776f0eb984e755,
         type: 3}
       propertyPath: m_SizeDelta.x
-      value: 60
+      value: 90.5
       objectReference: {fileID: 0}
     - target: {fileID: 4615491043791608043, guid: b7edadf5591085d4fb776f0eb984e755,
         type: 3}
       propertyPath: m_SizeDelta.y
-      value: 60
+      value: 79.1
       objectReference: {fileID: 0}
     - target: {fileID: 4615491043791608043, guid: b7edadf5591085d4fb776f0eb984e755,
         type: 3}
@@ -4230,6 +4230,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Pivot.y
       value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4615491043791608043, guid: b7edadf5591085d4fb776f0eb984e755,
+        type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.8
+      objectReference: {fileID: 0}
+    - target: {fileID: 4615491043791608043, guid: b7edadf5591085d4fb776f0eb984e755,
+        type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.8
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b7edadf5591085d4fb776f0eb984e755, type: 3}
@@ -4449,12 +4459,12 @@ PrefabInstance:
     - target: {fileID: 4615491043791608043, guid: b7edadf5591085d4fb776f0eb984e755,
         type: 3}
       propertyPath: m_SizeDelta.x
-      value: 60
+      value: 90.5
       objectReference: {fileID: 0}
     - target: {fileID: 4615491043791608043, guid: b7edadf5591085d4fb776f0eb984e755,
         type: 3}
       propertyPath: m_SizeDelta.y
-      value: 60
+      value: 79.1
       objectReference: {fileID: 0}
     - target: {fileID: 4615491043791608043, guid: b7edadf5591085d4fb776f0eb984e755,
         type: 3}
@@ -4485,6 +4495,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Pivot.y
       value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4615491043791608043, guid: b7edadf5591085d4fb776f0eb984e755,
+        type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.8
+      objectReference: {fileID: 0}
+    - target: {fileID: 4615491043791608043, guid: b7edadf5591085d4fb776f0eb984e755,
+        type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.8
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b7edadf5591085d4fb776f0eb984e755, type: 3}
@@ -16274,12 +16294,12 @@ PrefabInstance:
     - target: {fileID: 4615491043791608043, guid: b7edadf5591085d4fb776f0eb984e755,
         type: 3}
       propertyPath: m_SizeDelta.x
-      value: 60
+      value: 90.5
       objectReference: {fileID: 0}
     - target: {fileID: 4615491043791608043, guid: b7edadf5591085d4fb776f0eb984e755,
         type: 3}
       propertyPath: m_SizeDelta.y
-      value: 60
+      value: 79.1
       objectReference: {fileID: 0}
     - target: {fileID: 4615491043791608043, guid: b7edadf5591085d4fb776f0eb984e755,
         type: 3}
@@ -16310,6 +16330,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Pivot.y
       value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4615491043791608043, guid: b7edadf5591085d4fb776f0eb984e755,
+        type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.8
+      objectReference: {fileID: 0}
+    - target: {fileID: 4615491043791608043, guid: b7edadf5591085d4fb776f0eb984e755,
+        type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.8
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b7edadf5591085d4fb776f0eb984e755, type: 3}

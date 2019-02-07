@@ -182,6 +182,9 @@ public class PlayerStats : MonoBehaviour,
     public void GetHit()
     {
         Health--;
+        print(Health);
+        levelUI.UpdateHearts(Health);
+
         InvincibleTimer = Time.time + .2f;
     }
 }

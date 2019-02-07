@@ -139,6 +139,12 @@ public class EnemyMovement : MonoBehaviour
             return;
         }
 
+        // do nothing if is hitting
+        if (anim.IsAttacking)
+        {
+            return;
+        }
+
         // check target
         if (target == null)
         {
@@ -218,14 +224,12 @@ public class EnemyMovement : MonoBehaviour
         else if (Vector3.Distance(transform.position, target.position) < .5f)
         {
             // stop moving to attack if swordsman
-            if (enemyType == EnemyType.Swordsman)
+            if (enemyType == EnemyType.Swordsman && !anim.IsAttacking)
             {
-                toPos = transform.position;
+                StartCoroutine(anim.Swinging());
 
-                if (!anim.IsAttacking)
-                {
-                    StartCoroutine(anim.Swinging());
-                }
+                toPos = transform.position;
+                target = null;
             }
             else
             {
@@ -233,11 +237,11 @@ public class EnemyMovement : MonoBehaviour
                 toPos = target.position;
             }
         }
-        else if (Vector3.Distance(transform.position, target.position) > (targetTrigger as SphereCollider).radius)
+        else if (Vector3.Distance(transform.position, target.position) > (targetTrigger as SphereCollider).radius + 2)
         {
             // lose target
             // hunters lose targets only after shooting
-            if(enemyType != EnemyType.Hunter)
+            if (enemyType != EnemyType.Hunter)
             {
                 target = null;
                 timer = 1;
@@ -274,7 +278,7 @@ public class EnemyMovement : MonoBehaviour
             else
             {
                 // check if hunter has target
-                if (!(enemyType == EnemyType.Hunter && target != null))
+                if (!(enemyType == EnemyType.Hunter && target != null) && !anim.IsAttacking)
                 {
                     transform.Translate(moveDirection.normalized
                         * ((target == null) ? speed : followSpeed)
@@ -371,16 +375,16 @@ public class EnemyMovement : MonoBehaviour
                 player = other.GetComponent<IEnemyToPlayer>();
             }
 
-            if (player.PlayerActive && target == null && stats.InvincibleTimer <= 0)
+            if (player.PlayerActive && target == null && stats.InvincibleTimer <= 0 && !anim.IsAttacking)
             {
                 target = other.transform;
 
-                if(enemyType == EnemyType.Hunter && !anim.IsAttacking)
+                if (enemyType == EnemyType.Hunter && !anim.IsAttacking)
                 {
                     StartCoroutine(AimShoot());
                 }
             }
-            else if(enemyType != EnemyType.Hunter)
+            else if (enemyType != EnemyType.Hunter)
             {
                 target = null;
             }
