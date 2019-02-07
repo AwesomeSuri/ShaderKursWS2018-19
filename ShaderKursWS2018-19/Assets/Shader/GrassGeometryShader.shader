@@ -96,7 +96,7 @@ Shader "Custom/GrassGeometryShader"
 			{
 				v2g o;
 
-				o.pos = v.vertex;//mul(unity_WorldToObject, v.vertex);
+				o.pos = v.vertex;
 				o.normal = v.normal;
 				o.uv = v.texcoord;
 				o.myColor = v.color;// tex2Dlod(_MainTex, v.texcoord).rgb * v.color;

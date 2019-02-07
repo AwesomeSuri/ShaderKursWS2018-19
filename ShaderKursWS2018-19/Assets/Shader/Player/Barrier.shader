@@ -34,7 +34,7 @@
     }
     SubShader
     {
-        Tags { "Queue"="Transparent" "RenderType"="Fade" }
+        Tags { "Queue"="AlphaTest" "RenderType"="Fade" }
         //LOD 200
 
 		
@@ -51,6 +51,7 @@
         {
             float2 uv_MainTex;
 			float3 worldNormal;
+			float3 viewDir;
 			float3 vertex;
 			INTERNAL_DATA
         };
@@ -89,6 +90,8 @@
 			{
 				v.vertex.xyz -= _BarrierThickness * v.normal;
 			}
+
+			v.normal = mul(unity_ObjectToWorld, v.normal);
 		}
 
         //// Add instancing support for this shader. You need to check 'Enable Instancing' on materials that use the shader.
@@ -120,11 +123,22 @@
 
 
 
-				o.Albedo = _BarrierColor * (pulseTerm + edgePulseTerm).rgb;
+				o.Albedo = _BarrierColor * saturate((pulseTerm + edgePulseTerm).rgb);
 				
 				o.Metallic = _Metallic;
 				o.Smoothness = _Glossiness;
-				o.Alpha = _BarrierAlpha;
+
+				float3 viewDirection = normalize(IN.viewDir);
+
+				float normalX = saturate(IN.worldNormal.x);
+				float normalY = saturate(IN.worldNormal.z);
+				float normalZ = saturate(IN.worldNormal.z);
+
+				float3 normal = float3(normalY, normalX, normalZ);
+				float alpha = 1 - abs(dot(viewDirection, normal));
+				//o.Albedo = float3(alpha, 0, 0);
+				//o.Emission = _BarrierColor * (pulseTerm + edgePulseTerm).rgb * alpha;
+				o.Alpha = alpha;
 			} else
 			{
 				o.Alpha = 0;
