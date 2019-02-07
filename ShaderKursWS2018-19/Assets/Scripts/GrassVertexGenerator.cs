@@ -33,7 +33,7 @@ public class GrassVertexGenerator : MonoBehaviour
         List<Vector3> normals = new List<Vector3>(grassNumber);
         for (int i = 0; i < grassNumber; i++)
         {
-            Vector3 origin = transform.position;
+            Vector3 origin = Vector3.zero;
             origin.y = startHeight;
             origin.x += (size.x * Random.Range(-0.5f, 0.5f));
             origin.z += (size.y * Random.Range(-0.5f, 0.5f));
@@ -89,17 +89,17 @@ public class GrassVertexGenerator : MonoBehaviour
         List<Vector3> normals = new List<Vector3>(grassNumber);
         for (int i = 0; i < grassNumber; i++)
         {
-            Vector3 origin = transform.position;
+            Vector3 origin = new Vector3(0,0,0);
             origin.y = startHeight;
             origin.x += (size.x * Random.Range(-0.5f, 0.5f));
             origin.z += (size.y * Random.Range(-0.5f, 0.5f));
 
             float noiseCalc = Mathf.PerlinNoise(origin.x, origin.z);
-
+            indices[i] = i;
             Ray ray = new Ray(origin, Vector3.down);
             RaycastHit hit;
 
-            indices[i] = i;
+            
 
             if (Physics.Raycast(ray, out hit, startHeight, thisLayerMask) && (noiseCalc < grassDensity))
             {
@@ -108,7 +108,7 @@ public class GrassVertexGenerator : MonoBehaviour
                 origin.y += offsetY;
                 positions.Add(origin);
                 normals.Add(hit.normal);
-                indices[i] = i;
+                //indices[i] = i;
 
                 //Debug.DrawRay(origin, Vector3.up, Color.green);
                 //Debug.DrawLine(origin, hit.normal, Color.red);
