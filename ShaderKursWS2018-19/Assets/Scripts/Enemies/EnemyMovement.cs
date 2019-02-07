@@ -400,6 +400,7 @@ public class EnemyMovement : MonoBehaviour
             // push back
             target = null;
             toPos = transform.position + (transform.position - other.transform.position).normalized * 10;
+            toPos = new Vector3(toPos.x, 0, toPos.z);
 
             // set next toPos
             timer = 1;

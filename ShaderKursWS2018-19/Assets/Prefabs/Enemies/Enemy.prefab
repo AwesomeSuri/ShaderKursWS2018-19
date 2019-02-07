@@ -900,6 +900,21 @@ PrefabInstance:
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: 30d2aa8d198f53e42b7c2c74eefbe16d, type: 2}
+    - target: {fileID: 591543945925521342, guid: ae781b50952e92048a62eafd896e009a,
+        type: 3}
+      propertyPath: m_Layer
+      value: 14
+      objectReference: {fileID: 0}
+    - target: {fileID: 9175616269858161375, guid: ae781b50952e92048a62eafd896e009a,
+        type: 3}
+      propertyPath: m_IsKinematic
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9175616269858161375, guid: ae781b50952e92048a62eafd896e009a,
+        type: 3}
+      propertyPath: m_CollisionDetection
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 2835403919756747033, guid: ae781b50952e92048a62eafd896e009a,
         type: 3}
       propertyPath: m_Layer
@@ -1044,11 +1059,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Layer
       value: 12
-      objectReference: {fileID: 0}
-    - target: {fileID: 591543945925521342, guid: ae781b50952e92048a62eafd896e009a,
-        type: 3}
-      propertyPath: m_Layer
-      value: 14
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ae781b50952e92048a62eafd896e009a, type: 3}
