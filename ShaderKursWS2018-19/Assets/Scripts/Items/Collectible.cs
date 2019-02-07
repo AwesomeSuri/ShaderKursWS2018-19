@@ -92,7 +92,7 @@ public class Collectible : MonoBehaviour, ICollectibleSpawnerToCollectible, IPla
         IsActive = true;
 
         // set lifetime
-        Lifetime = 2;
+        Lifetime = 1;
 
         // enable collider
         col.enabled = true;

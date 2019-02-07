@@ -59,8 +59,8 @@ public class MazeController : MonoBehaviour, IPlayerToMaze
     public void DeactivateRoom(RoomCoordinate coordinate)
     {
         rooms[coordinate.x + coordinate.y * 10].DeactivateRoom();
-        collectibleSpawner.DecreaseCollectibleLifetime();
 
+        collectibleSpawner.DecreaseCollectibleLifetime();
         enemySpawner.DecreaseEnemyLifetime();
     }
 
@@ -83,7 +83,7 @@ public class MazeController : MonoBehaviour, IPlayerToMaze
         // Debugging:
         // Spawn artefact
         CollectibleType artefact = room.GetCollectibleType();
-        if((int)artefact > 2)
+        if ((int)artefact > 2)
         {
             collectibleSpawner.Drop(new Vector3(10 * coordinate.x, 0, 10 * coordinate.y), artefact);
         }

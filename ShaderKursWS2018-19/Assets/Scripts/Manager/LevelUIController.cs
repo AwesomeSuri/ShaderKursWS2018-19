@@ -61,6 +61,10 @@ public class LevelUIController : MonoBehaviour, IPlayerStatsToUI, IGameManagerTo
     [Tooltip("Stats component of player.")]
     GameObject playerObject;
 
+    [Space]
+    [SerializeField]
+    SoundEffectPlayer sfx;
+
 
     IUIToPlayerStats playerStats;
     IUIToPlayerMovement playerMovement;
@@ -179,12 +183,16 @@ public class LevelUIController : MonoBehaviour, IPlayerStatsToUI, IGameManagerTo
             mapOpen = false;
             menuOpen = true;
         }
+
+        sfx.PlayAudio("Button");
     }
 
     // when quit button is clicked
     // goes back to main menu
     public void QuitGame()
     {
+        sfx.PlayAudio("Button");
+
         SceneManager.LoadScene("MainMenu");
     }
 
@@ -231,6 +239,8 @@ public class LevelUIController : MonoBehaviour, IPlayerStatsToUI, IGameManagerTo
             mapOpen = true;
             menuOpen = false;
         }
+
+        sfx.PlayAudio("PageTurn");
     }
 
     // when a room in map is clicked
@@ -244,8 +254,8 @@ public class LevelUIController : MonoBehaviour, IPlayerStatsToUI, IGameManagerTo
         noteButtons.SetActive(true);
         roomSelected = EventSystem.current.currentSelectedGameObject;
         noteButtons.transform.position = roomSelected.transform.position;
-
-        return;
+        
+        sfx.PlayAudio("Stapler");
     }
 
     // when a note button is clicked
@@ -268,6 +278,8 @@ public class LevelUIController : MonoBehaviour, IPlayerStatsToUI, IGameManagerTo
         noteButtons.SetActive(false);
 
         roomSelected = null;
+
+        sfx.PlayAudio("Stapler");
     }
 
     // when player enters a room

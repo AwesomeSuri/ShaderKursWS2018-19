@@ -108,6 +108,9 @@ public class PlayerStats : MonoBehaviour,
                     Health++;
                     levelUI.UpdateHearts(Health);
                 }
+
+                sfx.PlayAudio("Blop");
+
                 break;
 
             case CollectibleType.Arrow:
@@ -121,12 +124,18 @@ public class PlayerStats : MonoBehaviour,
 
                     levelUI.UpdateArrows(ArrowAmount);
                 }
+
+                sfx.PlayAudio("Wood");
+
                 break;
 
             case CollectibleType.Bow:
                 BowCollected = true;
                 ArrowAmount = 15;
                 levelUI.ActivateBow();
+
+                sfx.PlayAudio("Wood");
+
                 break;
 
             case CollectibleType.Barrier:
@@ -145,6 +154,9 @@ public class PlayerStats : MonoBehaviour,
 
             case CollectibleType.Sword:
                 levelUI.ActivateSword();
+
+                sfx.PlayAudio("WhooshMetal");
+
                 break;
         }
     }

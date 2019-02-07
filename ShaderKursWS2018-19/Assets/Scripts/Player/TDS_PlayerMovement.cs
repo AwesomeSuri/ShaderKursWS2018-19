@@ -367,19 +367,22 @@ public class TDS_PlayerMovement : MonoBehaviour, IGameManagerToPlayerMovement, I
             + 5 * Vector3.right * transferDirection.x
             + 5 * Vector3.forward * transferDirection.z;
 
-        // activate next room
-        maze.ActivateRoom(room);
-        levelUI.EnterRoom(room.x, room.y);
-
         // move player
         yield return MovePlayer(toPos);
 
         // move shader
         yield return dissolve.CloseRoom(dissolveDir);
 
+        // deactivate previous room
+        maze.DeactivateRoom(roomOld);
+
         // move camera
         cam.MoveCamera(room);
         yield return new WaitWhile(() => cam.IsMoving);
+
+        // activate next room
+        maze.ActivateRoom(room);
+        levelUI.EnterRoom(room.x, room.y);
 
         // move shader
         yield return dissolve.OpenRoom(dissolveDir);
@@ -391,9 +394,6 @@ public class TDS_PlayerMovement : MonoBehaviour, IGameManagerToPlayerMovement, I
         toPos += 1.5f * Vector3.right * transferDirection.x
             + 1.5f * Vector3.forward * transferDirection.z;
         yield return MovePlayer(toPos);
-
-        // deactivate previous room
-        maze.DeactivateRoom(roomOld);
 
         // check instant death
         RoomType type = maze.GetRoomType(room);

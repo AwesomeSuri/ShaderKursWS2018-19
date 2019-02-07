@@ -9,7 +9,7 @@ public struct RoomCoordinate
     public int y;
 }
 
-public enum RoomType { Standard, Pit, Lava, Wumpus}
+public enum RoomType { Standard, Pit, Lava, Wumpus }
 
 public interface IMazeToRoom
 {
@@ -71,10 +71,6 @@ public class RoomController : MonoBehaviour, IMazeToRoom
         // activate room
         //staticObjects.SetActive(true);
         dynamicObjects.SetActive(true);
-
-        // reset all changes
-        // TODO
-
     }
 
     // Is called when leaving the room.
@@ -84,9 +80,6 @@ public class RoomController : MonoBehaviour, IMazeToRoom
         // deactivate room
         //staticObjects.SetActive(false);
         dynamicObjects.SetActive(false);
-
-        // deactivate all objects
-        // TODO
     }
 
     // When entering the room.

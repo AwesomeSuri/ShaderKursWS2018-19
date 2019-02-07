@@ -112,7 +112,7 @@ public class EnemyMovement : MonoBehaviour
         (targetTrigger as SphereCollider).radius = (spawn.type == EnemyType.Hunter) ? 4 : 2.5f;
 
         // set stats
-        Lifetime = 2;
+        Lifetime = 1;
         stats.SetStats(spawn.type);
 
         // set anim
