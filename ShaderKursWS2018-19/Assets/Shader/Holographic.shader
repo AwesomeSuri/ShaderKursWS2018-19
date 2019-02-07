@@ -17,9 +17,9 @@
 	}
 	SubShader
 	{
-		Tags { "Queue" = "Transparent" "IgnoreProjector" = "True" "RenderType" = "Transparent" }
+		Tags { "Queue" = "Transparent"}
 
-		Blend SrcAlpha One
+		Blend SrcAlpha OneMinusSrcAlpha
 		//Cull off
 		LOD 200
 

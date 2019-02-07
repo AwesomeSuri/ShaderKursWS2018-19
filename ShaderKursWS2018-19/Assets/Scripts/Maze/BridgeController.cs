@@ -30,7 +30,7 @@ public class BridgeController : MonoBehaviour, ISwitchToActivatedObject
     {
         if (mat == null)
         {
-            return;
+            mat = GetComponent<Renderer>().sharedMaterial;
         }
 
         if (pattern != null)
@@ -42,6 +42,11 @@ public class BridgeController : MonoBehaviour, ISwitchToActivatedObject
         mat.SetFloat("_DissolveEdge", edge);
         mat.SetColor("_DissolveGlow", glow);
         mat.SetFloat("_DissolveIntensity", intensity);
+    }
+
+    private void Awake()
+    {
+        mat = GetComponent<Renderer>().material;
     }
 
     private void Update()
