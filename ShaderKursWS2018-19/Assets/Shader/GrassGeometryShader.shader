@@ -96,7 +96,7 @@ Shader "Custom/GrassGeometryShader"
 			{
 				v2g o;
 
-				o.pos = v.vertex;//mul(unity_WorldToObject, v.vertex);
+				o.pos = v.vertex;
 				o.normal = v.normal;
 				o.uv = v.texcoord;
 				o.myColor = v.color;// tex2Dlod(_MainTex, v.texcoord).rgb * v.color;
@@ -151,7 +151,7 @@ Shader "Custom/GrassGeometryShader"
 			void geom(point v2g IN[1], inout TriangleStream<g2f> triStream)
 			{
 				
-				float3 v0 = mul(unity_WorldToObject, IN[0].pos.xyz);
+				float3 v0 = IN[0].pos.xyz;
 
 				//computing offset for v1
 				float3 cameraInObj = mul(unity_WorldToObject, float4(_WorldSpaceCameraPos, 1));
