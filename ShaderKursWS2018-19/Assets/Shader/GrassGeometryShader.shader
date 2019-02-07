@@ -1,4 +1,6 @@
-﻿Shader "Custom/GrassGeometryShader"
+﻿// Upgrade NOTE: replaced 'mul(UNITY_MATRIX_MVP,*)' with 'UnityObjectToClipPos(*)'
+
+Shader "Custom/GrassGeometryShader"
 {
     Properties
     {
@@ -81,7 +83,7 @@
 			{
 				v2g o;
 
-				o.pos = v.vertex;
+				o.pos = mul(unity_WorldToObject, v.vertex);
 				o.normal = v.normal;
 				o.uv = v.texcoord;
 				o.myColor = v.color;// tex2Dlod(_MainTex, v.texcoord).rgb * v.color;
