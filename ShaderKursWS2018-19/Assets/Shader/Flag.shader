@@ -35,6 +35,7 @@
 				float4 vertex : SV_POSITION;
 				float3 worldNormal : TEXCOORD1;
 				float2 uv : TEXCOORD0;
+				float4 worldPos : TEXCOORD2;
 			};
 				
 			sampler2D _MainTex;
@@ -46,6 +47,10 @@
             float _Speed;
             float _Frequency;
             float _Amplitude;
+
+			sampler2D _GlobalDissolveToBlackPattern;
+			float4 _GlobalDissolveToBlackPatternST;
+			float4 _GlobalDissolveToBlackVisualArea;
 			
 			v2f vert (appdata v)
 			{
@@ -54,9 +59,10 @@
 				o.worldNormal = UnityObjectToWorldNormal(v.normal);
 				o.uv = TRANSFORM_TEX(v.uv, _MainTex);
 
-                float3 worldPos = mul(unity_ObjectToWorld, v.vertex).xyz;
+                o.worldPos = mul(unity_ObjectToWorld, v.vertex);
                 //o.vertex.y += sin(worldPos.x + _Time.w);
                 o.vertex.y += sin((v.vertex.x + _Time.y * _Speed) * _Frequency) * _Amplitude * v.vertex.x;
+
 
 				return o;
 			}
@@ -67,11 +73,30 @@
 				fixed4 tex = tex2D(_MainTex, i.uv);
 				float nl = max(_Ambient, dot(normal, _WorldSpaceLightPos0.xyz));
 				float4 result = nl * _Color * tex * _LightColor0;
-				return result;
+
+
+				float alpha = 1;
+				// Global Dissolve
+				// get borders of visible area
+				float2 coord = i.worldPos.xz / _GlobalDissolveToBlackPatternST.xy + _GlobalDissolveToBlackPatternST.zw;
+				float borderLeft = (_GlobalDissolveToBlackVisualArea.r + tex2D(_GlobalDissolveToBlackPattern, coord));
+				float borderRight = (_GlobalDissolveToBlackVisualArea.g + (1 - tex2D(_GlobalDissolveToBlackPattern, coord)));
+				float borderBottom = (_GlobalDissolveToBlackVisualArea.b + tex2D(_GlobalDissolveToBlackPattern, coord));
+				float borderTop = (_GlobalDissolveToBlackVisualArea.a + (1 - tex2D(_GlobalDissolveToBlackPattern, coord)));
+				if (i.worldPos.x < borderLeft
+					|| i.worldPos.x > borderRight - 1
+					|| i.worldPos.z < borderBottom
+					|| i.worldPos.z > borderTop - 1) {
+					alpha = 0;
+				}
+
+				return result * alpha;
 			}
 
 			ENDHLSL
 		}
+
+		UsePass "Custom/GlobalDissolveToBlack/DissolveToBlack"
 	}
 	Fallback "Standard"
 }

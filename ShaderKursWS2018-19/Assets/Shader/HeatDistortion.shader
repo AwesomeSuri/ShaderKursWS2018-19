@@ -78,15 +78,6 @@
 				o.noiseUV = o.uv;
 				float2 move = float2(-_SpeedX, _SpeedY) * _Time.x;
 				o.noiseUV += move;
-				// prevent large numbers
-				if (o.noiseUV.x > 1)
-					o.noiseUV.x -= 1;
-				if (o.noiseUV.y > 1)
-					o.noiseUV.y -= 1;
-				if (o.noiseUV.x < 0)
-					o.noiseUV.x += 1;
-				if (o.noiseUV.y < 0)
-					o.noiseUV.y += 1;
 				// scale uv to resize noise pattern
 				o.noiseUV /= _Size;
 
@@ -112,20 +103,12 @@
 			fixed3 tint = _Color.rgb * _Intensity * noise.r;
 
 			// effect shape
-			float alpha = tex2D(_MainTex, i.shapeUV).r;
+			float alpha = tex2D(_MainTex, i.shapeUV).a;
 
 
 			// Global Dissolve
 			// get borders of visible area
 			float2 coord = i.worldPos.xz / _GlobalDissolveToBlackPatternST.xy + _GlobalDissolveToBlackPatternST.zw;
-			if (coord.x > 1)
-				coord.x - 1;
-			if (coord.y > 1)
-				coord.y - 1;
-			if (coord.x < 0)
-				coord.x + 1;
-			if (coord.y < 0)
-				coord.y + 1;
 			float borderLeft = (_GlobalDissolveToBlackVisualArea.r + tex2D(_GlobalDissolveToBlackPattern, coord));
 			float borderRight = (_GlobalDissolveToBlackVisualArea.g + (1 - tex2D(_GlobalDissolveToBlackPattern, coord)));
 			float borderBottom = (_GlobalDissolveToBlackVisualArea.b + tex2D(_GlobalDissolveToBlackPattern, coord));

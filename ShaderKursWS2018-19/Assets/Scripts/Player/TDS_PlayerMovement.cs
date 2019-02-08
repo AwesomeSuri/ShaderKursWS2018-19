@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public interface IGameManagerToPlayerMovement
 {
@@ -296,6 +297,12 @@ public class TDS_PlayerMovement : MonoBehaviour, IGameManagerToPlayerMovement, I
             float y = Mathf.Clamp(transform.position.z, room.z - 3.5f, room.z + 3.5f);
             transform.position = new Vector3(x, 0, y);
         }
+
+        // set y when flying
+        if(stats.CurrentEquipment == Equipment.Wings)
+        {
+            transform.position = new Vector3(transform.position.x, 0, transform.position.z);
+        }
     }
 
     // Apply movement values into the animation
@@ -417,6 +424,9 @@ public class TDS_PlayerMovement : MonoBehaviour, IGameManagerToPlayerMovement, I
             // TODO: add death anim
 
             // respawn at start
+            stats.GetHit();
+            stats.GetHit();
+            stats.GetHit();
             yield return DeathAndSpawn();
         }
     }
@@ -553,6 +563,11 @@ public class TDS_PlayerMovement : MonoBehaviour, IGameManagerToPlayerMovement, I
                 lightning.Emit(1);
                 lightning.GetComponent<AudioSource>().Play();
             }
+        }
+
+        if(other.gameObject.layer == LayerMask.NameToLayer("Finish"))
+        {
+            SceneManager.LoadScene("Win");
         }
     }
 }

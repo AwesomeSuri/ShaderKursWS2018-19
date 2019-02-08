@@ -134,28 +134,37 @@ public class PlayerStats : MonoBehaviour,
                 ArrowAmount = 15;
                 levelUI.ActivateBow();
 
-                sfx.PlayAudio("Wood");
+                sfx.PlayAudio("Artefact");
 
                 break;
 
             case CollectibleType.Barrier:
                 levelUI.ActivateBarrier();
+
+                sfx.PlayAudio("Artefact");
+
                 break;
 
             case CollectibleType.Wings:
                 levelUI.ActivateWings();
+
+                sfx.PlayAudio("Artefact");
+
                 break;
 
             case CollectibleType.WumpusSlayer:
                 WumpusSlayer = true;
                 print("WumpusSlayer");
+
+                sfx.PlayAudio("Artefact");
+
                 // TODO: change appeareance
                 break;
 
             case CollectibleType.Sword:
                 levelUI.ActivateSword();
 
-                sfx.PlayAudio("WhooshMetal");
+                sfx.PlayAudio("Artefact");
 
                 break;
         }

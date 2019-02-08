@@ -57,6 +57,11 @@ public class GlobalDissolveToBlackController : MonoBehaviour, IPlayerToGlobalDis
         Shader.SetGlobalFloat("_GlobalBottom", fog.y);
     }
 
+    void Start()
+    {
+        Shader.SetGlobalVector("_GlobalDissolveToBlackVisualArea", new Vector4(1,-1,1,-1));
+    }
+
     // Called by player when jumping into a room.
     public IEnumerator JumpIntoRoom(RoomCoordinate room)
     {

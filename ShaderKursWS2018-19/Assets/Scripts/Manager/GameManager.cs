@@ -18,7 +18,7 @@ public class GameManager : MonoBehaviour
     IGameManagerToGlobalDissolve dissolve;
 
     float timeTo;
-    float timeLeft;
+    public static float timeLeft;
 
 
     // Start is called before the first frame update
@@ -45,6 +45,10 @@ public class GameManager : MonoBehaviour
         if (timeLeft <= 0)
         {
             SceneManager.LoadScene("Lose");
+        }
+        else
+        {
+            timeLeft = timeTo - Time.time;
         }
     }
 

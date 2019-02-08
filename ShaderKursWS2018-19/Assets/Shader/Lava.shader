@@ -2,7 +2,7 @@
 {
 	Properties
 	{
-		_MainTexture ("Main Texture", 2D) = "white" {}
+		_MainTex ("Main Texture", 2D) = "white" {}
         _BumpMap ("Bump Map", 2D) = "bump" {}
 		_Color ("Color", Color) = (1,0,0,1)
 		_Ambient ("Ambient", Range (0, 1)) = 0.25
@@ -38,8 +38,8 @@
                 float4 worldPos : TEXCOORD2;
 			};
 				
-			sampler2D _MainTexture;
-            float4 _MainTexture_ST;
+			sampler2D _MainTex;
+            float4 _MainTex_ST;
             sampler2D _BumpMap;
             float4 _BumpMap_ST;
 			float4 _Color;
@@ -48,6 +48,10 @@
             float _Speed;
             sampler2D _UndoEffectTexture; 
             float4 _UndoEffectTexture_ST;
+
+			sampler2D _GlobalDissolveToBlackPattern;
+			float4 _GlobalDissolveToBlackPatternST;
+			float4 _GlobalDissolveToBlackVisualArea;
 			
 			v2f vert (appdata v)
 			{
@@ -77,13 +81,13 @@
 
                 // Add normals to texture
                 float2 offset1 = i.uv +  time * _Speed * 0.01f + float2(normals.r, normals.g);
-                float2 newUV1 = TRANSFORM_TEX(offset1, _MainTexture);
-                float4 mainTex1 = tex2D(_MainTexture, newUV1);
+                float2 newUV1 = TRANSFORM_TEX(offset1, _MainTex);
+                float4 mainTex1 = tex2D(_MainTex, newUV1);
                 
                 // Move the texture over time
                 float2 offset2 = i.uv + time * _Speed * 0.01f;
-                float2 newUV2 = TRANSFORM_TEX(offset2, _MainTexture);
-                float4 mainTex2 = tex2D(_MainTexture, newUV2);
+                float2 newUV2 = TRANSFORM_TEX(offset2, _MainTex);
+                float4 mainTex2 = tex2D(_MainTex, newUV2);
                 
                 // Calculate result color
                 float3 result = _Color.rgb * mainTex1.xyz * mainTex2.xyz * _Emmision;
@@ -98,8 +102,23 @@
 				float nl = max(_Ambient, dot(normalDir, _WorldSpaceLightPos0.xyz));
 				final = nl * final * _LightColor0;
 
+				float alpha = 1;
+				// Global Dissolve
+				// get borders of visible area
+				float2 coord = i.worldPos.xz / _GlobalDissolveToBlackPatternST.xy + _GlobalDissolveToBlackPatternST.zw;
+				float borderLeft = (_GlobalDissolveToBlackVisualArea.r + tex2D(_GlobalDissolveToBlackPattern, coord));
+				float borderRight = (_GlobalDissolveToBlackVisualArea.g + (1 - tex2D(_GlobalDissolveToBlackPattern, coord)));
+				float borderBottom = (_GlobalDissolveToBlackVisualArea.b + tex2D(_GlobalDissolveToBlackPattern, coord));
+				float borderTop = (_GlobalDissolveToBlackVisualArea.a + (1 - tex2D(_GlobalDissolveToBlackPattern, coord)));
+				if (i.worldPos.x < borderLeft
+					|| i.worldPos.x > borderRight - 1
+					|| i.worldPos.z < borderBottom
+					|| i.worldPos.z > borderTop - 1) {
+					alpha = 0;
+				}
+
                 // Return final color
-                return fixed4(final, 1);
+                return fixed4(final * alpha, alpha);
 			}
 
 			ENDHLSL
