@@ -67,7 +67,7 @@ Material:
     - _GlossMapScale: 1
     - _Glossiness: 0.5
     - _GlossyReflections: 1
-    - _GrassHeight: 0.5
+    - _GrassHeight: 0.82
     - _GrassOffset: -4
     - _GrassWidth: 1
     - _Metallic: 0
