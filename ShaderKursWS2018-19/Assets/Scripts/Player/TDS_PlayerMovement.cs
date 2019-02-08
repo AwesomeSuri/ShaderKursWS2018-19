@@ -12,7 +12,6 @@ public interface IUIToPlayerMovement
     void SetWings(bool wings);
 }
 
-[RequireComponent(typeof(Rigidbody))]
 [RequireComponent(typeof(PlayerStats))]
 public class TDS_PlayerMovement : MonoBehaviour, IGameManagerToPlayerMovement, IUIToPlayerMovement
 {
@@ -81,8 +80,7 @@ public class TDS_PlayerMovement : MonoBehaviour, IGameManagerToPlayerMovement, I
     IPlayerMovementToCamera cam;                        // interface between this script and the camera
     IPlayerToMaze maze;                                 // interface between this script and the maze
     IPlayerMovementToUI levelUI;                        // interface between this script and the ui
-
-    Rigidbody rigid;                                    // rigidbody directs all the movements
+    
     PlayerStats stats;                                  // stores all the stats
     Vector3 moveDirection;                              // direction the rigidbody should move to
     Vector3 lookDirection;                              // direction the rigidbody should face to
@@ -104,8 +102,6 @@ public class TDS_PlayerMovement : MonoBehaviour, IGameManagerToPlayerMovement, I
         mazeObject = null;
         levelUI = levelUIObject;
         levelUIObject = null;
-
-        rigid = GetComponent<Rigidbody>();
         stats = GetComponent<PlayerStats>();
         moveDirection = Vector3.zero;
         lookDirection = Vector3.forward;
@@ -131,13 +127,11 @@ public class TDS_PlayerMovement : MonoBehaviour, IGameManagerToPlayerMovement, I
         anim.Die();
 
         yield return new WaitForSeconds(2);
-        print("start");
-        // TODO: add spawn anim
+        
         yield return dissolve.DissolveAll();
 
         yield return new WaitForSeconds(.5f);
-
-        print("end");
+        
         maze.DeactivateRoom(room);
         room.x = 0;
         room.y = 0;
@@ -178,6 +172,8 @@ public class TDS_PlayerMovement : MonoBehaviour, IGameManagerToPlayerMovement, I
                 // check falling
                 if (transform.position.y < -.1f)
                 {
+                    moveDirection = Vector3.zero;
+
                     stats.GetHit();
                     stats.GetHit();
                     stats.GetHit();

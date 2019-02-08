@@ -42,6 +42,6 @@ public class EnemyStats : MonoBehaviour
     public void GetHit()
     {
         Health--;
-        InvincibleTimer = Time.time + ((Health <= 0) ? .5f : .2f);
+        InvincibleTimer = Time.time + ((Health <= 0) ? 2 : .2f);
     }
 }

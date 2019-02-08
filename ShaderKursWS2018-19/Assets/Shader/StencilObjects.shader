@@ -4,6 +4,7 @@
 	{
 		_Color ("Colour", COLOR) = (1,1,1,1)
 		_Ambient ("Ambient", Range (0, 1)) = 0.25
+		_Intensity ("Intensity", Float) = 1
         _StencilID("Stencil ID", Int) = 1
 	}
 	SubShader
@@ -39,6 +40,7 @@
 
 			float4 _Color;
 			float _Ambient;
+			float _Intensity;
 			
 			v2f vert (appdata v)
 			{
@@ -51,7 +53,7 @@
 			fixed4 frag (v2f i) : SV_Target
 			{
 				float3 normal = normalize(i.worldNormal);
-				float nl = max(_Ambient, dot(normal, _WorldSpaceLightPos0.xyz));
+				float nl = max(_Ambient, dot(normal, _WorldSpaceLightPos0.xyz)) + _Intensity;
 
 				return _Color * nl;
 			}
