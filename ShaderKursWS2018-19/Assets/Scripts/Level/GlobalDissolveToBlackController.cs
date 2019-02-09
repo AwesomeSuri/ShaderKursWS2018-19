@@ -20,7 +20,7 @@ public class GlobalDissolveToBlackController : MonoBehaviour, IPlayerToGlobalDis
 {
     public Texture pattern;
     public Vector2 size = new Vector2(8, 8);
-    public Vector2 offset = new Vector2(-5,-5);
+    public Vector2 offset = new Vector2(-5, -5);
     public Color glowColorTop = Color.cyan;
     public Color glowColorBottom = Color.cyan;
     public float glowThickness = .2f;
@@ -37,6 +37,8 @@ public class GlobalDissolveToBlackController : MonoBehaviour, IPlayerToGlobalDis
 
     [Space]
     public Vector2 fog = new Vector2(1, -1);
+
+    public bool mainScene;
 
 
     RoomCoordinate room;    // stores the current visual area location
@@ -59,7 +61,14 @@ public class GlobalDissolveToBlackController : MonoBehaviour, IPlayerToGlobalDis
 
     void Start()
     {
-        Shader.SetGlobalVector("_GlobalDissolveToBlackVisualArea", new Vector4(1,-1,1,-1));
+        if (mainScene)
+        {
+            Shader.SetGlobalVector("_GlobalDissolveToBlackVisualArea", new Vector4(-4.5f, 4.5f, -4.5f, 4.5f));
+        }
+        else
+        {
+            Shader.SetGlobalVector("_GlobalDissolveToBlackVisualArea", new Vector4(1, -1, 1, -1));
+        }
     }
 
     // Called by player when jumping into a room.
@@ -73,7 +82,7 @@ public class GlobalDissolveToBlackController : MonoBehaviour, IPlayerToGlobalDis
 
         // animate until area is complete
         float currentSize = -5;
-        while(currentSize < 5 + areaSizeOffset)
+        while (currentSize < 5 + areaSizeOffset)
         {
             currentSize += Time.deltaTime * speed;
 
@@ -120,7 +129,7 @@ public class GlobalDissolveToBlackController : MonoBehaviour, IPlayerToGlobalDis
 
         // animate until one side reaches the other
         float currentPos = 0;
-        while(currentPos < 10)
+        while (currentPos < 10)
         {
             currentPos += Time.deltaTime * speed;
 
